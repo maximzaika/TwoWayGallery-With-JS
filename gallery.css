@@ -48,20 +48,18 @@
    Post-cond:
      - navigation arrows are hidden
 */
-.tw-gallery > .tw-nav.tw-show {
+.tw-gallery > .tw-nav > .tw-hide {
   opacity: 0;
-  visibility: hidden;
-  transition: visibility 0.18s ease, opacity 0.18s ease;
-  transition-delay: 0.05s;
+  transition: 1s;
 }
 
 /* Post-cond:
-     - upon hovering over the gallery, it shows the navigation buttons
+     - upon hovering over the images in the gallery,
+       it shows the navigation buttons
 */
-.tw-gallery:hover > .tw-nav.tw-show,
-.tw-gallery:active > .tw-nav.tw-show {
+.tw-gallery > .tw-nav > .tw-show {
   opacity: 1;
-  visibility: visible;
+  transition: 1s;
 }
 
 /* Configuration of the right button*/
