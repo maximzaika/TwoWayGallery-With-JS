@@ -1,5 +1,3 @@
-// let firstInitTwoWayGallery = true;
-
 /*
     passing arguments:
        must:
@@ -158,27 +156,20 @@ function TwoWayGallery() {
     for (let index of indexArray) {
       if (index < 0 && firstInitTW) {
         indexArray = this.prev(twConf);
-        console.log("twoWayGallery: this.prev output:");
-        console.log(indexArray);
         break;
       }
 
       if (index >= arrLen && firstInitTW) {
         indexArray = this.next(twConf);
-        console.log("twoWayGallery: this.next output:");
-        console.log(indexArray);
         break;
       }
     }
 
-    // this.render(twConf, indexArray);
     this.initialRender(twConf);
     this.setIndexes(twConf, indexArray);
 
     if (firstInitTW) {
-      console.log("Tw-not-loaded, loading...");
       twGallery.classList.add("tw-loaded");
-      console.log("twoWayGallery: Initiating listeners...");
       this.listeners(twConf);
     }
   };
@@ -238,8 +229,6 @@ function TwoWayGallery() {
           navDiv.appendChild(buttonDiv);
         }
         twGallery.appendChild(navDiv);
-
-        this.setNavigationHover(o);
       } else {
         // navigation === dots
       }
@@ -255,6 +244,7 @@ function TwoWayGallery() {
   this.setNavigationHover = (o) => {
     function setEventListener(el, ev, items, removeItem, addItem) {
       el.addEventListener(ev, () => {
+        console.log("listening...");
         setOpacity(items, removeItem, addItem);
       });
     }
@@ -287,6 +277,7 @@ function TwoWayGallery() {
 
       for (const arrow of arrows) {
         setEventListener(arrow, "mouseenter", arrows, "tw-hide", "tw-show");
+        setEventListener(arrow, "mouseleave", arrows, "tw-show", "tw-hide");
       }
     }
   };
@@ -302,7 +293,6 @@ function TwoWayGallery() {
     for (const index of indexesToBeModified) {
       for (const i in twItems) {
         if (i == index) {
-          console.log(index);
           twItems[i].classList.toggle(TW_ITEM_HIDDEN);
           if (nextItem < 0) {
             twItems[i].classList.add(`${ITEM_LEFT}${nextItem * -1}`);
@@ -319,6 +309,8 @@ function TwoWayGallery() {
   };
 
   this.listeners = (o) => {
+    this.setNavigationHover(o);
+
     const leftBtnClick = document.getElementById(TW_NAV[0]); // tw-prev
     const rightBtnClick = document.getElementById(TW_NAV[1]); // tw-next
     const twGallery = document.querySelector(`.${TW_GALLERY}`);
@@ -438,7 +430,6 @@ function TwoWayGallery() {
   };
 
   this.prev = (o) => {
-    console.log("this.prev: Initiating...");
     const twConf = this.setConfig(o);
     let arrLen = twConf.imagesArray.length - 1;
 
@@ -477,7 +468,6 @@ function TwoWayGallery() {
   };
 
   this.next = (o) => {
-    console.log("this.next: Initiating...");
     const twConf = this.setConfig(o);
     let arrLen = twConf.imagesArray.length - 1;
 
