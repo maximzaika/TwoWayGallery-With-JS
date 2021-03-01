@@ -1,0 +1,325 @@
+.tw-gallery {
+  max-width: 800px;
+  height: 800px;
+  perspective: 100vmin;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: -10rem;
+  perspective-origin: top center;
+  position: relative;
+}
+
+/* Sets up both prev & next navigation arrows */
+.tw-arrow {
+  height: auto;
+  font-size: 80px;
+  display: inline-block;
+  position: absolute;
+  padding: 1rem;
+  margin: 1rem;
+  top: 13rem;
+  cursor: pointer;
+  opacity: 0.8;
+  z-index: 8;
+  transition: top 0.18s ease, font-size 0.18s ease;
+  transition-delay: 0.05s;
+}
+
+/* Pre-cond:
+     - option navigationHover is included as false or not included
+     - navigationHover IS NOT TRUE
+   Post-cond:
+     - upon hovering over each arrow, it expends itself
+*/
+.tw-hover:hover,
+.tw-hover:active {
+  font-size: 95px;
+  border-radius: 25px;
+  top: 12.2rem;
+  transition: top 0.18s ease, font-size 0.18s ease;
+  transition-delay: 0.05s;
+  text-shadow: 0px 0px 25px #999;
+  opacity: 1;
+}
+
+/* Pre-cond:
+     - option navigationHover is included as true
+     - navigationHover IS NOT FALSE or NOT SET
+   Post-cond:
+     - navigation arrows are hidden
+*/
+.tw-gallery > .tw-nav.tw-show {
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0.18s ease, opacity 0.18s ease;
+  transition-delay: 0.05s;
+}
+
+/* Post-cond:
+     - upon hovering over the gallery, it shows the navigation buttons
+*/
+.tw-gallery:hover > .tw-nav.tw-show,
+.tw-gallery:active > .tw-nav.tw-show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Configuration of the right button*/
+.tw-arrow.tw-right {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  right: -0.2em;
+}
+
+/* Configuration of the left button */
+.tw-arrow.tw-left {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  left: -0.2em;
+}
+
+.tw-arrow > .tw-padding {
+  background-color: burlywood;
+  padding-top: 245px;
+  padding-bottom: 235px;
+}
+
+@media (max-width: 768px) {
+  .tw-gallery {
+    height: 768px;
+    margin-bottom: -9rem;
+  }
+
+  .tw-arrow {
+    top: 12.5rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    top: 11.8rem;
+  }
+
+  .tw-arrow.tw-right {
+    right: -1.1rem;
+  }
+
+  .tw-arrow.tw-left {
+    left: -1.1rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: rosybrown;
+    padding-top: 240px;
+    padding-bottom: 230px;
+  }
+}
+@media (max-width: 650px) {
+  .tw-gallery {
+    /*margin-bottom: -50px;*/
+    height: 650px;
+    margin-bottom: -8rem;
+  }
+
+  .tw-arrow {
+    font-size: 75px;
+    top: 10rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    font-size: 90px;
+    top: 9.35rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: orange;
+    padding-top: 190px;
+    padding-bottom: 180px;
+  }
+}
+@media (max-width: 550px) {
+  .tw-gallery {
+    /*margin-bottom: -50px;*/
+    height: 550px;
+    margin-bottom: -7rem;
+  }
+
+  .tw-arrow {
+    font-size: 65px;
+    top: 7.5rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    font-size: 70px;
+    top: 7.3rem;
+  }
+
+  .tw-arrow.tw-right {
+    right: -1.3rem;
+  }
+
+  .tw-arrow.tw-left {
+    left: -1.3rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: blue;
+    padding-top: 150px;
+    padding-bottom: 140px;
+  }
+}
+@media (max-width: 425px) {
+  .tw-gallery {
+    height: 425px;
+    margin-bottom: -6rem;
+  }
+
+  .tw-arrow {
+    font-size: 60px;
+    top: 4.5rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    font-size: 65px;
+    top: 4.3rem;
+  }
+
+  .tw-arrow.tw-right {
+    right: -1.5rem;
+  }
+
+  .tw-arrow.tw-left {
+    left: -1.5rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: red;
+    padding-top: 120px;
+    padding-bottom: 110px;
+  }
+}
+@media (max-width: 390px) {
+  .tw-gallery {
+    height: 390px;
+    margin-bottom: -5rem;
+  }
+
+  .tw-arrow {
+    font-size: 55px;
+    top: 4rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    font-size: 60px;
+    top: 3.8rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: cyan;
+    padding-top: 110px;
+    padding-bottom: 95px;
+  }
+}
+@media (max-width: 375px) {
+  .tw-gallery {
+    height: 375px;
+  }
+}
+@media (max-width: 320px) {
+  .tw-gallery {
+    height: 320px;
+  }
+
+  .tw-arrow {
+    font-size: 45px;
+    top: 3rem;
+  }
+
+  .tw-hover:hover,
+  .tw-hover:active {
+    font-size: 50px;
+    top: 2.8rem;
+  }
+
+  .tw-arrow.tw-right {
+    right: -1.7rem;
+  }
+
+  .tw-arrow.tw-left {
+    left: -1.7rem;
+  }
+
+  .tw-arrow > .tw-padding {
+    background-color: green;
+    padding-top: 90px;
+    padding-bottom: 75px;
+  }
+}
+
+.tw-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: -webkit-transform 0.18s ease;
+}
+
+.tw-item.tw-hidden {
+  display: none;
+}
+
+.tw-item.middle {
+  transform: translate3d(0, 0, 0vmin);
+  transition-delay: 0s;
+  z-index: 7; /* Visibility of 1st item (etc.) in the background */
+}
+
+.tw-item.right-1 {
+  transform: translate3d(10vmin, 5%, -15vmin);
+  transition-delay: 0.05s;
+  z-index: 6;
+}
+
+.tw-item.right-2 {
+  transform: translate3d(20vmin, 10%, -30vmin);
+  transition-delay: 0.05s;
+  z-index: 5;
+}
+
+.tw-item.right-3 {
+  transform: translate3d(30vmin, 15%, -45vmin);
+  transition-delay: 0.05s;
+  z-index: 4;
+}
+
+.tw-item.left-1 {
+  transform: translate3d(-10vmin, 5%, -15vmin);
+  transition-delay: 0.05s;
+  z-index: 6;
+}
+
+.tw-item.left-2 {
+  transform: translate3d(-20vmin, 10%, -30vmin);
+  transition-delay: 0.05s;
+  z-index: 5;
+}
+
+.tw-item.left-3 {
+  transform: translate3d(-30vmin, 15%, -45vmin);
+  transition-delay: 0.05s;
+  z-index: 4;
+}
+
+.tw-item > .tw-image {
+  width: 100%;
+  height: 80%;
+  background-color: #eee;
+  border: 1.5vmin solid #eee;
+  box-sizing: border-box;
+  box-shadow: 0px 3vmin 3vmin rgba(0, 0, 0, 0.75),
+    0 -0vmin 1.5vmin rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  display: block;
+}
