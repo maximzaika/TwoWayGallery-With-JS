@@ -13,6 +13,7 @@
   */
 function TwoWayGallery() {
   const TW_GALLERY = "tw-gallery";
+  const TW_ITEMS = "tw-items";
   const TW_ITEM = "tw-item";
   const TW_ITEM_HIDDEN = "tw-hidden";
   const TW_IMAGE = "tw-image";
@@ -192,6 +193,8 @@ function TwoWayGallery() {
    */
   this.initialRender = (o) => {
     let arrLen = o.imagesArray.length - 1;
+    const itemsDiv = document.createElement("div");
+    itemsDiv.className = TW_ITEMS;
 
     if (!twGallery.classList.contains("tw-loaded")) {
       // create a gallery on the first iteration
@@ -203,9 +206,11 @@ function TwoWayGallery() {
         itemImg.src = o.directory + o.imagesArray[i];
         itemImg.className = TW_IMAGE;
 
-        twGallery.appendChild(itemDiv);
         itemDiv.appendChild(itemImg);
+        itemsDiv.appendChild(itemDiv);
       }
+
+      twGallery.appendChild(itemsDiv);
 
       twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
 
@@ -214,20 +219,10 @@ function TwoWayGallery() {
         const navDiv = document.createElement("div");
         navDiv.className = "tw-nav";
 
-        if (o.navigationHover) {
-          navDiv.classList.add("tw-show");
-          console.log("navigationHover: tw-show");
-        }
-
         for (let i = 0; i < TW_NAV.length; i++) {
           const buttonDiv = document.createElement("div");
           buttonDiv.id = TW_NAV[i];
           buttonDiv.classList.add("tw-arrow");
-
-          if (!o.navigationHover) {
-            buttonDiv.classList.add("tw-hover");
-            console.log("navigationHover: tw-hover");
-          }
 
           const paddingSpan = document.createElement("span");
           paddingSpan.className = "tw-padding";
@@ -243,8 +238,55 @@ function TwoWayGallery() {
           navDiv.appendChild(buttonDiv);
         }
         twGallery.appendChild(navDiv);
+
+        this.setNavigationHover(o);
       } else {
         // navigation === dots
+      }
+    }
+  };
+
+  /**
+   * @param {Object} o                   user options
+   * @param {Boolean} o.navigationHover  user's choice true or false
+   * If this option is true, then navigation buttons are hidden by default
+   * and are shown once user hovers/clicks (mouse/touch) over/on the image
+   */
+  this.setNavigationHover = (o) => {
+    function setEventListener(el, ev, items, removeItem, addItem) {
+      el.addEventListener(ev, () => {
+        setOpacity(items, removeItem, addItem);
+      });
+    }
+
+    function setOpacity(items, removeItem, addItem) {
+      for (const item of items) {
+        item.classList.remove(removeItem);
+        item.classList.add(addItem);
+      }
+    }
+
+    const arrows = document.querySelectorAll(
+      `.${TW_GALLERY} > .tw-nav .tw-arrow`
+    );
+    const setClass = o.navigationHover ? "tw-hide" : "tw-hover";
+
+    for (const arrow of arrows) {
+      arrow.classList.add(setClass);
+    }
+
+    if (o.navigationHover) {
+      const images = document.querySelectorAll(
+        `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM} > .${TW_IMAGE}`
+      );
+
+      for (const image of images) {
+        setEventListener(image, "mouseenter", arrows, "tw-hide", "tw-show");
+        setEventListener(image, "mouseleave", arrows, "tw-show", "tw-hide");
+      }
+
+      for (const arrow of arrows) {
+        setEventListener(arrow, "mouseenter", arrows, "tw-hide", "tw-show");
       }
     }
   };
@@ -329,7 +371,7 @@ function TwoWayGallery() {
       };
 
       twGallery.addEventListener("touchstart", (event) => {
-        if (event.target.id === "tw-prev" || event.target.id === "tw-next") {
+        if (event.target.id === TW_NAV[0] || event.target.id === TW_NAV[1]) {
           event.stopPropagation();
         } else {
           touchStart(event);
@@ -337,7 +379,7 @@ function TwoWayGallery() {
       });
 
       twGallery.addEventListener("touchend", (event) => {
-        if (event.target.id === "tw-prev" || event.target.id === "tw-next") {
+        if (event.target.id === TW_NAV[0] || event.target.id === TW_NAV[1]) {
           event.stopPropagation();
         } else {
           touchEnd(event);
