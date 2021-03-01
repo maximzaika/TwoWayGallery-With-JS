@@ -1,4 +1,4 @@
-let firstInitTwoWayGallery = true;
+// let firstInitTwoWayGallery = true;
 
 /*
     passing arguments:
@@ -22,6 +22,9 @@ function TwoWayGallery() {
   const ITEM_LEFT = "left-";
   const ITEM_MID = "middle";
   const ITEM_RIGHT = "right-";
+
+  const twGallery = document.querySelector(`.${TW_GALLERY}`);
+  let twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
 
   // Argument: options
   this.setConfig = (o) => {
@@ -56,7 +59,6 @@ function TwoWayGallery() {
       o.navigationHover &&
       o.navigationType !== "dots"
     ) {
-      console.log("CONF: o.navigationHover is Boolean");
       DEF_NAV_HOVER = o.navigationHover;
     }
 
@@ -92,9 +94,18 @@ function TwoWayGallery() {
     };
   };
 
-  this.setIndexArray = (startItem, displayItems, secondInit = null) => {
+  this.setIndexArray = (startItem, displayItems) => {
+    const twGallery = document.querySelector(`.${TW_GALLERY}`);
+
+    // if (twGallery.classList.contains("tw-loaded")) {
+    //   const twItems = document.querySelectorAll(`.${TW_ITEM}`);
+    //   indexArray = this.setIndexArray(null, twConf.displayItems, twItems);
+    // }
+
     const finalIndexArray = [];
-    if (secondInit) {
+    if (twGallery.classList.contains("tw-loaded")) {
+      const twItems = document.querySelectorAll(`.${TW_ITEM}`);
+
       let items = [
         `${ITEM_LEFT}3`,
         `${ITEM_LEFT}2`,
@@ -105,12 +116,13 @@ function TwoWayGallery() {
         `${ITEM_RIGHT}3`,
       ];
       for (const item of items) {
-        secondInit.forEach((element, i) => {
+        twItems.forEach((element, i) => {
           if (element.classList.contains(item)) {
             finalIndexArray.push(i);
           }
         });
       }
+
       return finalIndexArray;
     } else {
       let nextItem = -Math.floor(displayItems / 2);
@@ -128,11 +140,13 @@ function TwoWayGallery() {
     }
   };
 
-  this.init = (options) => {
-    console.log("Initiating TwoWayGallery...");
+  this.twoWayGallery = (options) => {
+    console.log("twoWayGallery: Initiating TwoWayGallery...");
     const arrayExists = this.verifyInput(options);
+    const firstInitTW = !twGallery.classList.contains("tw-loaded");
 
     if (!arrayExists) {
+      // user failed to pass items
       return;
     }
 
@@ -141,18 +155,16 @@ function TwoWayGallery() {
     let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
 
     for (let index of indexArray) {
-      if (index < 0 && firstInitTwoWayGallery) {
+      if (index < 0 && firstInitTW) {
         indexArray = this.prev(twConf);
-        firstInitTwoWayGallery = false;
-        console.log("this.prev output:");
+        console.log("twoWayGallery: this.prev output:");
         console.log(indexArray);
         break;
       }
 
-      if (index >= arrLen && firstInitTwoWayGallery) {
+      if (index >= arrLen && firstInitTW) {
         indexArray = this.next(twConf);
-        firstInitTwoWayGallery = false;
-        console.log("this.next output:");
+        console.log("twoWayGallery: this.next output:");
         console.log(indexArray);
         break;
       }
@@ -161,16 +173,27 @@ function TwoWayGallery() {
     // this.render(twConf, indexArray);
     this.initialRender(twConf);
     this.setIndexes(twConf, indexArray);
-    this.listeners(twConf);
+
+    if (firstInitTW) {
+      console.log("Tw-not-loaded, loading...");
+      twGallery.classList.add("tw-loaded");
+      console.log("twoWayGallery: Initiating listeners...");
+      this.listeners(twConf);
+    }
   };
 
+  /**
+   * @param {Object} o                   App options that include user options.
+   * @param {String[]} o.imagesArray     Array of images passed by the user.
+   * @param {String} o.directory         Directory where images are located.
+   * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
+   * @param {Boolean} o.navigationHover  Hide/show navigation upon hovering the gallery.
+   * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
+   */
   this.initialRender = (o) => {
-    const galleryDiv = document.querySelector(`.${TW_GALLERY}`);
-
-    let items = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
     let arrLen = o.imagesArray.length - 1;
 
-    if (items.length === 0) {
+    if (!twGallery.classList.contains("tw-loaded")) {
       // create a gallery on the first iteration
       for (let i = 0; i < arrLen; i++) {
         const itemDiv = document.createElement("div");
@@ -180,9 +203,11 @@ function TwoWayGallery() {
         itemImg.src = o.directory + o.imagesArray[i];
         itemImg.className = TW_IMAGE;
 
-        galleryDiv.appendChild(itemDiv);
+        twGallery.appendChild(itemDiv);
         itemDiv.appendChild(itemImg);
       }
+
+      twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
 
       // create prev and next arrows
       if (o.navigationType.includes("arrows")) {
@@ -217,7 +242,7 @@ function TwoWayGallery() {
           buttonDiv.append(paddingSpan);
           navDiv.appendChild(buttonDiv);
         }
-        galleryDiv.appendChild(navDiv);
+        twGallery.appendChild(navDiv);
       } else {
         // navigation === dots
       }
@@ -225,25 +250,24 @@ function TwoWayGallery() {
   };
 
   this.setIndexes = (o, indexesToBeModified) => {
-    items = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
-    if (items.length > 0) {
-      // set gallery to contain right classes in the hidden state
-      for (const index of items) {
-        index.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
-      }
+    // Resets the tw-item list making them all hidden
+    for (const index of twItems) {
+      index.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
     }
 
+    // Toggles hidden, and sets appropriate class to each item
     let nextItem = -Math.floor(o.displayItems / 2);
     for (const index of indexesToBeModified) {
-      for (const i in items) {
+      for (const i in twItems) {
         if (i == index) {
-          items[i].classList.toggle(TW_ITEM_HIDDEN);
+          console.log(index);
+          twItems[i].classList.toggle(TW_ITEM_HIDDEN);
           if (nextItem < 0) {
-            items[i].classList.add(`${ITEM_LEFT}${nextItem * -1}`);
+            twItems[i].classList.add(`${ITEM_LEFT}${nextItem * -1}`);
           } else if (nextItem === 0) {
-            items[i].classList.add(`${ITEM_MID}`);
+            twItems[i].classList.add(`${ITEM_MID}`);
           } else {
-            items[i].classList.add(`${ITEM_RIGHT}${nextItem}`);
+            twItems[i].classList.add(`${ITEM_RIGHT}${nextItem}`);
           }
           nextItem++;
           break;
@@ -374,21 +398,18 @@ function TwoWayGallery() {
   this.prev = (o) => {
     console.log("this.prev: Initiating...");
     const twConf = this.setConfig(o);
-    let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
-    if (!firstInitTwoWayGallery) {
-      const items = document.querySelectorAll(`.${TW_ITEM}`);
-      indexArray = this.setIndexArray(null, twConf.displayItems, items);
-    }
-
     let arrLen = twConf.imagesArray.length - 1;
-    let indexes = [];
+
+    const firstInitTW = !twGallery.classList.contains("tw-loaded");
+    let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
 
     let prev = 1;
-    let negativeArray = [];
+    const indexes = [];
+    const negativeArray = [];
     for (let i = 0; i < indexArray.length; i++) {
       let point = indexArray[i];
 
-      if (!firstInitTwoWayGallery) {
+      if (!firstInitTW) {
         point--;
       }
 
@@ -396,7 +417,7 @@ function TwoWayGallery() {
         point = arrLen - prev;
         negativeArray.push(point);
 
-        if (!firstInitTwoWayGallery) {
+        if (!firstInitTW) {
           indexes.push(point);
         }
 
@@ -406,39 +427,35 @@ function TwoWayGallery() {
       }
     }
 
-    if (firstInitTwoWayGallery) {
+    if (firstInitTW) {
       return [...negativeArray.reverse(), ...indexes];
-    } else {
-      this.render(twConf, indexes);
     }
+
+    this.setIndexes(twConf, indexes);
   };
 
   this.next = (o) => {
     console.log("this.next: Initiating...");
     const twConf = this.setConfig(o);
+    let arrLen = twConf.imagesArray.length - 1;
+
+    const firstInitTW = !twGallery.classList.contains("tw-loaded");
     let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
 
-    if (!firstInitTwoWayGallery) {
-      const items = document.querySelectorAll(`.${TW_ITEM}`);
-      indexArray = this.setIndexArray(null, twConf.displayItems, items);
-    }
-
-    let arrLen = twConf.imagesArray.length - 1;
-    let indexes = [];
-
     let beginning = 0;
-    let positiveArray = [];
+    const indexes = [];
+    const positiveArray = [];
     for (let i = indexArray.length - 1; i >= 0; i--) {
       let point = indexArray[i];
 
-      if (!firstInitTwoWayGallery) {
+      if (!firstInitTW) {
         point++;
       }
 
       if (point > arrLen - 1) {
         positiveArray.push(beginning);
 
-        if (!firstInitTwoWayGallery) {
+        if (!firstInitTW) {
           indexes.push(beginning);
         }
 
@@ -448,11 +465,11 @@ function TwoWayGallery() {
       }
     }
 
-    if (firstInitTwoWayGallery) {
+    if (firstInitTW) {
       return [...indexes.reverse(), ...positiveArray];
-    } else {
-      this.render(twConf, indexes.reverse());
     }
+
+    this.setIndexes(twConf, indexes.reverse());
   };
 
   this.verifyInput = (o) => {
@@ -483,7 +500,7 @@ function isInViewport(element) {
 }
 
 const twoWayGallery = new TwoWayGallery();
-twoWayGallery.init({
+twoWayGallery.twoWayGallery({
   imagesArray: [
     "0.1.jpg",
     "0.3.jpg",
