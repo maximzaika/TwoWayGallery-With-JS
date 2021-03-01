@@ -230,6 +230,7 @@ function TwoWayGallery() {
         }
         twGallery.appendChild(navDiv);
       } else {
+        console.log("navigationtype: dots selected");
         // navigation === dots
       }
     }
@@ -244,7 +245,6 @@ function TwoWayGallery() {
   this.setNavigationHover = (o) => {
     function setEventListener(el, ev, items, removeItem, addItem) {
       el.addEventListener(ev, () => {
-        console.log("listening...");
         setOpacity(items, removeItem, addItem);
       });
     }
@@ -554,9 +554,10 @@ twoWayGallery.twoWayGallery({
     enable: false,
     direction: "right",
     cursorPause: true,
+    // cursorPauseNotification: true,
     delay: 5000,
   },
-  navigationType: "arrows & dots",
+  // navigationType: "arrows",
   navigationHover: true,
   // navigationIcons: [
   //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
