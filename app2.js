@@ -212,8 +212,8 @@ function TwoWayGallery() {
 
         for (let i = 0; i < TW_NAV.length; i++) {
           const buttonDiv = document.createElement("div");
-          buttonDiv.id = TW_NAV[i];
-          buttonDiv.classList.add("tw-arrow");
+          // buttonDiv.id = TW_NAV[i];
+          buttonDiv.classList.add(TW_NAV[i], "tw-arrow");
 
           const paddingSpan = document.createElement("span");
           paddingSpan.className = "tw-padding";
@@ -311,8 +311,8 @@ function TwoWayGallery() {
   this.listeners = (o) => {
     this.setNavigationHover(o);
 
-    const leftBtnClick = document.getElementById(TW_NAV[0]); // tw-prev
-    const rightBtnClick = document.getElementById(TW_NAV[1]); // tw-next
+    const leftBtnClick = document.querySelector(`.${TW_NAV[0]}`); // tw-prev
+    const rightBtnClick = document.querySelector(`.${TW_NAV[1]}`); // tw-next
     const twGallery = document.querySelector(`.${TW_GALLERY}`);
 
     leftBtnClick.addEventListener("click", this.prev.bind(null, o));
@@ -333,18 +333,34 @@ function TwoWayGallery() {
     }
 
     if (o.enableTouch) {
-      let touchStartX = 0;
-      let touchStartTime;
-      const expectedTouchDistance = 40;
+      const touchEventListeners = (items) => {
+        let [touchStartX, touchStartTime] = [0, 0];
+        const expectedTouchDistance = 40;
 
-      const touchStart = (event) => {
-        // event.preventDefault();
-        const date = new Date();
-        touchStartTime = date.getTime();
-        touchStartX = event.touches[0].pageX;
+        for (const item of items) {
+          item.addEventListener("touchstart", (event) => {
+            [touchStartX, touchStartTime] = touchStart(event);
+          });
+
+          item.addEventListener("touchend", (event) => {
+            touchEnd(event, touchStartX, touchStartTime, expectedTouchDistance);
+          });
+        }
       };
 
-      const touchEnd = (event) => {
+      const touchStart = (event) => {
+        const date = new Date();
+        const touchStartTime = date.getTime();
+        const touchStartX = event.touches[0].pageX;
+        return [touchStartX, touchStartTime];
+      };
+
+      const touchEnd = (
+        event,
+        touchStartX,
+        touchStartTime,
+        expectedTouchDistance
+      ) => {
         const touchEndX = event.changedTouches[0].pageX;
         const date = new Date();
         const touchEndTime = date.getTime();
@@ -362,21 +378,18 @@ function TwoWayGallery() {
         }
       };
 
-      twGallery.addEventListener("touchstart", (event) => {
-        if (event.target.id === TW_NAV[0] || event.target.id === TW_NAV[1]) {
-          event.stopPropagation();
-        } else {
-          touchStart(event);
-        }
-      });
+      // Enable touch on the images
+      const twItemImages = document.querySelectorAll(
+        `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM} > .${TW_IMAGE}`
+      );
 
-      twGallery.addEventListener("touchend", (event) => {
-        if (event.target.id === TW_NAV[0] || event.target.id === TW_NAV[1]) {
-          event.stopPropagation();
-        } else {
-          touchEnd(event);
-        }
-      });
+      // Enable touch on the arrows
+      const twNav = document.querySelectorAll(
+        `.${TW_GALLERY} > .tw-nav > .tw-arrow`
+      );
+
+      touchEventListeners(twItemImages);
+      touchEventListeners(twNav);
     }
 
     if (o.autoRotate.enable) {
