@@ -9,6 +9,31 @@
   position: relative;
 }
 
+.tw-gallery > .tw-play {
+  position: relative;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: white;
+  width: 70px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: -2rem;
+  top: 0.7rem;
+  text-align: center;
+  z-index: 9;
+  opacity: 0;
+  transition: opacity 1s, top 1s;
+}
+
+.tw-gallery > .tw-pause {
+  opacity: 1;
+  top: 1.2rem;
+  transition: opacity 1s, top 1s;
+}
+
 /* Sets up both prev & next navigation arrows */
 .tw-arrow {
   height: auto;
@@ -77,7 +102,7 @@
 }
 
 .tw-arrow > .tw-padding {
-  background-color: burlywood;
+  /*background-color: burlywood;*/
   padding-top: 245px;
   padding-bottom: 235px;
 }
@@ -86,6 +111,14 @@
   .tw-gallery {
     height: 768px;
     margin-bottom: -9rem;
+  }
+
+  .tw-gallery > .tw-play {
+    top: 0.6rem;
+  }
+
+  .tw-gallery > .tw-pause {
+    top: 1rem;
   }
 
   .tw-arrow {
@@ -106,7 +139,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: rosybrown;
+    /*background-color: rosybrown;*/
     padding-top: 240px;
     padding-bottom: 230px;
   }
@@ -130,7 +163,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: orange;
+    /*background-color: orange;*/
     padding-top: 190px;
     padding-bottom: 180px;
   }
@@ -140,6 +173,14 @@
     /*margin-bottom: -50px;*/
     height: 550px;
     margin-bottom: -7rem;
+  }
+
+  .tw-gallery > .tw-play {
+    top: 0.5rem;
+  }
+
+  .tw-gallery > .tw-pause {
+    top: 0.9rem;
   }
 
   .tw-arrow {
@@ -162,7 +203,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: blue;
+    /*background-color: blue;*/
     padding-top: 150px;
     padding-bottom: 140px;
   }
@@ -171,6 +212,17 @@
   .tw-gallery {
     height: 425px;
     margin-bottom: -6rem;
+  }
+
+  .tw-gallery > .tw-play {
+    width: 70px;
+    font-size: 15px;
+    margin-bottom: -1.8rem;
+    top: 0.5rem;
+  }
+
+  .tw-gallery > .tw-pause {
+    top: 1rem;
   }
 
   .tw-arrow {
@@ -193,7 +245,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: red;
+    /*background-color: red;*/
     padding-top: 120px;
     padding-bottom: 110px;
   }
@@ -202,6 +254,17 @@
   .tw-gallery {
     height: 390px;
     margin-bottom: -5rem;
+  }
+
+  .tw-gallery > .tw-play {
+    width: 60px;
+    font-size: 13px;
+    margin-bottom: -1.5rem;
+    top: 0.7rem;
+  }
+
+  .tw-gallery > .tw-pause {
+    top: 1rem;
   }
 
   .tw-arrow {
@@ -216,7 +279,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: cyan;
+    /*background-color: cyan;*/
     padding-top: 110px;
     padding-bottom: 95px;
   }
@@ -224,6 +287,17 @@
 @media (max-width: 375px) {
   .tw-gallery {
     height: 375px;
+  }
+
+  .tw-gallery > .tw-play {
+    width: 45px;
+    font-size: 10px;
+    margin-bottom: -1rem;
+    top: 0.8rem;
+  }
+
+  .tw-gallery > .tw-pause {
+    top: 1.2rem;
   }
 }
 @media (max-width: 320px) {
@@ -251,7 +325,7 @@
   }
 
   .tw-arrow > .tw-padding {
-    background-color: green;
+    /*background-color: green;*/
     padding-top: 90px;
     padding-bottom: 75px;
   }
