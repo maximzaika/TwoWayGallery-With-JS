@@ -333,25 +333,39 @@ function TwoWayGallery() {
     }
 
     if (o.enableTouch) {
-      const touchEventListeners = (items) => {
+      const touchEventListeners = (items, evStart, evEnd) => {
         let [touchStartX, touchStartTime] = [0, 0];
         const expectedTouchDistance = 40;
 
         for (const item of items) {
-          item.addEventListener("touchstart", (event) => {
-            [touchStartX, touchStartTime] = touchStart(event);
+          item.addEventListener(evStart, (event) => {
+            [touchStartX, touchStartTime] = touchStart(event, evStart);
           });
 
-          item.addEventListener("touchend", (event) => {
-            touchEnd(event, touchStartX, touchStartTime, expectedTouchDistance);
+          item.addEventListener(evEnd, (event) => {
+            touchEnd(
+              event,
+              touchStartX,
+              touchStartTime,
+              expectedTouchDistance,
+              evEnd
+            );
           });
         }
       };
 
-      const touchStart = (event) => {
+      const touchStart = (event, ev) => {
         const date = new Date();
         const touchStartTime = date.getTime();
-        const touchStartX = event.touches[0].pageX;
+        let touchStartX = 0;
+
+        if (ev.includes("touch")) {
+          touchStartX = event.touches[0].pageX;
+        } else {
+          // mouse event
+          touchStartX = event.pageX;
+          event.preventDefault();
+        }
         return [touchStartX, touchStartTime];
       };
 
@@ -359,9 +373,19 @@ function TwoWayGallery() {
         event,
         touchStartX,
         touchStartTime,
-        expectedTouchDistance
+        expectedTouchDistance,
+        ev
       ) => {
-        const touchEndX = event.changedTouches[0].pageX;
+        let touchEndX = 0;
+
+        if (ev.includes("touch")) {
+          touchEndX = event.changedTouches[0].pageX;
+        } else {
+          // mouse event
+          touchEndX = event.pageX;
+          event.preventDefault();
+        }
+
         const date = new Date();
         const touchEndTime = date.getTime();
         const touchDuration = Math.abs(touchStartTime - touchEndTime);
@@ -388,8 +412,10 @@ function TwoWayGallery() {
         `.${TW_GALLERY} > .tw-nav > .tw-arrow`
       );
 
-      touchEventListeners(twItemImages);
-      touchEventListeners(twNav);
+      touchEventListeners(twItemImages, "touchstart", "touchend");
+      touchEventListeners(twNav, "touchstart", "touchend");
+      touchEventListeners(twItemImages, "mousedown", "mouseup");
+      touchEventListeners(twNav, "mousedown", "mouseup");
     }
 
     if (o.autoRotate.enable) {
