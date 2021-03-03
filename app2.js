@@ -195,7 +195,7 @@ function TwoWayGallery() {
    * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
    */
   this.initialRender = (o) => {
-    let arrLen = o.imagesArray.length - 1;
+    let arrLen = o.imagesArray.length;
     const itemsDiv = document.createElement("div");
     itemsDiv.className = TW_ITEMS;
 
@@ -275,6 +275,110 @@ function TwoWayGallery() {
   };
 
   this.listeners = (o) => {
+    const test2 = document.querySelector(".test2");
+
+    test2.addEventListener("click", (event) => {
+      const rotaGal = document.querySelectorAll(".rota-gal");
+
+      const myItemOrig = event.target;
+      const myItem = event.target.dataset.id;
+
+      for (const item of rotaGal) {
+        item.classList.remove("focus");
+      }
+
+      myItemOrig.classList.add("focus");
+
+      const testArr = this.setIndexArray(myItem, o.displayItems);
+      // console.log(testArr);
+      // console.log(myItem);
+
+      if (testArr[2] > myItem) {
+        // let no = true;
+        // for (let i = testArr[2]; i > myItem; i--) {
+        //   // console.log("prev: " + i);
+        //   if (i !== myItem) {
+        //     console.log("no " + no);
+        //     this.prev(o);
+        //   }
+        // }
+
+        const diff = testArr[2] - myItem;
+        let timesRun = 0;
+        let interval = setInterval(() => {
+          timesRun++;
+          if (timesRun === diff) {
+            clearInterval(interval);
+          }
+          this.prev(o);
+        }, 100);
+      } else {
+        // for (let i = testArr[2]; i < myItem; i++) {
+        //   console.log("next: " + i);
+        //   if (i !== myItem) {
+        //     this.next(o);
+        //   }
+        // }
+        const diff = myItem - testArr[2];
+        let timesRun = 0;
+        let interval = setInterval(() => {
+          timesRun++;
+          if (timesRun === diff) {
+            clearInterval(interval);
+          }
+          this.next(o);
+        }, 100);
+      }
+
+      // console.log(o);
+      // console.dir(event.target.dataset.id);
+    });
+
+    // const testBtn1 = document.querySelector("#testBtn");
+    // const testBtn2 = document.querySelector("#testBtn2");
+    // const testBtn3 = document.querySelector("#testBtn3");
+    //
+    // const test = document.querySelector(".test2");
+    // console.log("test");
+    //
+    // const testItem0 = document.querySelector("#jsTest0");
+    // const testItem0off = testItem0.offsetLeft;
+    // console.log(testItem0off);
+    //
+    // const testItem1 = document.querySelector("#jsTest1");
+    // const testItem1off = testItem1.offsetLeft;
+    // console.log(testItem1off);
+    //
+    // const testItem2 = document.querySelector("#jsTest2");
+    // const testItem12off = testItem2.offsetLeft;
+    // console.log(testItem12off);
+    //
+    // const diff = testItem0off - testItem12off;
+    // console.log(diff);
+    //
+    // const diff2 = testItem1off - testItem0off;
+    // console.log(diff2);
+    //
+    // test.addEventListener("click", (event) => {
+    //   console.log(event);
+    // });
+    //
+    // testBtn1.addEventListener("click", (event) => {
+    //   console.log("clicked 1");
+    //   test.scrollTo({ left: testItem12off, behavior: "smooth" });
+    //   testItem2.classList.add("focus");
+    // });
+    //
+    // testBtn2.addEventListener("click", (event) => {
+    //   console.log("clicked 2");
+    //   test.scrollTo({ left: diff, behavior: "smooth" });
+    // });
+    //
+    // testBtn3.addEventListener("click", (event) => {
+    //   console.log("clicked 2");
+    //   test.scrollTo({ left: diff2, behavior: "smooth" });
+    // });
+
     const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-prev
     const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-next
 
@@ -509,7 +613,7 @@ function TwoWayGallery() {
 
   this.prev = (o) => {
     const twConf = this.setConfig(o);
-    let arrLen = twConf.imagesArray.length - 1;
+    let arrLen = twConf.imagesArray.length;
 
     const firstInitTW = !twGallery.classList.contains("tw-loaded");
     let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
@@ -547,7 +651,8 @@ function TwoWayGallery() {
 
   this.next = (o) => {
     const twConf = this.setConfig(o);
-    let arrLen = twConf.imagesArray.length - 1;
+    let arrLen = twConf.imagesArray.length;
+    console.log(arrLen);
 
     const firstInitTW = !twGallery.classList.contains("tw-loaded");
     let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
