@@ -59,6 +59,8 @@ function TwoWayGallery() {
       `<i class="fas fa-chevron-left"></i>`,
       `<i class="fas fa-chevron-right"></i>`,
     ]; // [left, right]
+    const DEF_ITEM_GALLERY = false;
+    const DEF_ITEM_GALLERY_INSTANT = false;
 
     if (
       typeof o.navigationHover === "boolean" &&
@@ -106,6 +108,14 @@ function TwoWayGallery() {
           DEF_AUTOPLAY_PAUSE_NOTIFICATION_TEXT
         ),
         timeout: setOption("number", o.autoPlay.timeout, DEF_AUTOPLAY_TIMEOUT),
+      },
+      itemGallery: {
+        enable: setOption("boolean", o.itemGallery.enable, DEF_ITEM_GALLERY),
+        instant: setOption(
+          "boolean",
+          o.itemGallery.instant,
+          DEF_ITEM_GALLERY_INSTANT
+        ),
       },
     };
   };
@@ -208,6 +218,7 @@ function TwoWayGallery() {
         const itemImg = document.createElement("img");
         itemImg.src = o.directory + o.imagesArray[i];
         itemImg.className = TW_IMAGE;
+        itemImg.dataset.itemId = i.toString();
 
         itemDiv.appendChild(itemImg);
         itemsDiv.appendChild(itemDiv);
@@ -275,115 +286,11 @@ function TwoWayGallery() {
   };
 
   this.listeners = (o) => {
-    const test2 = document.querySelector(".test2");
-
-    test2.addEventListener("click", (event) => {
-      const rotaGal = document.querySelectorAll(".rota-gal");
-
-      const myItemOrig = event.target;
-      const myItem = event.target.dataset.id;
-
-      for (const item of rotaGal) {
-        item.classList.remove("focus");
-      }
-
-      myItemOrig.classList.add("focus");
-
-      const testArr = this.setIndexArray(myItem, o.displayItems);
-      // console.log(testArr);
-      // console.log(myItem);
-
-      if (testArr[2] > myItem) {
-        // let no = true;
-        // for (let i = testArr[2]; i > myItem; i--) {
-        //   // console.log("prev: " + i);
-        //   if (i !== myItem) {
-        //     console.log("no " + no);
-        //     this.prev(o);
-        //   }
-        // }
-
-        const diff = testArr[2] - myItem;
-        let timesRun = 0;
-        let interval = setInterval(() => {
-          timesRun++;
-          if (timesRun === diff) {
-            clearInterval(interval);
-          }
-          this.prev(o);
-        }, 100);
-      } else {
-        // for (let i = testArr[2]; i < myItem; i++) {
-        //   console.log("next: " + i);
-        //   if (i !== myItem) {
-        //     this.next(o);
-        //   }
-        // }
-        const diff = myItem - testArr[2];
-        let timesRun = 0;
-        let interval = setInterval(() => {
-          timesRun++;
-          if (timesRun === diff) {
-            clearInterval(interval);
-          }
-          this.next(o);
-        }, 100);
-      }
-
-      // console.log(o);
-      // console.dir(event.target.dataset.id);
-    });
-
-    // const testBtn1 = document.querySelector("#testBtn");
-    // const testBtn2 = document.querySelector("#testBtn2");
-    // const testBtn3 = document.querySelector("#testBtn3");
-    //
-    // const test = document.querySelector(".test2");
-    // console.log("test");
-    //
-    // const testItem0 = document.querySelector("#jsTest0");
-    // const testItem0off = testItem0.offsetLeft;
-    // console.log(testItem0off);
-    //
-    // const testItem1 = document.querySelector("#jsTest1");
-    // const testItem1off = testItem1.offsetLeft;
-    // console.log(testItem1off);
-    //
-    // const testItem2 = document.querySelector("#jsTest2");
-    // const testItem12off = testItem2.offsetLeft;
-    // console.log(testItem12off);
-    //
-    // const diff = testItem0off - testItem12off;
-    // console.log(diff);
-    //
-    // const diff2 = testItem1off - testItem0off;
-    // console.log(diff2);
-    //
-    // test.addEventListener("click", (event) => {
-    //   console.log(event);
-    // });
-    //
-    // testBtn1.addEventListener("click", (event) => {
-    //   console.log("clicked 1");
-    //   test.scrollTo({ left: testItem12off, behavior: "smooth" });
-    //   testItem2.classList.add("focus");
-    // });
-    //
-    // testBtn2.addEventListener("click", (event) => {
-    //   console.log("clicked 2");
-    //   test.scrollTo({ left: diff, behavior: "smooth" });
-    // });
-    //
-    // testBtn3.addEventListener("click", (event) => {
-    //   console.log("clicked 2");
-    //   test.scrollTo({ left: diff2, behavior: "smooth" });
-    // });
-
     const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-prev
     const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-next
 
-    prevBtn.addEventListener("click", this.prev.bind(null, o));
-    nextBtn.addEventListener("click", this.next.bind(null, o));
+    prevBtn.addEventListener("click", this.prev.bind(null, o, true));
+    nextBtn.addEventListener("click", this.next.bind(null, o, true));
 
     // Enable action on the arrows
     const twNav = document.querySelectorAll(
@@ -400,6 +307,156 @@ function TwoWayGallery() {
     this.eventNavigationHover(o, pauseThese, twNav);
     this.eventTouch(o, pauseThese, prevBtn, nextBtn);
     this.eventArrowKeys(o, prevBtn, nextBtn);
+    this.renderItemGallery(o);
+  };
+
+  this.renderItemGallery = (o) => {
+    if (o.itemGallery.enable) {
+      const test2 = document.querySelector(".test2");
+
+      // const activeMid = document.querySelector(".tw-item.middle");
+      // const midIndex = activeMid.firstChild.dataset.itemId;
+      // console.dir(midIndex);
+
+      // const rotaGal = document.querySelectorAll(`.rota-gal[data-id="${[o.startItem]}"]`);
+      // rotaGal[o.startItem].classList.add("focus");
+      console.log(o.startItem);
+      this.focusItemGallery(o, o.startItem);
+
+      test2.addEventListener("click", (event) => {
+        const imgClicked = event.target;
+        const imgClickedId = imgClicked.dataset.id;
+
+        if (imgClicked.classList.contains("rota-gal")) {
+          // remove focus from old image
+          const focusedImage = document.querySelector(".rota-gal.focus");
+          focusedImage.classList.remove("focus");
+
+          // add focus to the new image
+          imgClicked.classList.add("focus");
+        } else {
+          return;
+        }
+
+        const midItem = document.querySelector(`.${TW_ITEM}.middle`);
+        const midItemIndex = midItem.firstChild.dataset.itemId;
+        console.dir(midItem);
+
+        // const testArr = this.setIndexArray(myItem, o.displayItems);
+        // console.log(testArr);
+        // console.log(myItem);
+
+        switch (true) {
+          case midItemIndex > imgClickedId:
+            console.log("prev");
+            switch (true) {
+              case o.itemGallery.instant:
+                for (let i = midItemIndex; i > imgClickedId; i--) {
+                  if (i !== imgClickedId) {
+                    this.prev(o);
+                  }
+                }
+                break;
+              case !o.itemGallery.instant:
+                const diff = midItemIndex - imgClickedId;
+                let timesRun = 0;
+                let interval = setInterval(() => {
+                  timesRun++;
+                  if (timesRun === diff) {
+                    clearInterval(interval);
+                  }
+                  this.prev(o);
+                }, 100);
+                break;
+            }
+            break;
+          case midItemIndex == imgClickedId:
+            console.log("stop");
+            break;
+          case midItemIndex < imgClickedId:
+            console.log("next");
+            switch (true) {
+              case o.itemGallery.instant:
+                for (let i = midItemIndex; i < imgClickedId; i++) {
+                  if (i !== imgClickedId) {
+                    this.next(o, false);
+                  }
+                }
+                break;
+              case !o.itemGallery.instant:
+                const diff = imgClickedId - midItemIndex;
+                let timesRun = 0;
+                let interval = setInterval(() => {
+                  timesRun++;
+                  if (timesRun === diff) {
+                    clearInterval(interval);
+                  }
+                  this.next(o, false);
+                }, 100);
+                break;
+            }
+            break;
+        }
+      });
+
+      // const testBtn1 = document.querySelector("#testBtn");
+      // const testBtn2 = document.querySelector("#testBtn2");
+      // const testBtn3 = document.querySelector("#testBtn3");
+      //
+      // const test = document.querySelector(".test2");
+      // console.log("test");
+      //
+      // const testItem0 = document.querySelector("#jsTest0");
+      // const testItem0off = testItem0.offsetLeft;
+      // console.log(testItem0off);
+      //
+      // const testItem1 = document.querySelector("#jsTest1");
+      // const testItem1off = testItem1.offsetLeft;
+      // console.log(testItem1off);
+      //
+      // const testItem2 = document.querySelector("#jsTest2");
+      // const testItem12off = testItem2.offsetLeft;
+      // console.log(testItem12off);
+      //
+      // const diff = testItem0off - testItem12off;
+      // console.log(diff);
+      //
+      // const diff2 = testItem1off - testItem0off;
+      // console.log(diff2);
+      //
+      // test.addEventListener("click", (event) => {
+      //   console.log(event);
+      // });
+      //
+      // testBtn1.addEventListener("click", (event) => {
+      //   console.log("clicked 1");
+      //   test.scrollTo({ left: testItem12off, behavior: "smooth" });
+      //   testItem2.classList.add("focus");
+      // });
+      //
+      // testBtn2.addEventListener("click", (event) => {
+      //   console.log("clicked 2");
+      //   test.scrollTo({ left: diff, behavior: "smooth" });
+      // });
+      //
+      // testBtn3.addEventListener("click", (event) => {
+      //   console.log("clicked 2");
+      //   test.scrollTo({ left: diff2, behavior: "smooth" });
+      // });
+    }
+  };
+
+  this.focusItemGallery = (o, index) => {
+    console.log("triggered");
+    const element = document.querySelector(`.rota-gal[data-id="${index}"]`);
+    console.log(element);
+    if (o.itemGallery.enable && element.classList.contains("rota-gal")) {
+      const currentFocusedImage = document.querySelector(".rota-gal.focus");
+      if (currentFocusedImage) {
+        currentFocusedImage.classList.remove("focus");
+      }
+      element.classList.add("focus");
+    }
   };
 
   /**
@@ -611,7 +668,7 @@ function TwoWayGallery() {
     }
   };
 
-  this.prev = (o) => {
+  this.prev = (o, isArrowClick = false) => {
     const twConf = this.setConfig(o);
     let arrLen = twConf.imagesArray.length;
 
@@ -623,10 +680,7 @@ function TwoWayGallery() {
     const negativeArray = [];
     for (let i = 0; i < indexArray.length; i++) {
       let point = indexArray[i];
-
-      if (!firstInitTW) {
-        point--;
-      }
+      point = !firstInitTW ? point - 1 : point;
 
       if (point < 0) {
         point = arrLen - prev;
@@ -646,13 +700,18 @@ function TwoWayGallery() {
       return [...negativeArray.reverse(), ...indexes];
     }
 
+    if (isArrowClick) {
+      // Bottom item gallery selection
+      const mid = indexes[Math.floor(indexes.length / 2)];
+      this.focusItemGallery(o, mid);
+    }
+
     this.setIndexes(twConf, indexes);
   };
 
-  this.next = (o) => {
+  this.next = (o, isArrowClick = false) => {
     const twConf = this.setConfig(o);
     let arrLen = twConf.imagesArray.length;
-    console.log(arrLen);
 
     const firstInitTW = !twGallery.classList.contains("tw-loaded");
     let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
@@ -662,10 +721,7 @@ function TwoWayGallery() {
     const positiveArray = [];
     for (let i = indexArray.length - 1; i >= 0; i--) {
       let point = indexArray[i];
-
-      if (!firstInitTW) {
-        point++;
-      }
+      point = !firstInitTW ? point + 1 : point;
 
       if (point > arrLen - 1) {
         positiveArray.push(beginning);
@@ -682,6 +738,12 @@ function TwoWayGallery() {
 
     if (firstInitTW) {
       return [...indexes.reverse(), ...positiveArray];
+    }
+
+    if (isArrowClick) {
+      // Bottom item gallery selection
+      const mid = indexes[Math.floor(indexes.length / 2)];
+      this.focusItemGallery(o, mid);
     }
 
     this.setIndexes(twConf, indexes.reverse());
@@ -731,7 +793,7 @@ twoWayGallery.twoWayGallery({
   directory: "img/",
   startItem: 0,
   displayItems: 5,
-  enableArrowKeys: true,
+  enableArrowKeys: false,
   enableTouch: true,
   autoPlay: {
     enable: false,
@@ -739,10 +801,16 @@ twoWayGallery.twoWayGallery({
     hoverPause: true,
     hoverPauseNotification: true,
     hoverPauseNotificationText: "PAUSED",
-    timeout: 10000,
+    timeout: 3000,
   },
   navigationType: "arrows",
   navigationHover: false,
+  itemGallery: {
+    enable: true,
+    instant: false,
+    arrows: true,
+    touch: true,
+  },
   // navigationIcons: [
   //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
   //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
