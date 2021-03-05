@@ -10,30 +10,49 @@
          - itemClass
   */
 function TwoWayGallery() {
-  // Gallery related pre-defined classes that user can change later on
-  const [TW_GALLERY, TW_ITEMS, TW_ITEM, TW_ITEM_HIDDEN, TW_IMAGE] = [
+  // tw-gallery related pre-defined classes
+  const [TW_GALLERY, TW_M_GALLERY, TW_S_GALLERY, TW_LOADED] = [
     "tw-gallery",
+    "tw-m-gallery",
+    "tw-s-gallery",
+    "tw-loaded",
+  ];
+
+  // tw-m-gallery related pre-defined classes
+  const [TW_ITEMS, TW_ITEM, TW_ITEM_HIDDEN, TW_IMAGE] = [
     "tw-items",
     "tw-item",
     "tw-hidden",
     "tw-image",
   ];
 
-  // Item related pre-defined classes
+  // tw-m-gallery > tw-item related pre-defined classes
   const [ITEM_LEFT, ITEM_MID, ITEM_RIGHT] = ["left-", "middle", "right-"];
 
-  // Navigation related pre-defined classes that user can change later on
+  // tw-m-gallery navigation related pre-defined classes
   const [TW_NAV, TW_NAVS, TW_ARROW] = [
     "tw-nav",
     ["tw-prev", "tw-next"],
     "tw-arrow",
   ];
 
-  // Auto play related pre-defined classes that user can change later on
+  // tw-m-gallery > tw-ap (autoplay) related pre-defined classes
   const [TW_AP, TW_APS] = ["tw-ap", ["tw-play", "tw-pause"]];
 
-  const twGallery = document.querySelector(`.${TW_GALLERY}`);
-  // let twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
+  // tw-s-gallery related pre-defined classes
+  const [TW_SLIDER, TW_THUMB, TW_FOCUS] = [
+    "tw-slider",
+    "tw-thumbnail",
+    "tw-focus",
+  ];
+
+  const twMGallery = document.querySelector(
+    `.${TW_GALLERY} > .${TW_M_GALLERY}`
+  );
+
+  const twSGallery = document.querySelector(
+    `.${TW_GALLERY} > .${TW_S_GALLERY}`
+  );
 
   // Argument: options
   this.setConfig = (o) => {
@@ -135,16 +154,15 @@ function TwoWayGallery() {
 
     options = this.restructureImagesArray(options);
     const twConf = this.setConfig(options);
-    let indexesToRender = this.generateItems(
+    let indexesToRender = this.generateMItems(
       twConf.startItem,
       twConf.displayItems
     );
 
-    let twItems = this.renderGallery(twConf);
-    this.renderItems(twConf, indexesToRender, twItems);
-
-    twGallery.classList.add("tw-loaded");
+    let twItems = this.renderMGallery(twConf);
+    this.renderMItems(twConf, indexesToRender, twItems);
     this.listeners(twConf);
+    document.querySelector(`.${TW_GALLERY}`).classList.add(TW_LOADED);
   };
 
   this.restructureImagesArray = (o) => {
@@ -189,65 +207,63 @@ function TwoWayGallery() {
    * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
    * @param {Number} o.startItem
    */
-  this.renderGallery = (o) => {
+  this.renderMGallery = (o) => {
     let arrLen = o.imagesArray.length;
     const itemsDiv = document.createElement("div");
     itemsDiv.className = TW_ITEMS;
 
-    if (!twGallery.classList.contains("tw-loaded")) {
-      // create a gallery on the first iteration
-      for (let i = 0; i < arrLen; i++) {
-        const itemDiv = document.createElement("div");
-        itemDiv.classList.add(TW_ITEM, TW_ITEM_HIDDEN);
+    // Add tw-item inside tw-items
+    for (let i = 0; i < arrLen; i++) {
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add(TW_ITEM, TW_ITEM_HIDDEN);
 
-        const itemImg = document.createElement("img");
-        itemImg.src = o.directory + o.imagesArray[i];
-        itemImg.className = TW_IMAGE;
-        itemImg.dataset.itemId = i.toString();
+      const itemImg = document.createElement("img");
+      itemImg.src = o.directory + o.imagesArray[i];
+      itemImg.className = TW_IMAGE;
+      itemImg.dataset.itemId = i.toString();
 
-        itemDiv.appendChild(itemImg);
-        itemsDiv.appendChild(itemDiv);
-      }
-
-      twGallery.appendChild(itemsDiv);
-
-      // create prev and next arrows
-      if (o.navigationType.includes("arrows")) {
-        const navDiv = document.createElement("div");
-        navDiv.className = TW_NAV;
-
-        for (let i = 0; i < TW_NAVS.length; i++) {
-          const buttonDiv = document.createElement("div");
-          // buttonDiv.id = TW_NAVS[i];
-          buttonDiv.classList.add(TW_NAVS[i], TW_ARROW);
-
-          const paddingSpan = document.createElement("span");
-          paddingSpan.className = "tw-padding";
-
-          if (i < 1) {
-            buttonDiv.classList.add("tw-left");
-          } else {
-            buttonDiv.classList.add("tw-right");
-          }
-
-          paddingSpan.innerHTML = o.navigationIcons[i];
-          buttonDiv.append(paddingSpan);
-          navDiv.appendChild(buttonDiv);
-        }
-        twGallery.appendChild(navDiv);
-      } else {
-        console.log("navigationType: dots selected");
-        // navigation === dots
-      }
-
-      return document.querySelectorAll(
-        `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
-      );
+      itemDiv.appendChild(itemImg);
+      itemsDiv.appendChild(itemDiv);
     }
+
+    twMGallery.appendChild(itemsDiv);
+
+    // create prev and next arrows
+    if (o.navigationType.includes("arrows")) {
+      const navDiv = document.createElement("div");
+      navDiv.className = TW_NAV;
+
+      for (let i = 0; i < TW_NAVS.length; i++) {
+        const buttonDiv = document.createElement("div");
+        // buttonDiv.id = TW_NAVS[i];
+        buttonDiv.classList.add(TW_NAVS[i], TW_ARROW);
+
+        const paddingSpan = document.createElement("span");
+        paddingSpan.className = "tw-padding";
+
+        if (i < 1) {
+          buttonDiv.classList.add("tw-left");
+        } else {
+          buttonDiv.classList.add("tw-right");
+        }
+
+        paddingSpan.innerHTML = o.navigationIcons[i];
+        buttonDiv.append(paddingSpan);
+        navDiv.appendChild(buttonDiv);
+      }
+      twMGallery.appendChild(navDiv);
+    } else {
+      console.log("navigationType: dots selected");
+      // navigation === dots
+    }
+
+    return document.querySelectorAll(
+      `.${TW_M_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+    );
   };
 
   // Generates array of indexes where appropriate classes will go
-  this.generateItems = (startItem, displayItems) => {
+  this.generateMItems = (startItem, displayItems) => {
     const generatedIndex = [];
 
     let classVal = -Math.floor(displayItems / 2);
@@ -266,12 +282,14 @@ function TwoWayGallery() {
   };
 
   // Sets appropriate classes to appropriate index of
-  // NodeList (tw-item) generated in the this.generateItems function
-  this.renderItems = (o, indexesToSet, nodeItemsList) => {
+  // NodeList (tw-item) generated in the this.generateMItems function
+  this.renderMItems = (o, indexesToSet, nodeItemsList) => {
     // Turns all the tw-item classes into hidden: tw-item tw-hidden
     nodeItemsList.forEach((element) => {
       element.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
     });
+
+    let midItemId;
 
     // Toggles hidden, and sets appropriate class to each item
     let classVal = -Math.floor(o.displayItems / 2);
@@ -282,6 +300,7 @@ function TwoWayGallery() {
           if (classVal < 0) {
             nodeItemsList[i].classList.add(`${ITEM_LEFT}${classVal * -1}`);
           } else if (classVal === 0) {
+            midItemId = nodeItemsList[i].childNodes[0].dataset.itemId;
             nodeItemsList[i].classList.add(`${ITEM_MID}`);
           } else {
             nodeItemsList[i].classList.add(`${ITEM_RIGHT}${classVal}`);
@@ -291,6 +310,7 @@ function TwoWayGallery() {
         }
       }
     }
+    return midItemId;
   };
 
   this.listeners = (o) => {
@@ -302,7 +322,7 @@ function TwoWayGallery() {
 
     // Enable action on the arrows
     const twNav = document.querySelectorAll(
-      `.${TW_GALLERY} > .${TW_NAV} > .${TW_ARROW}`
+      `.${TW_M_GALLERY} > .${TW_NAV} > .${TW_ARROW}`
     );
 
     // Enable actions on the following items
@@ -315,44 +335,37 @@ function TwoWayGallery() {
     this.eventNavigationHover(o, pauseThese, twNav);
     this.eventTouch(o, pauseThese, prevBtn, nextBtn);
     this.eventArrowKeys(o, prevBtn, nextBtn);
-    this.renderItemGallery(o);
+    this.renderSGallery(o);
   };
 
-  this.renderItemGallery = (o) => {
+  this.renderSGallery = (o) => {
+    console.log(o);
     if (o.itemGallery.enable) {
-      const test2 = document.querySelector(".test2");
-
-      // const activeMid = document.querySelector(".tw-item.middle");
-      // const midIndex = activeMid.firstChild.dataset.itemId;
-      // console.dir(midIndex);
-
-      // const rotaGal = document.querySelectorAll(`.rota-gal[data-id="${[o.startItem]}"]`);
-      // rotaGal[o.startItem].classList.add("focus");
+      const twSlider = document.createElement("div");
+      twSlider.className = TW_SLIDER;
+      let id = 0;
+      for (const item of o.imagesArray) {
+        const twSliderImage = document.createElement("img");
+        twSliderImage.dataset.id = id.toString();
+        id++;
+        twSliderImage.className = TW_THUMB;
+        twSliderImage.src = o.directory + item;
+        twSlider.appendChild(twSliderImage);
+      }
+      twSGallery.append(twSlider);
 
       this.focusItemGallery(o, o.startItem);
 
-      test2.addEventListener("click", (event) => {
+      twSlider.addEventListener("click", (event) => {
         const imgClicked = event.target;
         const imgClickedId = imgClicked.dataset.id;
 
-        if (imgClicked.classList.contains("rota-gal")) {
-          // remove focus from old image
-          const focusedImage = document.querySelector(".rota-gal.focus");
-          focusedImage.classList.remove("focus");
-
-          // add focus to the new image
-          imgClicked.classList.add("focus");
-        } else {
-          return;
-        }
+        console.log("this.focusItemGallery...");
+        this.focusItemGallery(o, imgClickedId);
 
         const midItem = document.querySelector(`.${TW_ITEM}.middle`);
         const midItemIndex = midItem.firstChild.dataset.itemId;
         console.dir(midItem);
-
-        // const testArr = this.generateItems(myItem, o.displayItems);
-        // console.log(testArr);
-        // console.log(myItem);
 
         switch (true) {
           case midItemIndex > imgClickedId:
@@ -361,7 +374,7 @@ function TwoWayGallery() {
               case o.itemGallery.instant:
                 for (let i = midItemIndex; i > imgClickedId; i--) {
                   if (i !== imgClickedId) {
-                    this.prev(o);
+                    this.prev(o, false);
                   }
                 }
                 break;
@@ -373,7 +386,7 @@ function TwoWayGallery() {
                   if (timesRun === diff) {
                     clearInterval(interval);
                   }
-                  this.prev(o);
+                  this.prev(o, false);
                 }, 100);
                 break;
             }
@@ -406,83 +419,34 @@ function TwoWayGallery() {
             break;
         }
       });
-
-      // const testBtn1 = document.querySelector("#testBtn");
-      // const testBtn2 = document.querySelector("#testBtn2");
-      // const testBtn3 = document.querySelector("#testBtn3");
-      //
-      // const test = document.querySelector(".test2");
-      // console.log("test");
-      //
-      // const testItem0 = document.querySelector("#jsTest0");
-      // const testItem0off = testItem0.offsetLeft;
-      // console.log(testItem0off);
-      //
-      // const testItem1 = document.querySelector("#jsTest1");
-      // const testItem1off = testItem1.offsetLeft;
-      // console.log(testItem1off);
-      //
-      // const testItem2 = document.querySelector("#jsTest2");
-      // const testItem12off = testItem2.offsetLeft;
-      // console.log(testItem12off);
-      //
-      // const diff = testItem0off - testItem12off;
-      // console.log(diff);
-      //
-      // const diff2 = testItem1off - testItem0off;
-      // console.log(diff2);
-      //
-      // test.addEventListener("click", (event) => {
-      //   console.log(event);
-      // });
-      //
-      // testBtn1.addEventListener("click", (event) => {
-      //   console.log("clicked 1");
-      //   test.scrollTo({ left: testItem12off, behavior: "smooth" });
-      //   testItem2.classList.add("focus");
-      // });
-      //
-      // testBtn2.addEventListener("click", (event) => {
-      //   console.log("clicked 2");
-      //   test.scrollTo({ left: diff, behavior: "smooth" });
-      // });
-      //
-      // testBtn3.addEventListener("click", (event) => {
-      //   console.log("clicked 2");
-      //   test.scrollTo({ left: diff2, behavior: "smooth" });
-      // });
     }
   };
 
   this.focusItemGallery = (o, index) => {
-    const element = document.querySelector(`.rota-gal[data-id="${index}"]`);
-    if (o.itemGallery.enable && element.classList.contains("rota-gal")) {
-      const test2 = document.querySelector(".test2");
+    const element = document.querySelector(`.${TW_THUMB}[data-id="${index}"]`);
+    console.log(element);
 
-      const currFocusedImage = document.querySelector(".rota-gal.focus");
+    if (o.itemGallery.enable && element.classList.contains(`${TW_THUMB}`)) {
+      const twSlider = document.querySelector(`.${TW_SLIDER}`);
+
+      const currFocusedImage = document.querySelector(
+        `.${TW_THUMB}.${TW_FOCUS}`
+      );
+
       if (currFocusedImage) {
         // const currFocusedImageOffset = currFocusedImage.offsetLeft;
-        currFocusedImage.classList.remove("focus");
+        currFocusedImage.classList.remove(`${TW_FOCUS}`);
       }
-      element.classList.add("focus");
-      const changedFocusedImageOffset = element.offsetLeft;
-      test2.scrollTo({
+
+      element.classList.add(`${TW_FOCUS}`);
+      const changedFocusedImageOffset =
+        element.offsetLeft + element.offsetWidth / 2 - twSlider.offsetWidth / 2;
+      twSlider.scrollTo({
         left: changedFocusedImageOffset - 10,
         behavior: "smooth",
       });
     }
   };
-
-  // The general formula is as following - you find your
-  // element of interest, find its middle point (x + width / 2),
-  //   then subtract half of container's width from that:
-
-  // window.addEventListener("load", function(e) {
-  //   var container = document.querySelector(".scroll_container");
-  //   var middle = container.children[Math.floor((container.children.length - 1) / 2)];
-  //   container.scrollLeft = middle.offsetLeft +
-  //     middle.offsetWidth / 2 - container.offsetWidth / 2;
-  // });
 
   /**
    * @param {Object} o user options
@@ -520,7 +484,7 @@ function TwoWayGallery() {
           pauseDiv = document.createElement("div");
           pauseDiv.innerHTML = o.autoPlay.hoverPauseNotificationText;
           pauseDiv.className = `${TW_AP} ${TW_APS[0]}`;
-          twGallery.prepend(pauseDiv);
+          twMGallery.prepend(pauseDiv);
         }
 
         const eventListener = (items, event, paused) => {
@@ -559,12 +523,12 @@ function TwoWayGallery() {
   this.eventArrowKeys = (o, prev, next) => {
     if (o.enableArrowKeys) {
       document.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowLeft" && isInViewport(twGallery)) {
+        if (event.key === "ArrowLeft" && isInViewport(twMGallery)) {
           event.preventDefault();
           prev.click();
         }
 
-        if (event.key === "ArrowRight" && isInViewport(twGallery)) {
+        if (event.key === "ArrowRight" && isInViewport(twMGallery)) {
           event.preventDefault();
           next.click();
         }
@@ -694,53 +658,69 @@ function TwoWayGallery() {
   };
 
   this.prev = (o, isArrowClick = false) => {
+    console.log("Clicking this.prev...");
     const twConf = this.setConfig(o);
 
-    let indexArray = this.generateItems(twConf.startItem, twConf.displayItems);
+    let indexArray = this.generateMItems(twConf.startItem, twConf.displayItems);
     const newIndexArray = []; // holds decremented indexes
     indexArray.forEach((element) => {
       newIndexArray.push(element - 1);
     });
 
     const twItems = document.querySelectorAll(
-      `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+      `.${TW_M_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
     );
     const twLastItem = twItems[twItems.length - 1];
 
     // move last item to the front of the NodeList
-    document.querySelector(`.${TW_ITEMS}`).prepend(twLastItem);
+    document
+      .querySelector(`.${TW_GALLERY} > .${TW_M_GALLERY} > .${TW_ITEMS}`)
+      .prepend(twLastItem);
 
-    // if (isArrowClick) {
-    //   const mid = indexes[Math.floor(indexes.length / 2)];
-    //   this.focusItemGallery(o, mid);
-    // }
+    const midId = this.renderMItems(twConf, newIndexArray, twItems);
 
-    this.renderItems(twConf, newIndexArray, twItems);
+    if (isArrowClick && o.itemGallery.enable) {
+      const twThumbs = document.querySelectorAll(
+        `.${TW_GALLERY} > .${TW_S_GALLERY} > .${TW_SLIDER} > .${TW_THUMB}`
+      );
+
+      const twThumbLast = twThumbs[twItems.length - 1];
+      document.querySelector(`.${TW_SLIDER}`).prepend(twThumbLast);
+
+      this.focusItemGallery(o, midId);
+    }
   };
 
   this.next = (o, isArrowClick = false) => {
+    console.log("Clicking this.next...");
     const twConf = this.setConfig(o);
 
-    let indexArray = this.generateItems(twConf.startItem, twConf.displayItems);
+    let indexArray = this.generateMItems(twConf.startItem, twConf.displayItems);
     const newIndexArray = []; // holds incremented indexes
     indexArray.forEach((element) => {
       newIndexArray.push(element + 1);
     });
 
     const twItems = document.querySelectorAll(
-      `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+      `.${TW_M_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
     );
     const twFirstItem = twItems[0];
 
     // move last item to the front of the NodeList
-    document.querySelector(`.${TW_ITEMS}`).appendChild(twFirstItem);
+    document
+      .querySelector(`.${TW_GALLERY} > .${TW_M_GALLERY} > .${TW_ITEMS}`)
+      .appendChild(twFirstItem);
 
-    // if (isArrowClick) {
-    //   const mid = indexes[Math.floor(indexes.length / 2)];
-    //   this.focusItemGallery(o, mid);
-    // }
+    const midId = this.renderMItems(twConf, newIndexArray, twItems);
 
-    this.renderItems(twConf, newIndexArray, twItems);
+    if (isArrowClick && o.itemGallery.enable) {
+      const twThumbs = document.querySelectorAll(
+        `.${TW_GALLERY} > .${TW_S_GALLERY} > .${TW_SLIDER} > .${TW_THUMB}`
+      );
+      const twThumbLast = twThumbs[0];
+      document.querySelector(`.${TW_SLIDER}`).appendChild(twThumbLast);
+      this.focusItemGallery(o, midId);
+    }
   };
 
   this.verifyInput = (o) => {
