@@ -10,25 +10,30 @@
          - itemClass
   */
 function TwoWayGallery() {
-  const TW_GALLERY = "tw-gallery";
-  const TW_ITEMS = "tw-items";
-  const TW_ITEM = "tw-item";
-  const TW_ITEM_HIDDEN = "tw-hidden";
-  const TW_IMAGE = "tw-image";
+  // Gallery related pre-defined classes that user can change later on
+  const [TW_GALLERY, TW_ITEMS, TW_ITEM, TW_ITEM_HIDDEN, TW_IMAGE] = [
+    "tw-gallery",
+    "tw-items",
+    "tw-item",
+    "tw-hidden",
+    "tw-image",
+  ];
 
-  const TW_NAV = "tw-nav";
-  const TW_NAVS = ["tw-prev", "tw-next"];
-  const TW_ARROW = "tw-arrow";
+  // Item related pre-defined classes
+  const [ITEM_LEFT, ITEM_MID, ITEM_RIGHT] = ["left-", "middle", "right-"];
 
-  const TW_AP = "tw-ap";
-  const TW_APS = ["tw-play", "tw-pause"];
+  // Navigation related pre-defined classes that user can change later on
+  const [TW_NAV, TW_NAVS, TW_ARROW] = [
+    "tw-nav",
+    ["tw-prev", "tw-next"],
+    "tw-arrow",
+  ];
 
-  const ITEM_LEFT = "left-";
-  const ITEM_MID = "middle";
-  const ITEM_RIGHT = "right-";
+  // Auto play related pre-defined classes that user can change later on
+  const [TW_AP, TW_APS] = ["tw-ap", ["tw-play", "tw-pause"]];
 
   const twGallery = document.querySelector(`.${TW_GALLERY}`);
-  let twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
+  // let twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
 
   // Argument: options
   this.setConfig = (o) => {
@@ -120,80 +125,59 @@ function TwoWayGallery() {
     };
   };
 
-  this.setIndexArray = (startItem, displayItems) => {
-    const twGallery = document.querySelector(`.${TW_GALLERY}`);
-
-    const finalIndexArray = [];
-    if (twGallery.classList.contains("tw-loaded")) {
-      const twItems = document.querySelectorAll(`.${TW_ITEM}`);
-
-      let items = [
-        `${ITEM_LEFT}3`,
-        `${ITEM_LEFT}2`,
-        `${ITEM_LEFT}1`,
-        `${ITEM_MID}`,
-        `${ITEM_RIGHT}1`,
-        `${ITEM_RIGHT}2`,
-        `${ITEM_RIGHT}3`,
-      ];
-      for (const item of items) {
-        twItems.forEach((element, i) => {
-          if (element.classList.contains(item)) {
-            finalIndexArray.push(i);
-          }
-        });
-      }
-
-      return finalIndexArray;
-    } else {
-      let nextItem = -Math.floor(displayItems / 2);
-      for (let i = 0; i < displayItems; i++) {
-        if (nextItem < 0) {
-          finalIndexArray.push(startItem - nextItem * -1);
-        } else if (nextItem === 0) {
-          finalIndexArray.push(startItem);
-        } else {
-          finalIndexArray.push(startItem + nextItem);
-        }
-        nextItem++;
-      }
-      return finalIndexArray;
-    }
-  };
-
   this.twoWayGallery = (options) => {
     console.log("twoWayGallery: Initiating TwoWayGallery...");
     const arrayExists = this.verifyInput(options);
-    const firstInitTW = !twGallery.classList.contains("tw-loaded");
 
     if (!arrayExists) {
-      // user failed to pass items
-      return;
+      return; // user failed to pass imagesArray
     }
 
+    options = this.restructureImagesArray(options);
     const twConf = this.setConfig(options);
-    let arrLen = twConf.imagesArray.length - 1;
-    let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
+    let indexesToRender = this.generateItems(
+      twConf.startItem,
+      twConf.displayItems
+    );
 
-    for (let index of indexArray) {
-      if (index < 0 && firstInitTW) {
-        indexArray = this.prev(twConf);
-        break;
+    let twItems = this.renderGallery(twConf);
+    this.renderItems(twConf, indexesToRender, twItems);
+
+    twGallery.classList.add("tw-loaded");
+    this.listeners(twConf);
+  };
+
+  this.restructureImagesArray = (o) => {
+    let arrLen = o.imagesArray.length;
+
+    const restructuredArray = [];
+
+    let mid = Math.floor(arrLen / 2);
+    let i = o.startItem;
+    const originalMid = mid;
+
+    let fullyParsed = false;
+
+    while (!fullyParsed) {
+      restructuredArray[mid] = o.imagesArray[i];
+      mid++;
+      if (mid > arrLen - 1) {
+        mid = 0;
       }
 
-      if (index >= arrLen && firstInitTW) {
-        indexArray = this.next(twConf);
-        break;
+      if (mid === originalMid) {
+        fullyParsed = true;
+      }
+
+      i++;
+      if (i > arrLen - 1) {
+        i = 0;
       }
     }
 
-    this.initialRender(twConf);
-    this.setIndexes(twConf, indexArray);
-
-    if (firstInitTW) {
-      twGallery.classList.add("tw-loaded");
-      this.listeners(twConf);
-    }
+    o.imagesArray = restructuredArray;
+    o.startItem = originalMid;
+    return o;
   };
 
   /**
@@ -203,8 +187,9 @@ function TwoWayGallery() {
    * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
    * @param {Boolean} o.navigationHover  Hide/show navigation upon hovering the gallery.
    * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
+   * @param {Number} o.startItem
    */
-  this.initialRender = (o) => {
+  this.renderGallery = (o) => {
     let arrLen = o.imagesArray.length;
     const itemsDiv = document.createElement("div");
     itemsDiv.className = TW_ITEMS;
@@ -225,8 +210,6 @@ function TwoWayGallery() {
       }
 
       twGallery.appendChild(itemsDiv);
-
-      twItems = [...document.querySelectorAll(`.${TW_GALLERY} .${TW_ITEM}`)];
 
       // create prev and next arrows
       if (o.navigationType.includes("arrows")) {
@@ -256,29 +239,54 @@ function TwoWayGallery() {
         console.log("navigationType: dots selected");
         // navigation === dots
       }
+
+      return document.querySelectorAll(
+        `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+      );
     }
   };
 
-  this.setIndexes = (o, indexesToBeModified) => {
-    // Resets the tw-item list making them all hidden
-    for (const index of twItems) {
-      index.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
+  // Generates array of indexes where appropriate classes will go
+  this.generateItems = (startItem, displayItems) => {
+    const generatedIndex = [];
+
+    let classVal = -Math.floor(displayItems / 2);
+    for (let i = 0; i < displayItems; i++) {
+      if (classVal < 0) {
+        generatedIndex.push(startItem - classVal * -1);
+      } else if (classVal === 0) {
+        generatedIndex.push(startItem);
+      } else {
+        generatedIndex.push(startItem + classVal);
+      }
+      classVal++;
     }
 
+    return generatedIndex;
+  };
+
+  // Sets appropriate classes to appropriate index of
+  // NodeList (tw-item) generated in the this.generateItems function
+  this.renderItems = (o, indexesToSet, nodeItemsList) => {
+    // Turns all the tw-item classes into hidden: tw-item tw-hidden
+    nodeItemsList.forEach((element) => {
+      element.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
+    });
+
     // Toggles hidden, and sets appropriate class to each item
-    let nextItem = -Math.floor(o.displayItems / 2);
-    for (const index of indexesToBeModified) {
-      for (const i in twItems) {
-        if (i == index) {
-          twItems[i].classList.toggle(TW_ITEM_HIDDEN);
-          if (nextItem < 0) {
-            twItems[i].classList.add(`${ITEM_LEFT}${nextItem * -1}`);
-          } else if (nextItem === 0) {
-            twItems[i].classList.add(`${ITEM_MID}`);
+    let classVal = -Math.floor(o.displayItems / 2);
+    for (const index of indexesToSet) {
+      for (let i = 0; i < nodeItemsList.length; i++) {
+        if (+i === +index) {
+          nodeItemsList[i].classList.toggle(TW_ITEM_HIDDEN);
+          if (classVal < 0) {
+            nodeItemsList[i].classList.add(`${ITEM_LEFT}${classVal * -1}`);
+          } else if (classVal === 0) {
+            nodeItemsList[i].classList.add(`${ITEM_MID}`);
           } else {
-            twItems[i].classList.add(`${ITEM_RIGHT}${nextItem}`);
+            nodeItemsList[i].classList.add(`${ITEM_RIGHT}${classVal}`);
           }
-          nextItem++;
+          classVal++;
           break;
         }
       }
@@ -320,7 +328,7 @@ function TwoWayGallery() {
 
       // const rotaGal = document.querySelectorAll(`.rota-gal[data-id="${[o.startItem]}"]`);
       // rotaGal[o.startItem].classList.add("focus");
-      console.log(o.startItem);
+
       this.focusItemGallery(o, o.startItem);
 
       test2.addEventListener("click", (event) => {
@@ -342,7 +350,7 @@ function TwoWayGallery() {
         const midItemIndex = midItem.firstChild.dataset.itemId;
         console.dir(midItem);
 
-        // const testArr = this.setIndexArray(myItem, o.displayItems);
+        // const testArr = this.generateItems(myItem, o.displayItems);
         // console.log(testArr);
         // console.log(myItem);
 
@@ -447,17 +455,34 @@ function TwoWayGallery() {
   };
 
   this.focusItemGallery = (o, index) => {
-    console.log("triggered");
     const element = document.querySelector(`.rota-gal[data-id="${index}"]`);
-    console.log(element);
     if (o.itemGallery.enable && element.classList.contains("rota-gal")) {
-      const currentFocusedImage = document.querySelector(".rota-gal.focus");
-      if (currentFocusedImage) {
-        currentFocusedImage.classList.remove("focus");
+      const test2 = document.querySelector(".test2");
+
+      const currFocusedImage = document.querySelector(".rota-gal.focus");
+      if (currFocusedImage) {
+        // const currFocusedImageOffset = currFocusedImage.offsetLeft;
+        currFocusedImage.classList.remove("focus");
       }
       element.classList.add("focus");
+      const changedFocusedImageOffset = element.offsetLeft;
+      test2.scrollTo({
+        left: changedFocusedImageOffset - 10,
+        behavior: "smooth",
+      });
     }
   };
+
+  // The general formula is as following - you find your
+  // element of interest, find its middle point (x + width / 2),
+  //   then subtract half of container's width from that:
+
+  // window.addEventListener("load", function(e) {
+  //   var container = document.querySelector(".scroll_container");
+  //   var middle = container.children[Math.floor((container.children.length - 1) / 2)];
+  //   container.scrollLeft = middle.offsetLeft +
+  //     middle.offsetWidth / 2 - container.offsetWidth / 2;
+  // });
 
   /**
    * @param {Object} o user options
@@ -670,83 +695,52 @@ function TwoWayGallery() {
 
   this.prev = (o, isArrowClick = false) => {
     const twConf = this.setConfig(o);
-    let arrLen = twConf.imagesArray.length;
 
-    const firstInitTW = !twGallery.classList.contains("tw-loaded");
-    let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
+    let indexArray = this.generateItems(twConf.startItem, twConf.displayItems);
+    const newIndexArray = []; // holds decremented indexes
+    indexArray.forEach((element) => {
+      newIndexArray.push(element - 1);
+    });
 
-    let prev = 1;
-    const indexes = [];
-    const negativeArray = [];
-    for (let i = 0; i < indexArray.length; i++) {
-      let point = indexArray[i];
-      point = !firstInitTW ? point - 1 : point;
+    const twItems = document.querySelectorAll(
+      `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+    );
+    const twLastItem = twItems[twItems.length - 1];
 
-      if (point < 0) {
-        point = arrLen - prev;
-        negativeArray.push(point);
+    // move last item to the front of the NodeList
+    document.querySelector(`.${TW_ITEMS}`).prepend(twLastItem);
 
-        if (!firstInitTW) {
-          indexes.push(point);
-        }
+    // if (isArrowClick) {
+    //   const mid = indexes[Math.floor(indexes.length / 2)];
+    //   this.focusItemGallery(o, mid);
+    // }
 
-        prev++;
-      } else {
-        indexes.push(point);
-      }
-    }
-
-    if (firstInitTW) {
-      return [...negativeArray.reverse(), ...indexes];
-    }
-
-    if (isArrowClick) {
-      // Bottom item gallery selection
-      const mid = indexes[Math.floor(indexes.length / 2)];
-      this.focusItemGallery(o, mid);
-    }
-
-    this.setIndexes(twConf, indexes);
+    this.renderItems(twConf, newIndexArray, twItems);
   };
 
   this.next = (o, isArrowClick = false) => {
     const twConf = this.setConfig(o);
-    let arrLen = twConf.imagesArray.length;
 
-    const firstInitTW = !twGallery.classList.contains("tw-loaded");
-    let indexArray = this.setIndexArray(twConf.startItem, twConf.displayItems);
+    let indexArray = this.generateItems(twConf.startItem, twConf.displayItems);
+    const newIndexArray = []; // holds incremented indexes
+    indexArray.forEach((element) => {
+      newIndexArray.push(element + 1);
+    });
 
-    let beginning = 0;
-    const indexes = [];
-    const positiveArray = [];
-    for (let i = indexArray.length - 1; i >= 0; i--) {
-      let point = indexArray[i];
-      point = !firstInitTW ? point + 1 : point;
+    const twItems = document.querySelectorAll(
+      `.${TW_GALLERY} > .${TW_ITEMS} > .${TW_ITEM}`
+    );
+    const twFirstItem = twItems[0];
 
-      if (point > arrLen - 1) {
-        positiveArray.push(beginning);
+    // move last item to the front of the NodeList
+    document.querySelector(`.${TW_ITEMS}`).appendChild(twFirstItem);
 
-        if (!firstInitTW) {
-          indexes.push(beginning);
-        }
+    // if (isArrowClick) {
+    //   const mid = indexes[Math.floor(indexes.length / 2)];
+    //   this.focusItemGallery(o, mid);
+    // }
 
-        beginning++;
-      } else {
-        indexes.push(point);
-      }
-    }
-
-    if (firstInitTW) {
-      return [...indexes.reverse(), ...positiveArray];
-    }
-
-    if (isArrowClick) {
-      // Bottom item gallery selection
-      const mid = indexes[Math.floor(indexes.length / 2)];
-      this.focusItemGallery(o, mid);
-    }
-
-    this.setIndexes(twConf, indexes.reverse());
+    this.renderItems(twConf, newIndexArray, twItems);
   };
 
   this.verifyInput = (o) => {
