@@ -19,6 +19,12 @@
   margin: 0 9px 0px 9px;
   padding: 9px 0 9px 0;
   overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+.tw-slider::-webkit-scrollbar {
+  height: 0px;
+  background: transparent; /* make scrollbar transparent */
 }
 
 .tw-slider > .tw-thumbnail {
