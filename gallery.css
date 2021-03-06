@@ -1,15 +1,62 @@
 .tw-gallery {
   max-width: 800px;
-  height: 800px;
-  perspective: 100vmin;
   margin-left: auto;
   margin-right: auto;
+}
+
+.tw-s-gallery {
+  display: block;
+  white-space: nowrap;
+
+  background-color: #eeecec;
+  box-shadow: 0px 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
+
+  /*outline: 5px solid #e6e4e4;*/
+  box-sizing: content-box;
+  position: relative;
+
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+
+  /*padding-right: 5px;*/
+}
+
+.tw-s-gallery > .tw-slider {
+  /*padding: 9px 0 9px 9px;*/
+  margin: 0 9px 0px 9px;
+  padding: 9px 0 9px 0;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+.tw-slider::-webkit-scrollbar {
+  height: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
+.tw-slider > .tw-thumbnail {
+  display: inline-block;
+  width: 110px;
+  height: 80px;
+  margin: 0 4px 0 4px;
+  border: 0.4vmin solid #eee;
+  box-shadow: 0px 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
+  /*0 0vmin 1.5vmin rgba(0, 0, 0, 0.75);*/
+}
+
+.tw-thumbnail.tw-focus {
+  border: 0.4vmin solid red;
+}
+
+.tw-m-gallery {
+  height: 800px;
+  perspective: 100vmin;
   margin-bottom: -10rem;
   perspective-origin: top center;
   position: relative;
 }
 
-.tw-gallery > .tw-play {
+.tw-m-gallery > .tw-play {
   position: relative;
   font-size: 15px;
   letter-spacing: 1px;
@@ -28,7 +75,7 @@
   transition: opacity 1s, top 1s;
 }
 
-.tw-gallery > .tw-pause {
+.tw-m-gallery > .tw-pause {
   opacity: 1;
   top: 1.2rem;
   transition: opacity 1s, top 1s;
@@ -73,7 +120,7 @@
    Post-cond:
      - navigation arrows are hidden
 */
-.tw-gallery > .tw-nav > .tw-hide {
+.tw-m-gallery > .tw-nav > .tw-hide {
   opacity: 0;
   transition: 1s;
 }
@@ -82,7 +129,7 @@
      - upon hovering over the images in the gallery,
        it shows the navigation buttons
 */
-.tw-gallery > .tw-nav > .tw-show {
+.tw-m-gallery > .tw-nav > .tw-show {
   opacity: 1;
   transition: 1s;
 }
@@ -108,16 +155,16 @@
 }
 
 @media (max-width: 768px) {
-  .tw-gallery {
+  .tw-m-gallery {
     height: 768px;
     margin-bottom: -9rem;
   }
 
-  .tw-gallery > .tw-play {
+  .tw-m-gallery > .tw-play {
     top: 0.6rem;
   }
 
-  .tw-gallery > .tw-pause {
+  .tw-m-gallery > .tw-pause {
     top: 1rem;
   }
 
@@ -145,7 +192,7 @@
   }
 }
 @media (max-width: 650px) {
-  .tw-gallery {
+  .tw-m-gallery {
     /*margin-bottom: -50px;*/
     height: 650px;
     margin-bottom: -8rem;
@@ -169,17 +216,17 @@
   }
 }
 @media (max-width: 550px) {
-  .tw-gallery {
+  .tw-m-gallery {
     /*margin-bottom: -50px;*/
     height: 550px;
     margin-bottom: -7rem;
   }
 
-  .tw-gallery > .tw-play {
+  .tw-m-gallery > .tw-play {
     top: 0.5rem;
   }
 
-  .tw-gallery > .tw-pause {
+  .tw-m-gallery > .tw-pause {
     top: 0.9rem;
   }
 
@@ -209,19 +256,19 @@
   }
 }
 @media (max-width: 425px) {
-  .tw-gallery {
+  .tw-m-gallery {
     height: 425px;
     margin-bottom: -6rem;
   }
 
-  .tw-gallery > .tw-play {
+  .tw-m-gallery > .tw-play {
     width: 70px;
     font-size: 15px;
     margin-bottom: -1.8rem;
     top: 0.5rem;
   }
 
-  .tw-gallery > .tw-pause {
+  .tw-m-gallery > .tw-pause {
     top: 1rem;
   }
 
@@ -251,19 +298,19 @@
   }
 }
 @media (max-width: 390px) {
-  .tw-gallery {
+  .tw-m-gallery {
     height: 390px;
     margin-bottom: -5rem;
   }
 
-  .tw-gallery > .tw-play {
+  .tw-m-gallery > .tw-play {
     width: 60px;
     font-size: 13px;
     margin-bottom: -1.5rem;
     top: 0.7rem;
   }
 
-  .tw-gallery > .tw-pause {
+  .tw-m-gallery > .tw-pause {
     top: 1rem;
   }
 
@@ -285,23 +332,23 @@
   }
 }
 @media (max-width: 375px) {
-  .tw-gallery {
+  .tw-m-gallery {
     height: 375px;
   }
 
-  .tw-gallery > .tw-play {
+  .tw-m-gallery > .tw-play {
     width: 45px;
     font-size: 10px;
     margin-bottom: -1rem;
     top: 0.8rem;
   }
 
-  .tw-gallery > .tw-pause {
+  .tw-m-gallery > .tw-pause {
     top: 1.2rem;
   }
 }
 @media (max-width: 320px) {
-  .tw-gallery {
+  .tw-m-gallery {
     height: 320px;
   }
 
