@@ -336,6 +336,52 @@ function TwoWayGallery() {
     this.eventTouch(o, pauseThese, prevBtn, nextBtn);
     this.eventArrowKeys(o, prevBtn, nextBtn);
     this.renderSGallery(o);
+
+    const twSlider = document.querySelector(".tw-slider");
+
+    let mouseStart = 0;
+    twSlider.addEventListener("mousedown", (event1) => {
+      mouseStart = event1.pageX;
+      console.log("mousedown...");
+      event1.preventDefault();
+      // console.log(this);
+      twSlider.addEventListener("mousemove", mouseOverFunction);
+    });
+
+    twSlider.addEventListener("mouseup", () => {
+      console.log("mouseup...");
+      twSlider.removeEventListener("mousemove", mouseOverFunction);
+    });
+
+    const mouseOverFunction = (event) => {
+      const twSlider = document.querySelector(".tw-slider");
+      const scrollPos = twSlider.scrollLeft;
+
+      const mouseDiff = mouseStart - event.pageX;
+      // console.log(`mouseStart: ${mouseStart}; mouseDiff = ${mouseDiff}`);
+
+      // const diff = Math.abs(mouseStart - scrollPos);
+
+      const moveDiff = scrollPos - mouseDiff;
+      console.log(
+        `scrollPos: ${scrollPos} - mouseDiff: ${mouseDiff} = moveDiff: ${moveDiff}`
+      );
+      if (moveDiff > 0) {
+        twSlider.scrollTo({
+          left: moveDiff,
+          // behavior: "smooth",
+        });
+      }
+    };
+
+    // document.getElementById("testBtn").addEventListener("click", (event) => {
+    //   const twSlider = document.querySelector(".tw-slider");
+    //
+    //   twSlider.scrollTo({
+    //     left: 10,
+    //     behavior: "smooth",
+    //   });
+    // });
   };
 
   this.renderSGallery = (o) => {
@@ -370,25 +416,22 @@ function TwoWayGallery() {
         switch (true) {
           case midItemIndex > imgClickedId:
             console.log("prev");
-            switch (true) {
-              case o.itemGallery.instant:
-                for (let i = midItemIndex; i > imgClickedId; i--) {
-                  if (i !== imgClickedId) {
-                    this.prev(o, false);
-                  }
-                }
-                break;
-              case !o.itemGallery.instant:
-                const diff = midItemIndex - imgClickedId;
-                let timesRun = 0;
-                let interval = setInterval(() => {
-                  timesRun++;
-                  if (timesRun === diff) {
-                    clearInterval(interval);
-                  }
+            if (o.itemGallery.instant) {
+              for (let i = midItemIndex; i > imgClickedId; i--) {
+                if (i !== imgClickedId) {
                   this.prev(o, false);
-                }, 100);
-                break;
+                }
+              }
+            } else {
+              const diff = midItemIndex - imgClickedId;
+              let timesRun = 0;
+              let interval = setInterval(() => {
+                timesRun++;
+                if (timesRun === diff) {
+                  clearInterval(interval);
+                }
+                this.prev(o, false);
+              }, 100);
             }
             break;
           case midItemIndex == imgClickedId:
@@ -396,25 +439,22 @@ function TwoWayGallery() {
             break;
           case midItemIndex < imgClickedId:
             console.log("next");
-            switch (true) {
-              case o.itemGallery.instant:
-                for (let i = midItemIndex; i < imgClickedId; i++) {
-                  if (i !== imgClickedId) {
-                    this.next(o, false);
-                  }
-                }
-                break;
-              case !o.itemGallery.instant:
-                const diff = imgClickedId - midItemIndex;
-                let timesRun = 0;
-                let interval = setInterval(() => {
-                  timesRun++;
-                  if (timesRun === diff) {
-                    clearInterval(interval);
-                  }
+            if (o.itemGallery.instant) {
+              for (let i = midItemIndex; i < imgClickedId; i++) {
+                if (i !== imgClickedId) {
                   this.next(o, false);
-                }, 100);
-                break;
+                }
+              }
+            } else {
+              const diff = imgClickedId - midItemIndex;
+              let timesRun = 0;
+              let interval = setInterval(() => {
+                timesRun++;
+                if (timesRun === diff) {
+                  clearInterval(interval);
+                }
+                this.next(o, false);
+              }, 100);
             }
             break;
         }
@@ -426,7 +466,7 @@ function TwoWayGallery() {
     const element = document.querySelector(`.${TW_THUMB}[data-id="${index}"]`);
     console.log(element);
 
-    if (o.itemGallery.enable && element.classList.contains(`${TW_THUMB}`)) {
+    if (o.itemGallery.enable && element) {
       const twSlider = document.querySelector(`.${TW_SLIDER}`);
 
       const currFocusedImage = document.querySelector(
