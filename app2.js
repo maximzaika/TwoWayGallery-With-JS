@@ -50,10 +50,6 @@ function TwoWayGallery() {
     `.${TW_GALLERY} > .${TW_M_GALLERY}`
   );
 
-  const twSGallery = document.querySelector(
-    `.${TW_GALLERY} > .${TW_S_GALLERY}`
-  );
-
   // Argument: options
   this.setConfig = (o) => {
     function setOption(dataType, userInput, defaultInput) {
@@ -83,8 +79,9 @@ function TwoWayGallery() {
       `<i class="fas fa-chevron-left"></i>`,
       `<i class="fas fa-chevron-right"></i>`,
     ]; // [left, right]
-    const DEF_ITEM_GALLERY = false;
-    const DEF_ITEM_GALLERY_INSTANT = false;
+    const DEF_S_GALLERY_ENABLE = true;
+    const DEF_S_GALLERY_INSTANT = false;
+    const DEF_S_GALLERY_DESK_TOUCH = true;
 
     if (
       typeof o.navigationHover === "boolean" &&
@@ -133,12 +130,17 @@ function TwoWayGallery() {
         ),
         timeout: setOption("number", o.autoPlay.timeout, DEF_AUTOPLAY_TIMEOUT),
       },
-      itemGallery: {
-        enable: setOption("boolean", o.itemGallery.enable, DEF_ITEM_GALLERY),
+      sGallery: {
+        enable: setOption("boolean", o.sGallery.enable, DEF_S_GALLERY_ENABLE),
         instant: setOption(
           "boolean",
-          o.itemGallery.instant,
-          DEF_ITEM_GALLERY_INSTANT
+          o.sGallery.instant,
+          DEF_S_GALLERY_INSTANT
+        ),
+        desktopTouch: setOption(
+          "boolean",
+          o.sGallery.desktopTouch,
+          DEF_S_GALLERY_DESK_TOUCH
         ),
       },
     };
@@ -159,7 +161,7 @@ function TwoWayGallery() {
       twConf.displayItems
     );
 
-    let twItems = this.renderMGallery(twConf);
+    let twItems = this.renderMGal(twConf);
     this.renderMItems(twConf, indexesToRender, twItems);
     this.listeners(twConf);
     document.querySelector(`.${TW_GALLERY}`).classList.add(TW_LOADED);
@@ -207,7 +209,7 @@ function TwoWayGallery() {
    * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
    * @param {Number} o.startItem
    */
-  this.renderMGallery = (o) => {
+  this.renderMGal = (o) => {
     let arrLen = o.imagesArray.length;
     const itemsDiv = document.createElement("div");
     itemsDiv.className = TW_ITEMS;
@@ -331,62 +333,20 @@ function TwoWayGallery() {
     );
 
     // additional user options
-    pauseThese = this.eventAutoPlay(o, pauseThese, prevBtn, nextBtn);
-    this.eventNavigationHover(o, pauseThese, twNav);
-    this.eventTouch(o, pauseThese, prevBtn, nextBtn);
-    this.eventArrowKeys(o, prevBtn, nextBtn);
-    this.renderSGallery(o);
-
-    const twSlider = document.querySelector(".tw-slider");
-
-    let mouseStart = 0;
-    twSlider.addEventListener("mousedown", (event1) => {
-      mouseStart = event1.pageX;
-      console.log("mousedown...");
-      event1.preventDefault();
-      // console.log(this);
-      twSlider.addEventListener("mousemove", mouseOverFunction);
-    });
-
-    twSlider.addEventListener("mouseup", () => {
-      console.log("mouseup...");
-      twSlider.removeEventListener("mousemove", mouseOverFunction);
-    });
-
-    const mouseOverFunction = (event) => {
-      const twSlider = document.querySelector(".tw-slider");
-      const scrollPos = twSlider.scrollLeft;
-
-      const mouseDiff = mouseStart - event.pageX;
-      // console.log(`mouseStart: ${mouseStart}; mouseDiff = ${mouseDiff}`);
-
-      // const diff = Math.abs(mouseStart - scrollPos);
-
-      const moveDiff = scrollPos - mouseDiff;
-      console.log(
-        `scrollPos: ${scrollPos} - mouseDiff: ${mouseDiff} = moveDiff: ${moveDiff}`
-      );
-      if (moveDiff > 0) {
-        twSlider.scrollTo({
-          left: moveDiff,
-          // behavior: "smooth",
-        });
-      }
-    };
-
-    // document.getElementById("testBtn").addEventListener("click", (event) => {
-    //   const twSlider = document.querySelector(".tw-slider");
-    //
-    //   twSlider.scrollTo({
-    //     left: 10,
-    //     behavior: "smooth",
-    //   });
-    // });
+    pauseThese = this.eventMGalAutoPlay(o, pauseThese, prevBtn, nextBtn);
+    this.eventMGalNavigationHover(o, pauseThese, twNav);
+    this.eventMGalTouch(o, pauseThese, prevBtn, nextBtn);
+    this.eventMGalArrowKeys(o, prevBtn, nextBtn);
+    this.renderSGal(o);
+    this.eventSGalClickTouch(o);
   };
 
-  this.renderSGallery = (o) => {
-    console.log(o);
-    if (o.itemGallery.enable) {
+  this.renderSGal = (o) => {
+    if (o.sGallery.enable) {
+      const twSGallery = document.querySelector(
+        `.${TW_GALLERY} > .${TW_S_GALLERY}`
+      );
+
       const twSlider = document.createElement("div");
       twSlider.className = TW_SLIDER;
       let id = 0;
@@ -400,73 +360,14 @@ function TwoWayGallery() {
       }
       twSGallery.append(twSlider);
 
-      this.focusItemGallery(o, o.startItem);
-
-      twSlider.addEventListener("click", (event) => {
-        const imgClicked = event.target;
-        const imgClickedId = imgClicked.dataset.id;
-
-        console.log("this.focusItemGallery...");
-        this.focusItemGallery(o, imgClickedId);
-
-        const midItem = document.querySelector(`.${TW_ITEM}.middle`);
-        const midItemIndex = midItem.firstChild.dataset.itemId;
-        console.dir(midItem);
-
-        switch (true) {
-          case midItemIndex > imgClickedId:
-            console.log("prev");
-            if (o.itemGallery.instant) {
-              for (let i = midItemIndex; i > imgClickedId; i--) {
-                if (i !== imgClickedId) {
-                  this.prev(o, false);
-                }
-              }
-            } else {
-              const diff = midItemIndex - imgClickedId;
-              let timesRun = 0;
-              let interval = setInterval(() => {
-                timesRun++;
-                if (timesRun === diff) {
-                  clearInterval(interval);
-                }
-                this.prev(o, false);
-              }, 100);
-            }
-            break;
-          case midItemIndex == imgClickedId:
-            console.log("stop");
-            break;
-          case midItemIndex < imgClickedId:
-            console.log("next");
-            if (o.itemGallery.instant) {
-              for (let i = midItemIndex; i < imgClickedId; i++) {
-                if (i !== imgClickedId) {
-                  this.next(o, false);
-                }
-              }
-            } else {
-              const diff = imgClickedId - midItemIndex;
-              let timesRun = 0;
-              let interval = setInterval(() => {
-                timesRun++;
-                if (timesRun === diff) {
-                  clearInterval(interval);
-                }
-                this.next(o, false);
-              }, 100);
-            }
-            break;
-        }
-      });
+      this.focusSGal(o, o.startItem);
     }
   };
 
-  this.focusItemGallery = (o, index) => {
+  this.focusSGal = (o, index) => {
     const element = document.querySelector(`.${TW_THUMB}[data-id="${index}"]`);
-    console.log(element);
 
-    if (o.itemGallery.enable && element) {
+    if (o.sGallery.enable && element) {
       const twSlider = document.querySelector(`.${TW_SLIDER}`);
 
       const currFocusedImage = document.querySelector(
@@ -501,7 +402,7 @@ function TwoWayGallery() {
    * If this option is true, then the gallery will auto AUTOPLAY based on the
    * options selected.
    */
-  this.eventAutoPlay = (o, pauseThese, prev, next) => {
+  this.eventMGalAutoPlay = (o, pauseThese, prev, next) => {
     if (o.autoPlay.enable) {
       let isPaused = false;
 
@@ -560,8 +461,20 @@ function TwoWayGallery() {
    * If this option is true, then user can use left and right arrow keyboard keys
    * to trigger clicks on the next/prev buttons.
    */
-  this.eventArrowKeys = (o, prev, next) => {
+  this.eventMGalArrowKeys = (o, prev, next) => {
     if (o.enableArrowKeys) {
+      const isInViewport = (element) => {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth)
+        );
+      };
+
       document.addEventListener("keydown", (event) => {
         if (event.key === "ArrowLeft" && isInViewport(twMGallery)) {
           event.preventDefault();
@@ -585,7 +498,7 @@ function TwoWayGallery() {
    * If this option is true, then user can swipe right/left (both touch
    * and mouse events) to trigger clicks on the next/prev buttons.
    */
-  this.eventTouch = (o, pauseThese, prev, next) => {
+  this.eventMGalTouch = (o, pauseThese, prev, next) => {
     if (o.enableTouch) {
       const eventListeners = (items, evStart, evEnd) => {
         let [touchStartX, touchStartTime] = [0, 0];
@@ -669,7 +582,7 @@ function TwoWayGallery() {
    * If this option is true, then navigation buttons are hidden by default
    * and are shown once user hovers/clicks (mouse/touch) over/on the image
    */
-  this.eventNavigationHover = (o, pauseThese, twNav) => {
+  this.eventMGalNavigationHover = (o, pauseThese, twNav) => {
     const setClass = o.navigationHover ? "tw-hide" : "tw-hover";
 
     for (const arrow of twNav) {
@@ -697,8 +610,106 @@ function TwoWayGallery() {
     }
   };
 
+  this.eventSGalClickTouch = (o) => {
+    const twSlider = document.querySelector(".tw-slider");
+
+    // Enable touch rotation on the desktop (mobile should would by default)
+    let touchDuration = 0;
+    if (o.sGallery.desktopTouch && o.sGallery.enable && twSlider) {
+      let mouseStart = 0;
+      let touchStartTime;
+      twSlider.addEventListener("mousedown", (event) => {
+        const date = new Date();
+        touchStartTime = date.getTime();
+        mouseStart = event.pageX;
+        event.preventDefault();
+        twSlider.addEventListener("mousemove", mouseOverFunction);
+      });
+
+      document.addEventListener("mouseup", () => {
+        const date = new Date();
+        const touchEndTime = date.getTime();
+        touchDuration = Math.abs(touchStartTime - touchEndTime);
+        twSlider.removeEventListener("mousemove", mouseOverFunction);
+      });
+
+      const mouseOverFunction = (event) => {
+        const twSlider = document.querySelector(".tw-slider");
+        const scrollPos = twSlider.scrollLeft;
+        const cursorPos = Math.floor((mouseStart - event.pageX) / 40);
+
+        const scrollerDiff = scrollPos + cursorPos;
+        if (scrollerDiff > 0) {
+          twSlider.scrollTo({ left: scrollerDiff });
+        }
+      };
+    }
+
+    // Clicking on the sGallery but listen for the clicks on the images only
+    if (o.sGallery.enable && twSlider) {
+      twSlider.addEventListener("click", (event) => {
+        if (touchDuration > 120) {
+          return;
+        }
+
+        const imgClicked = event.target;
+        const imgClickedId = imgClicked.dataset.id;
+
+        this.focusSGal(o, imgClickedId);
+
+        const mMidItem = document.querySelector(`.${TW_ITEM}.middle`);
+        const mMidIndex = mMidItem.firstChild.dataset.itemId;
+
+        switch (true) {
+          // Scroll the mGallery to the left
+          case mMidIndex > imgClickedId:
+            if (o.sGallery.instant) {
+              for (let i = mMidIndex; i > imgClickedId; i--) {
+                if (i !== imgClickedId) {
+                  this.prev(o, false);
+                }
+              }
+            } else {
+              const diff = mMidIndex - imgClickedId;
+              let timesRun = 0;
+              let interval = setInterval(() => {
+                timesRun++;
+                if (timesRun === diff) {
+                  clearInterval(interval);
+                }
+                this.prev(o, false);
+              }, 100);
+            }
+            break;
+          // Do nothing if the same element is selected
+          case mMidIndex == imgClickedId:
+            break;
+          // Scroll the mGallery to the right
+          case mMidIndex < imgClickedId:
+            if (o.sGallery.instant) {
+              for (let i = mMidIndex; i < imgClickedId; i++) {
+                if (i !== imgClickedId) {
+                  this.next(o, false);
+                }
+              }
+            } else {
+              const diff = imgClickedId - mMidIndex;
+              let timesRun = 0;
+              let interval = setInterval(() => {
+                timesRun++;
+                if (timesRun === diff) {
+                  clearInterval(interval);
+                }
+                this.next(o, false);
+              }, 100);
+            }
+            break;
+        }
+      });
+    }
+  };
+
   this.prev = (o, isArrowClick = false) => {
-    console.log("Clicking this.prev...");
     const twConf = this.setConfig(o);
 
     let indexArray = this.generateMItems(twConf.startItem, twConf.displayItems);
@@ -719,7 +730,7 @@ function TwoWayGallery() {
 
     const midId = this.renderMItems(twConf, newIndexArray, twItems);
 
-    if (isArrowClick && o.itemGallery.enable) {
+    if (isArrowClick && o.sGallery.enable) {
       const twThumbs = document.querySelectorAll(
         `.${TW_GALLERY} > .${TW_S_GALLERY} > .${TW_SLIDER} > .${TW_THUMB}`
       );
@@ -727,12 +738,11 @@ function TwoWayGallery() {
       const twThumbLast = twThumbs[twItems.length - 1];
       document.querySelector(`.${TW_SLIDER}`).prepend(twThumbLast);
 
-      this.focusItemGallery(o, midId);
+      this.focusSGal(o, midId);
     }
   };
 
   this.next = (o, isArrowClick = false) => {
-    console.log("Clicking this.next...");
     const twConf = this.setConfig(o);
 
     let indexArray = this.generateMItems(twConf.startItem, twConf.displayItems);
@@ -753,13 +763,13 @@ function TwoWayGallery() {
 
     const midId = this.renderMItems(twConf, newIndexArray, twItems);
 
-    if (isArrowClick && o.itemGallery.enable) {
+    if (isArrowClick && o.sGallery.enable) {
       const twThumbs = document.querySelectorAll(
         `.${TW_GALLERY} > .${TW_S_GALLERY} > .${TW_SLIDER} > .${TW_THUMB}`
       );
       const twThumbLast = twThumbs[0];
       document.querySelector(`.${TW_SLIDER}`).appendChild(twThumbLast);
-      this.focusItemGallery(o, midId);
+      this.focusSGal(o, midId);
     }
   };
 
@@ -779,17 +789,6 @@ function TwoWayGallery() {
   };
 }
 
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
-
 const twoWayGallery = new TwoWayGallery();
 twoWayGallery.twoWayGallery({
   imagesArray: [
@@ -807,7 +806,7 @@ twoWayGallery.twoWayGallery({
   directory: "img/",
   startItem: 0,
   displayItems: 5,
-  enableArrowKeys: false,
+  enableArrowKeys: true,
   enableTouch: true,
   autoPlay: {
     enable: false,
@@ -819,11 +818,11 @@ twoWayGallery.twoWayGallery({
   },
   navigationType: "arrows",
   navigationHover: false,
-  itemGallery: {
+  sGallery: {
     enable: true,
     instant: false,
+    desktopTouch: true,
     arrows: true,
-    touch: true,
   },
   // navigationIcons: [
   //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
