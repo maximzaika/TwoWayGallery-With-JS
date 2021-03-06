@@ -82,6 +82,7 @@ function TwoWayGallery() {
     const DEF_S_GALLERY_ENABLE = true;
     const DEF_S_GALLERY_INSTANT = false;
     const DEF_S_GALLERY_DESK_TOUCH = true;
+    const DEF_S_GALLERY_ARROWS = true;
 
     if (
       typeof o.navigationHover === "boolean" &&
@@ -142,6 +143,7 @@ function TwoWayGallery() {
           o.sGallery.desktopTouch,
           DEF_S_GALLERY_DESK_TOUCH
         ),
+        arrows: setOption("boolean", o.sGallery.arrows, DEF_S_GALLERY_ARROWS),
       },
     };
   };
@@ -163,6 +165,7 @@ function TwoWayGallery() {
 
     let twItems = this.renderMGal(twConf);
     this.renderMItems(twConf, indexesToRender, twItems);
+    this.renderSGal(twConf);
     this.listeners(twConf);
     document.querySelector(`.${TW_GALLERY}`).classList.add(TW_LOADED);
   };
@@ -337,8 +340,8 @@ function TwoWayGallery() {
     this.eventMGalNavigationHover(o, pauseThese, twNav);
     this.eventMGalTouch(o, pauseThese, prevBtn, nextBtn);
     this.eventMGalArrowKeys(o, prevBtn, nextBtn);
-    this.renderSGal(o);
     this.eventSGalClickTouch(o);
+    this.eventSGalNavArrows(o);
   };
 
   this.renderSGal = (o) => {
@@ -635,13 +638,13 @@ function TwoWayGallery() {
 
       const mouseOverFunction = (event) => {
         const twSlider = document.querySelector(".tw-slider");
+        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
         const scrollPos = twSlider.scrollLeft;
-        const cursorPos = Math.floor((mouseStart - event.pageX) / 40);
+        const cursorPos = Math.floor((mouseStart - event.pageX) / 60);
 
-        const scrollerDiff = scrollPos + cursorPos;
-        if (scrollerDiff > 0) {
-          twSlider.scrollTo({ left: scrollerDiff });
-        }
+        let scrollerDiff = scrollPos + cursorPos;
+        this.sGalToggleNavigation(scrollerDiff, maxSliderScroll);
+        twSlider.scrollTo({ left: scrollerDiff });
       };
     }
 
@@ -709,6 +712,33 @@ function TwoWayGallery() {
     }
   };
 
+  this.eventSGalNavArrows = (o) => {
+    if (o.sGallery.arrows) {
+      const slideSGal = (action) => {
+        const twSlider = document.querySelector(`.${TW_SLIDER}`);
+        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
+        const twFocused = document.querySelector(`.${TW_FOCUS}`);
+        const focusedWidth = twFocused.offsetWidth;
+        const scrollPos = twSlider.scrollLeft;
+        let scrollerDiff;
+
+        if (action === "prev") {
+          scrollerDiff = scrollPos - focusedWidth;
+        } else {
+          scrollerDiff = scrollPos + focusedWidth;
+        }
+        this.sGalToggleNavigation(scrollerDiff, maxSliderScroll);
+        twSlider.scrollTo({ left: scrollerDiff, behavior: "smooth" });
+      };
+
+      const prevSBtn = document.querySelector(`.tw-s-prev`);
+      const nextSBtn = document.querySelector(`.tw-s-next`);
+
+      prevSBtn.addEventListener("click", slideSGal.bind(null, "prev"));
+      nextSBtn.addEventListener("click", slideSGal.bind(null, "next"));
+    }
+  };
+
   this.prev = (o, isArrowClick = false) => {
     const twConf = this.setConfig(o);
 
@@ -773,6 +803,21 @@ function TwoWayGallery() {
     }
   };
 
+  this.sGalToggleNavigation = (scrollerDiff, maxSliderScroll) => {
+    if (scrollerDiff < 0) {
+      document.querySelector(".tw-s-prev").style.visibility = "hidden";
+      return 0;
+    } else {
+      document.querySelector(".tw-s-prev").style.visibility = "visible";
+    }
+
+    if (scrollerDiff > maxSliderScroll) {
+      document.querySelector(".tw-s-next").style.visibility = "hidden";
+    } else {
+      document.querySelector(".tw-s-next").style.visibility = "visible";
+    }
+  };
+
   this.verifyInput = (o) => {
     let arrayExists = true;
     new Promise((resolve, reject) => {
@@ -792,18 +837,18 @@ function TwoWayGallery() {
 const twoWayGallery = new TwoWayGallery();
 twoWayGallery.twoWayGallery({
   imagesArray: [
-    "0.1.jpg",
-    "0.3.jpg",
-    "0.4.jpg",
-    "2.jpg",
-    "0.5.jpg",
-    "0.11.jpg",
-    "12.jpg",
-    "13.jpg",
-    "14.jpg",
+    "https://images.unsplash.com/photo-1553241880-0cdc914d1d88?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
+    "https://images.unsplash.com/photo-1561781565-3c2fcbf552cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1610872853577-98ffd151ff2b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1590354501494-b2038be5b83d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1494626594498-792a9632e9a4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1596312906091-281b15599021?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
+    "https://images.unsplash.com/photo-1529784237789-45cc21f5705b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80",
+    "https://images.unsplash.com/photo-1605260082899-300f8867d39e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1491&q=80",
   ],
   descriptionArray: [],
-  directory: "img/",
+  directory: "",
   startItem: 0,
   displayItems: 5,
   enableArrowKeys: true,
