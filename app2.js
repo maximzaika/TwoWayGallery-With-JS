@@ -73,7 +73,7 @@ function TwoWayGallery() {
     const DEF_AUTOPLAY_PAUSE_NOTIFICATION = true;
     const DEF_AUTOPLAY_PAUSE_NOTIFICATION_TEXT = "PAUSED";
     const DEF_AUTOPLAY_DIRECTION = "right";
-    const DEF_NAV = "arrows"; //arrows, dots, arrows & dots
+    const DEF_NAV = true;
     let DEF_NAV_HOVER = false;
     const DEF_NAV_ICONS = [
       `<i class="fas fa-chevron-left"></i>`,
@@ -85,11 +85,12 @@ function TwoWayGallery() {
     const DEF_S_GALLERY_ARROWS = true;
 
     if (
-      typeof o.navigationHover === "boolean" &&
-      o.navigationHover &&
-      o.navigationType !== "dots"
+      o.navigation.enable &&
+      typeof o.navigation.enable === "boolean" &&
+      o.navigation.hover &&
+      typeof o.navigation.hover === "boolean"
     ) {
-      DEF_NAV_HOVER = o.navigationHover;
+      DEF_NAV_HOVER = o.navigation.hover;
     }
 
     return {
@@ -102,9 +103,15 @@ function TwoWayGallery() {
       directory: setOption("string", o.directory, DEF_DIRECTORY),
       startItem: setOption("number", o.startItem, DEF_START_ITEM),
       displayItems: setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
-      navigationType: setOption("string", o.navigationType, DEF_NAV),
-      navigationHover: DEF_NAV_HOVER,
-      navigationIcons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
+      navigation: {
+        enable: setOption("boolean", o.navigation.enable, DEF_NAV),
+        hover: DEF_NAV_HOVER,
+        icons: setOption("array", o.navigation.icons, DEF_NAV_ICONS),
+      },
+
+      // setOption("boolean", o.navigationArrows, DEF_NAV),
+      // navigationHover: DEF_NAV_HOVER,
+      // navigationIcons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
       enableArrowKeys: setOption("boolean", o.enableArrowKeys, DEF_ARROW_KEYS),
       enableTouch: setOption("boolean", o.enableTouch, DEF_TOUCH),
       autoPlay: {
@@ -143,7 +150,16 @@ function TwoWayGallery() {
           o.sGallery.desktopTouch,
           DEF_S_GALLERY_DESK_TOUCH
         ),
-        arrows: setOption("boolean", o.sGallery.arrows, DEF_S_GALLERY_ARROWS),
+        navigationArrows: setOption(
+          "boolean",
+          o.sGallery.navigationArrows,
+          DEF_S_GALLERY_ARROWS
+        ),
+        navigationIcons: setOption(
+          "array",
+          o.sGallery.navigationIcons,
+          DEF_NAV_ICONS
+        ),
       },
     };
   };
@@ -208,8 +224,8 @@ function TwoWayGallery() {
    * @param {String[]} o.imagesArray     Array of images passed by the user.
    * @param {String} o.directory         Directory where images are located.
    * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
-   * @param {Boolean} o.navigationHover  Hide/show navigation upon hovering the gallery.
-   * @param {String[]} o.navigationIcons Array that contains HTML of the arrow icons.
+   * @param {Boolean} o.navigation.hover  Hide/show navigation upon hovering the gallery.
+   * @param {String[]} o.navigation.icons Array that contains HTML of the arrow icons.
    * @param {Number} o.startItem
    */
   this.renderMGal = (o) => {
@@ -234,32 +250,29 @@ function TwoWayGallery() {
     twMGallery.appendChild(itemsDiv);
 
     // create prev and next arrows
-    if (o.navigationType.includes("arrows")) {
-      const navDiv = document.createElement("div");
-      navDiv.className = TW_NAV;
+    if (o.navigation.enable) {
+      const twNav = document.createElement("div");
+      twNav.className = TW_NAV;
 
       for (let i = 0; i < TW_NAVS.length; i++) {
-        const buttonDiv = document.createElement("div");
+        const twMNav = document.createElement("div");
         // buttonDiv.id = TW_NAVS[i];
-        buttonDiv.classList.add(TW_NAVS[i], TW_ARROW);
+        twMNav.classList.add(TW_NAVS[i], TW_ARROW);
 
         const paddingSpan = document.createElement("span");
         paddingSpan.className = "tw-padding";
 
         if (i < 1) {
-          buttonDiv.classList.add("tw-left");
+          twMNav.classList.add("tw-left");
         } else {
-          buttonDiv.classList.add("tw-right");
+          twMNav.classList.add("tw-right");
         }
 
-        paddingSpan.innerHTML = o.navigationIcons[i];
-        buttonDiv.append(paddingSpan);
-        navDiv.appendChild(buttonDiv);
+        paddingSpan.innerHTML = o.navigation.icons[i];
+        twMNav.append(paddingSpan);
+        twNav.appendChild(twMNav);
       }
-      twMGallery.appendChild(navDiv);
-    } else {
-      console.log("navigationType: dots selected");
-      // navigation === dots
+      twMGallery.prepend(twNav);
     }
 
     return document.querySelectorAll(
@@ -318,32 +331,6 @@ function TwoWayGallery() {
     return midItemId;
   };
 
-  this.listeners = (o) => {
-    const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-prev
-    const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-next
-
-    prevBtn.addEventListener("click", this.prev.bind(null, o, true));
-    nextBtn.addEventListener("click", this.next.bind(null, o, true));
-
-    // Enable action on the arrows
-    const twNav = document.querySelectorAll(
-      `.${TW_M_GALLERY} > .${TW_NAV} > .${TW_ARROW}`
-    );
-
-    // Enable actions on the following items
-    let pauseThese = document.querySelectorAll(
-      `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}`
-    );
-
-    // additional user options
-    pauseThese = this.eventMGalAutoPlay(o, pauseThese, prevBtn, nextBtn);
-    this.eventMGalNavigationHover(o, pauseThese, twNav);
-    this.eventMGalTouch(o, pauseThese, prevBtn, nextBtn);
-    this.eventMGalArrowKeys(o, prevBtn, nextBtn);
-    this.eventSGalClickTouch(o);
-    this.eventSGalNavArrows(o);
-  };
-
   this.renderSGal = (o) => {
     if (o.sGallery.enable) {
       const twSGallery = document.querySelector(
@@ -364,6 +351,26 @@ function TwoWayGallery() {
       twSGallery.append(twSlider);
 
       this.focusSGal(o, o.startItem);
+
+      if (o.sGallery.navigationArrows) {
+        const twSNav = document.createElement("div");
+        twSNav.className = "tw-s-nav";
+
+        const twSArrows = [
+          ["tw-s-prev", "tw-left"],
+          ["tw-s-next", "tw-right"],
+        ];
+        let i = 0;
+        for (const arrow of twSArrows) {
+          const twSArrow = document.createElement("div");
+          twSArrow.classList.add(arrow[0], "tw-s-arrow", arrow[1]);
+          twSArrow.innerHTML = o.sGallery.navigationIcons[i];
+          twSNav.append(twSArrow);
+          i++;
+        }
+
+        twSGallery.prepend(twSNav);
+      }
     }
   };
 
@@ -392,6 +399,35 @@ function TwoWayGallery() {
     }
   };
 
+  this.listeners = (o) => {
+    // Enable action on the arrows
+    const twNav = document.querySelectorAll(
+      `.${TW_M_GALLERY} > .${TW_NAV} > .${TW_ARROW}`
+    );
+
+    // additional user options
+    this.eventMGalNavArrows(o);
+    this.eventMGalAutoPlay(o);
+    const pauseThese = document.querySelectorAll(
+      `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}`
+    );
+    this.eventMGalArrowKeys(o);
+    this.eventMGalTouch(o, pauseThese);
+    this.eventMGalNavigationHover(o, pauseThese, twNav);
+    this.eventSGalClickTouch(o);
+    this.eventSGalNavArrows(o);
+  };
+
+  this.eventMGalNavArrows = (o) => {
+    if (o.navigation.enable) {
+      const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-prev
+      const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-next
+
+      prevBtn.addEventListener("click", this.prev.bind(null, o, true));
+      nextBtn.addEventListener("click", this.next.bind(null, o, true));
+    }
+  };
+
   /**
    * @param {Object} o user options
    * @param {Boolean} o.autoPlay.enable user's choice true or false
@@ -400,12 +436,10 @@ function TwoWayGallery() {
    * @param {Boolean} o.autoPlay.hoverPauseNotification true or false to display the pause notification
    * @param {String} o.autoPlay.hoverPauseNotificationText text to display upon pause
    * @param {NodeListOf} pauseThese items that will listen for a pause event
-   * @param {Element} prev prevBtn query selector of the prev button
-   * @param {Element} next nextBtn query selector of the next button
    * If this option is true, then the gallery will auto AUTOPLAY based on the
    * options selected.
    */
-  this.eventMGalAutoPlay = (o, pauseThese, prev, next) => {
+  this.eventMGalAutoPlay = (o) => {
     if (o.autoPlay.enable) {
       let isPaused = false;
 
@@ -413,10 +447,10 @@ function TwoWayGallery() {
         if (!isPaused) {
           switch (o.autoPlay.direction) {
             case "right":
-              next.click();
+              this.next(o, true);
               break;
             case "left":
-              prev.click();
+              this.prev(o, true);
               break;
           }
         }
@@ -445,26 +479,23 @@ function TwoWayGallery() {
           }
         };
 
-        pauseThese = document.querySelectorAll(
-          `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}`
+        const pauseThese = document.querySelectorAll(
+          `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}, .tw-s-nav, .tw-slider`
         );
 
         eventListener(pauseThese, "mouseenter", true);
         eventListener(pauseThese, "mouseleave", false);
       }
     }
-    return pauseThese;
   };
 
   /**
    * @param {Object} o user options
    * @param {Boolean} o.enableArrowKeys user's choice true or false
-   * @param {Element} prev prevBtn query selector of the prev button
-   * @param {Element} next nextBtn query selector of the next button
    * If this option is true, then user can use left and right arrow keyboard keys
    * to trigger clicks on the next/prev buttons.
    */
-  this.eventMGalArrowKeys = (o, prev, next) => {
+  this.eventMGalArrowKeys = (o) => {
     if (o.enableArrowKeys) {
       const isInViewport = (element) => {
         const rect = element.getBoundingClientRect();
@@ -481,12 +512,12 @@ function TwoWayGallery() {
       document.addEventListener("keydown", (event) => {
         if (event.key === "ArrowLeft" && isInViewport(twMGallery)) {
           event.preventDefault();
-          prev.click();
+          this.prev(o, true);
         }
 
         if (event.key === "ArrowRight" && isInViewport(twMGallery)) {
           event.preventDefault();
-          next.click();
+          this.next(o, true);
         }
       });
     }
@@ -496,12 +527,10 @@ function TwoWayGallery() {
    * @param {Object} o user options
    * @param {Boolean} o.enableTouch user's choice true or false
    * @param {NodeListOf} pauseThese items that will listen for a pause event
-   * @param {Element} prev prevBtn query selector of the prev button
-   * @param {Element} next nextBtn query selector of the next button
    * If this option is true, then user can swipe right/left (both touch
    * and mouse events) to trigger clicks on the next/prev buttons.
    */
-  this.eventMGalTouch = (o, pauseThese, prev, next) => {
+  this.eventMGalTouch = (o, pauseThese) => {
     if (o.enableTouch) {
       const eventListeners = (items, evStart, evEnd) => {
         let [touchStartX, touchStartTime] = [0, 0];
@@ -546,7 +575,7 @@ function TwoWayGallery() {
         expectedTouchDistance,
         ev
       ) => {
-        let touchEndX = 0;
+        let touchEndX;
 
         if (ev.includes("touch")) {
           touchEndX = event.changedTouches[0].pageX;
@@ -564,9 +593,9 @@ function TwoWayGallery() {
         if (touchDuration < 1500) {
           if (touchDiffX > expectedTouchDistance) {
             if (touchEndX > touchStartX) {
-              prev.click();
+              this.prev(o, true);
             } else {
-              next.click();
+              this.next(o, true);
             }
           }
         }
@@ -579,20 +608,20 @@ function TwoWayGallery() {
 
   /**
    * @param {Object} o user options
-   * @param {Boolean} o.navigationHover user's choice true or false
+   * @param {Boolean} o.navigation.hover user's choice true or false
    * @param {NodeListOf} pauseThese items that will listen for a hover event
    * @param {NodeListOf} twNav navigation buttons that will listen for a hover event
    * If this option is true, then navigation buttons are hidden by default
    * and are shown once user hovers/clicks (mouse/touch) over/on the image
    */
   this.eventMGalNavigationHover = (o, pauseThese, twNav) => {
-    const setClass = o.navigationHover ? "tw-hide" : "tw-hover";
+    const setClass = o.navigation.hover ? "tw-hide" : "tw-hover";
 
     for (const arrow of twNav) {
       arrow.classList.add(setClass);
     }
 
-    if (o.navigationHover) {
+    if (o.navigation.hover) {
       const eventListener = (event, items, removeClass, addClass) => {
         for (const item of items) {
           item.addEventListener(event, () => {
@@ -638,12 +667,10 @@ function TwoWayGallery() {
 
       const mouseOverFunction = (event) => {
         const twSlider = document.querySelector(".tw-slider");
-        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
         const scrollPos = twSlider.scrollLeft;
         const cursorPos = Math.floor((mouseStart - event.pageX) / 60);
 
         let scrollerDiff = scrollPos + cursorPos;
-        this.sGalToggleNavigation(scrollerDiff, maxSliderScroll);
         twSlider.scrollTo({ left: scrollerDiff });
       };
     }
@@ -713,10 +740,9 @@ function TwoWayGallery() {
   };
 
   this.eventSGalNavArrows = (o) => {
-    if (o.sGallery.arrows) {
+    if (o.sGallery.enable && o.sGallery.navigationArrows) {
       const slideSGal = (action) => {
         const twSlider = document.querySelector(`.${TW_SLIDER}`);
-        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
         const twFocused = document.querySelector(`.${TW_FOCUS}`);
         const focusedWidth = twFocused.offsetWidth;
         const scrollPos = twSlider.scrollLeft;
@@ -727,7 +753,7 @@ function TwoWayGallery() {
         } else {
           scrollerDiff = scrollPos + focusedWidth;
         }
-        this.sGalToggleNavigation(scrollerDiff, maxSliderScroll);
+
         twSlider.scrollTo({ left: scrollerDiff, behavior: "smooth" });
       };
 
@@ -736,6 +762,32 @@ function TwoWayGallery() {
 
       prevSBtn.addEventListener("click", slideSGal.bind(null, "prev"));
       nextSBtn.addEventListener("click", slideSGal.bind(null, "next"));
+
+      const twSlider = document.querySelector(`.${TW_SLIDER}`);
+      twSlider.addEventListener("scroll", () => {
+        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
+        const scrollPos = twSlider.scrollLeft;
+
+        this.sGalToggleNavigation(scrollPos, maxSliderScroll);
+      });
+    }
+  };
+
+  this.sGalToggleNavigation = (scrollerDiff, maxSliderScroll) => {
+    const sPrevBtn = document.querySelector(".tw-s-prev");
+    const sNextBtn = document.querySelector(".tw-s-next");
+
+    if (scrollerDiff <= 0) {
+      sPrevBtn.classList.toggle("tw-invisible");
+      return 0;
+    } else if (scrollerDiff >= maxSliderScroll) {
+      sNextBtn.classList.toggle("tw-invisible");
+    } else {
+      if (sNextBtn.classList.contains("tw-invisible")) {
+        sNextBtn.classList.remove("tw-invisible");
+      } else {
+        sPrevBtn.classList.remove("tw-invisible");
+      }
     }
   };
 
@@ -803,21 +855,6 @@ function TwoWayGallery() {
     }
   };
 
-  this.sGalToggleNavigation = (scrollerDiff, maxSliderScroll) => {
-    if (scrollerDiff < 0) {
-      document.querySelector(".tw-s-prev").style.visibility = "hidden";
-      return 0;
-    } else {
-      document.querySelector(".tw-s-prev").style.visibility = "visible";
-    }
-
-    if (scrollerDiff > maxSliderScroll) {
-      document.querySelector(".tw-s-next").style.visibility = "hidden";
-    } else {
-      document.querySelector(".tw-s-next").style.visibility = "visible";
-    }
-  };
-
   this.verifyInput = (o) => {
     let arrayExists = true;
     new Promise((resolve, reject) => {
@@ -855,22 +892,28 @@ twoWayGallery.twoWayGallery({
   enableTouch: true,
   autoPlay: {
     enable: false,
-    direction: "right",
+    direction: "left",
     hoverPause: true,
     hoverPauseNotification: true,
-    hoverPauseNotificationText: "PAUSED",
+    hoverPauseNotificationText: `<i class="fa fa-pause" aria-hidden="true"></i>`,
     timeout: 3000,
   },
-  navigationType: "arrows",
-  navigationHover: false,
+  navigation: {
+    enable: true,
+    hover: true,
+    // icons: [
+    //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
+    //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
+    // ],
+  },
   sGallery: {
     enable: true,
     instant: false,
     desktopTouch: true,
-    arrows: true,
+    navigationArrows: true,
+    // navigationIcons: [
+    //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
+    //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
+    // ],
   },
-  // navigationIcons: [
-  //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
-  //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
-  // ],
 });
