@@ -20,29 +20,29 @@ function TwoWayGallery() {
 
   // tw-m-gallery related pre-defined classes
   const [TW_ITEMS, TW_ITEM, TW_ITEM_HIDDEN, TW_IMAGE] = [
-    "tw-items",
-    "tw-item",
-    "tw-hidden",
+    "tw-m-items",
+    "tw-m-item",
+    "tw-m-hidden",
     "tw-image",
   ];
 
-  // tw-m-gallery > tw-item related pre-defined classes
-  const [ITEM_LEFT, ITEM_MID, ITEM_RIGHT] = ["left-", "middle", "right-"];
+  // tw-m-gallery > tw-m-item related pre-defined classes
+  const [TW_LEFT, TW_MID, TW_RIGHT] = ["tw-m-left-", "tw-m-mid", "tw-m-right-"];
 
   // tw-m-gallery navigation related pre-defined classes
   const [TW_NAV, TW_NAVS, TW_ARROW] = [
-    "tw-nav",
-    ["tw-prev", "tw-next"],
-    "tw-arrow",
+    "tw-m-nav",
+    ["tw-m-prev", "tw-m-next"],
+    "tw-m-arrow",
   ];
 
-  // tw-m-gallery > tw-ap (autoplay) related pre-defined classes
-  const [TW_AP, TW_APS] = ["tw-ap", ["tw-play", "tw-pause"]];
+  // tw-m-gallery > tw-m-ap (autoplay) related pre-defined classes
+  const [TW_AP, TW_APS] = ["tw-m-ap", ["tw-m-play", "tw-m-pause"]];
 
   // tw-s-gallery related pre-defined classes
   const [TW_SLIDER, TW_THUMB, TW_FOCUS] = [
-    "tw-slider",
-    "tw-thumbnail",
+    "tw-s-slider",
+    "tw-s-thumbnail",
     "tw-focus",
   ];
 
@@ -62,7 +62,8 @@ function TwoWayGallery() {
     }
 
     const DEF_DESCRIPTION_ARRAY = [];
-    const DEF_DIRECTORY = "img/";
+    const DEF_DESCRIPTION_TYPE = "white";
+    const DEF_DIRECTORY = "";
     const DEF_START_ITEM = 0;
     const DEF_DISPLAY_ITEMS = 5;
     const DEF_ARROW_KEYS = false;
@@ -93,6 +94,10 @@ function TwoWayGallery() {
       DEF_NAV_HOVER = o.navigation.hover;
     }
 
+    // if (o.descriptionType === 'black') {
+    //   DEF_DESCRIPTION_TYPE =
+    // }
+
     return {
       imagesArray: o.imagesArray,
       descriptionArray: setOption(
@@ -100,18 +105,19 @@ function TwoWayGallery() {
         o.descriptionArray,
         DEF_DESCRIPTION_ARRAY
       ),
+      descriptionType:
+        DEF_DESCRIPTION_TYPE === "black" ? "black" : DEF_DESCRIPTION_TYPE,
       directory: setOption("string", o.directory, DEF_DIRECTORY),
       startItem: setOption("number", o.startItem, DEF_START_ITEM),
-      displayItems: setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
+      displayItems:
+        setOption("number", o.displayItems, DEF_DISPLAY_ITEMS) % 2 == 0
+          ? DEF_DISPLAY_ITEMS
+          : setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
       navigation: {
         enable: setOption("boolean", o.navigation.enable, DEF_NAV),
         hover: DEF_NAV_HOVER,
         icons: setOption("array", o.navigation.icons, DEF_NAV_ICONS),
       },
-
-      // setOption("boolean", o.navigationArrows, DEF_NAV),
-      // navigationHover: DEF_NAV_HOVER,
-      // navigationIcons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
       enableArrowKeys: setOption("boolean", o.enableArrowKeys, DEF_ARROW_KEYS),
       enableTouch: setOption("boolean", o.enableTouch, DEF_TOUCH),
       autoPlay: {
@@ -172,8 +178,8 @@ function TwoWayGallery() {
       return; // user failed to pass imagesArray
     }
 
-    options = this.restructureImagesArray(options);
-    const twConf = this.setConfig(options);
+    let twConf = this.setConfig(options);
+    twConf = this.restructureImagesArray(twConf);
     let indexesToRender = this.generateMItems(
       twConf.startItem,
       twConf.displayItems
@@ -189,7 +195,11 @@ function TwoWayGallery() {
   this.restructureImagesArray = (o) => {
     let arrLen = o.imagesArray.length;
 
-    const restructuredArray = [];
+    const newImagesArray = [];
+    let newDescArray;
+    if (o.descriptionArray.length !== 0) {
+      newDescArray = [];
+    }
 
     let mid = Math.floor(arrLen / 2);
     let i = o.startItem;
@@ -198,7 +208,10 @@ function TwoWayGallery() {
     let fullyParsed = false;
 
     while (!fullyParsed) {
-      restructuredArray[mid] = o.imagesArray[i];
+      newImagesArray[mid] = o.imagesArray[i];
+      if (o.descriptionArray.length !== 0) {
+        newDescArray[mid] = o.descriptionArray[i];
+      }
       mid++;
       if (mid > arrLen - 1) {
         mid = 0;
@@ -214,14 +227,19 @@ function TwoWayGallery() {
       }
     }
 
-    o.imagesArray = restructuredArray;
+    o.imagesArray = newImagesArray;
     o.startItem = originalMid;
+    if (o.descriptionArray.length !== 0) {
+      o.descriptionArray = newDescArray;
+    }
     return o;
   };
 
   /**
    * @param {Object} o                   App options that include user options.
    * @param {String[]} o.imagesArray     Array of images passed by the user.
+   * @param {String[]} o.descriptionArray Array of descriptions passed by the user.
+   * @param {String} o.descriptionType String that contains type and color of the description.
    * @param {String} o.directory         Directory where images are located.
    * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
    * @param {Boolean} o.navigation.hover  Hide/show navigation upon hovering the gallery.
@@ -233,17 +251,35 @@ function TwoWayGallery() {
     const itemsDiv = document.createElement("div");
     itemsDiv.className = TW_ITEMS;
 
-    // Add tw-item inside tw-items
+    // Add tw-m-item inside tw-m-items
     for (let i = 0; i < arrLen; i++) {
       const itemDiv = document.createElement("div");
       itemDiv.classList.add(TW_ITEM, TW_ITEM_HIDDEN);
 
+      const twBase = document.createElement("div");
+      twBase.className = "tw-base";
+
       const itemImg = document.createElement("img");
       itemImg.src = o.directory + o.imagesArray[i];
       itemImg.className = TW_IMAGE;
-      itemImg.dataset.itemId = i.toString();
+      itemImg.dataset.twMId = i.toString();
+      twBase.appendChild(itemImg);
 
-      itemDiv.appendChild(itemImg);
+      if (o.descriptionArray.length !== 0) {
+        const itemDesc = document.createElement("div");
+        itemDesc.classList.add("tw-description");
+
+        if (o.descriptionType.includes("white")) {
+          itemDesc.classList.add("tw-white");
+        } else {
+          itemDesc.classList.add("tw-transparent");
+        }
+
+        itemDesc.innerHTML = o.descriptionArray[i];
+        twBase.appendChild(itemDesc);
+      }
+
+      itemDiv.appendChild(twBase);
       itemsDiv.appendChild(itemDiv);
     }
 
@@ -256,11 +292,10 @@ function TwoWayGallery() {
 
       for (let i = 0; i < TW_NAVS.length; i++) {
         const twMNav = document.createElement("div");
-        // buttonDiv.id = TW_NAVS[i];
         twMNav.classList.add(TW_NAVS[i], TW_ARROW);
 
         const paddingSpan = document.createElement("span");
-        paddingSpan.className = "tw-padding";
+        paddingSpan.className = "tw-m-nav-padding";
 
         if (i < 1) {
           twMNav.classList.add("tw-left");
@@ -300,9 +335,9 @@ function TwoWayGallery() {
   };
 
   // Sets appropriate classes to appropriate index of
-  // NodeList (tw-item) generated in the this.generateMItems function
+  // NodeList (tw-m-item) generated in the this.generateMItems function
   this.renderMItems = (o, indexesToSet, nodeItemsList) => {
-    // Turns all the tw-item classes into hidden: tw-item tw-hidden
+    // Turns all the tw-m-item classes into hidden: tw-m-item tw-m-hidden
     nodeItemsList.forEach((element) => {
       element.className = `${TW_ITEM} ${TW_ITEM_HIDDEN}`;
     });
@@ -316,12 +351,13 @@ function TwoWayGallery() {
         if (+i === +index) {
           nodeItemsList[i].classList.toggle(TW_ITEM_HIDDEN);
           if (classVal < 0) {
-            nodeItemsList[i].classList.add(`${ITEM_LEFT}${classVal * -1}`);
+            nodeItemsList[i].classList.add(`${TW_LEFT}${classVal * -1}`);
           } else if (classVal === 0) {
-            midItemId = nodeItemsList[i].childNodes[0].dataset.itemId;
-            nodeItemsList[i].classList.add(`${ITEM_MID}`);
+            midItemId =
+              nodeItemsList[i].childNodes[0].childNodes[0].dataset.twMId;
+            nodeItemsList[i].classList.add(`${TW_MID}`);
           } else {
-            nodeItemsList[i].classList.add(`${ITEM_RIGHT}${classVal}`);
+            nodeItemsList[i].classList.add(`${TW_RIGHT}${classVal}`);
           }
           classVal++;
           break;
@@ -342,7 +378,7 @@ function TwoWayGallery() {
       let id = 0;
       for (const item of o.imagesArray) {
         const twSliderImage = document.createElement("img");
-        twSliderImage.dataset.id = id.toString();
+        twSliderImage.dataset.twSId = id.toString();
         id++;
         twSliderImage.className = TW_THUMB;
         twSliderImage.src = o.directory + item;
@@ -375,9 +411,12 @@ function TwoWayGallery() {
   };
 
   this.focusSGal = (o, index) => {
-    const element = document.querySelector(`.${TW_THUMB}[data-id="${index}"]`);
+    const element = document.querySelector(
+      `.${TW_THUMB}[data-tw-s-id="${index}"]`
+    );
 
     if (o.sGallery.enable && element) {
+      console.log(element);
       const twSlider = document.querySelector(`.${TW_SLIDER}`);
 
       const currFocusedImage = document.querySelector(
@@ -385,7 +424,6 @@ function TwoWayGallery() {
       );
 
       if (currFocusedImage) {
-        // const currFocusedImageOffset = currFocusedImage.offsetLeft;
         currFocusedImage.classList.remove(`${TW_FOCUS}`);
       }
 
@@ -409,7 +447,7 @@ function TwoWayGallery() {
     this.eventMGalNavArrows(o);
     this.eventMGalAutoPlay(o);
     const pauseThese = document.querySelectorAll(
-      `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}`
+      `.${TW_AP}, .tw-image, .tw-description, .${TW_ARROW}`
     );
     this.eventMGalArrowKeys(o);
     this.eventMGalTouch(o, pauseThese);
@@ -420,8 +458,8 @@ function TwoWayGallery() {
 
   this.eventMGalNavArrows = (o) => {
     if (o.navigation.enable) {
-      const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-prev
-      const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-next
+      const prevBtn = document.querySelector(`.${TW_NAVS[0]}`); // tw-m-prev
+      const nextBtn = document.querySelector(`.${TW_NAVS[1]}`); // tw-m-next
 
       prevBtn.addEventListener("click", this.prev.bind(null, o, true));
       nextBtn.addEventListener("click", this.next.bind(null, o, true));
@@ -480,7 +518,7 @@ function TwoWayGallery() {
         };
 
         const pauseThese = document.querySelectorAll(
-          `.${TW_AP}, .${TW_IMAGE}, .${TW_ARROW}, .tw-s-nav, .tw-slider`
+          `.${TW_AP}, .tw-image, .tw-description, .${TW_ARROW}, .tw-s-nav, .tw-s-slider`
         );
 
         eventListener(pauseThese, "mouseenter", true);
@@ -615,7 +653,7 @@ function TwoWayGallery() {
    * and are shown once user hovers/clicks (mouse/touch) over/on the image
    */
   this.eventMGalNavigationHover = (o, pauseThese, twNav) => {
-    const setClass = o.navigation.hover ? "tw-hide" : "tw-hover";
+    const setClass = o.navigation.hover ? "tw-m-hide-nav" : "tw-hover";
 
     for (const arrow of twNav) {
       arrow.classList.add(setClass);
@@ -625,7 +663,7 @@ function TwoWayGallery() {
       const eventListener = (event, items, removeClass, addClass) => {
         for (const item of items) {
           item.addEventListener(event, () => {
-            setOpacity(items, removeClass, addClass);
+            setOpacity(twNav, removeClass, addClass);
           });
         }
       };
@@ -637,13 +675,13 @@ function TwoWayGallery() {
         }
       }
 
-      eventListener("mouseenter", pauseThese, "tw-hide", "tw-show");
-      eventListener("mouseleave", pauseThese, "tw-show", "tw-hide");
+      eventListener("mouseenter", pauseThese, "tw-m-hide-nav", "tw-m-show-nav");
+      eventListener("mouseleave", pauseThese, "tw-m-show-nav", "tw-m-hide-nav");
     }
   };
 
   this.eventSGalClickTouch = (o) => {
-    const twSlider = document.querySelector(".tw-slider");
+    const twSlider = document.querySelector(".tw-s-slider");
 
     // Enable touch rotation on the desktop (mobile should would by default)
     let touchDuration = 0;
@@ -666,7 +704,7 @@ function TwoWayGallery() {
       });
 
       const mouseOverFunction = (event) => {
-        const twSlider = document.querySelector(".tw-slider");
+        const twSlider = document.querySelector(".tw-s-slider");
         const scrollPos = twSlider.scrollLeft;
         const cursorPos = Math.floor((mouseStart - event.pageX) / 60);
 
@@ -683,12 +721,12 @@ function TwoWayGallery() {
         }
 
         const imgClicked = event.target;
-        const imgClickedId = imgClicked.dataset.id;
+        const imgClickedId = imgClicked.dataset.twSId;
 
         this.focusSGal(o, imgClickedId);
 
-        const mMidItem = document.querySelector(`.${TW_ITEM}.middle`);
-        const mMidIndex = mMidItem.firstChild.dataset.itemId;
+        const mMidItem = document.querySelector(`.${TW_ITEM}.${TW_MID}`);
+        const mMidIndex = mMidItem.firstChild.firstChild.dataset.twMId;
 
         switch (true) {
           // Scroll the mGallery to the left
@@ -778,15 +816,15 @@ function TwoWayGallery() {
     const sNextBtn = document.querySelector(".tw-s-next");
 
     if (scrollerDiff <= 0) {
-      sPrevBtn.classList.toggle("tw-invisible");
+      sPrevBtn.classList.toggle("tw-s-invisible");
       return 0;
     } else if (scrollerDiff >= maxSliderScroll) {
-      sNextBtn.classList.toggle("tw-invisible");
+      sNextBtn.classList.toggle("tw-s-invisible");
     } else {
-      if (sNextBtn.classList.contains("tw-invisible")) {
-        sNextBtn.classList.remove("tw-invisible");
+      if (sNextBtn.classList.contains("tw-s-invisible")) {
+        sNextBtn.classList.remove("tw-s-invisible");
       } else {
-        sPrevBtn.classList.remove("tw-invisible");
+        sPrevBtn.classList.remove("tw-s-invisible");
       }
     }
   };
@@ -884,14 +922,25 @@ twoWayGallery.twoWayGallery({
     "https://images.unsplash.com/photo-1529784237789-45cc21f5705b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80",
     "https://images.unsplash.com/photo-1605260082899-300f8867d39e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1491&q=80",
   ],
-  descriptionArray: [],
+  descriptionArray: [
+    "Fantastic view from the above.",
+    "River view.",
+    "City view during the day.",
+    "Awesome looking church!",
+    "Beautiful flower.",
+    "Bench that you can sit on. :)",
+    "Destroyed castle. :(",
+    "City view during the night.",
+    "Hotel in the desert...",
+  ],
+  descriptionType: "black",
   directory: "",
   startItem: 0,
-  displayItems: 5,
+  displayItems: 7,
   enableArrowKeys: true,
   enableTouch: true,
   autoPlay: {
-    enable: false,
+    enable: true,
     direction: "left",
     hoverPause: true,
     hoverPauseNotification: true,
