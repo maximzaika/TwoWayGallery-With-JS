@@ -437,9 +437,6 @@ function TwoWayGallery() {
           element.offsetLeft +
           element.offsetWidth / 2 -
           twsSlider.offsetWidth / 2;
-        console.log(`element.offsetLeft: ${element.offsetLeft}; 
-      element.offsetWidth: ${element.offsetWidth / 2};
-      twsSlider.offsetWidth: ${twsSlider.offsetWidth / 2}`);
         twsSlider.scrollTo({
           left: changedFocusedImageOffset - 10,
           behavior: "smooth",
