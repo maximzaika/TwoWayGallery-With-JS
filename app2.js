@@ -62,7 +62,7 @@ function TwoWayGallery() {
   const [TWS_SLIDER, TWS_THUMB, TWS_FOCUS] = [
     "tw-s-slider",
     "tw-s-thumbnail",
-    "tw-focus",
+    "tw-s-focus",
   ];
 
   const [TWS_NAV, TWS_NAVS, TWS_ARROW, TWS_NAV_HIDE] = [
@@ -432,14 +432,19 @@ function TwoWayGallery() {
       }
 
       element.classList.add(TWS_FOCUS);
-      const changedFocusedImageOffset =
-        element.offsetLeft +
-        element.offsetWidth / 2 -
-        twsSlider.offsetWidth / 2;
-      twsSlider.scrollTo({
-        left: changedFocusedImageOffset - 10,
-        behavior: "smooth",
-      });
+      setTimeout(() => {
+        const changedFocusedImageOffset =
+          element.offsetLeft +
+          element.offsetWidth / 2 -
+          twsSlider.offsetWidth / 2;
+        console.log(`element.offsetLeft: ${element.offsetLeft}; 
+      element.offsetWidth: ${element.offsetWidth / 2};
+      twsSlider.offsetWidth: ${twsSlider.offsetWidth / 2}`);
+        twsSlider.scrollTo({
+          left: changedFocusedImageOffset - 10,
+          behavior: "smooth",
+        });
+      }, 15);
     }
   };
 
@@ -747,7 +752,8 @@ function TwoWayGallery() {
         const imgClicked = event.target;
         const imgClickedId = imgClicked.dataset.twSId;
         this.focusSGal(o, imgClickedId);
-        const mMidItem = document.querySelector(`.${TWM_ITEM}.${TWM_MID}`);
+        const twmItemPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS} > .${TWM_ITEM}`;
+        const mMidItem = document.querySelector(`${twmItemPath}.${TWM_MID}`);
         const mMidIndex = mMidItem.firstChild.firstChild.dataset.twMId;
 
         switch (true) {
