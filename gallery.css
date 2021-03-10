@@ -1,4 +1,4 @@
-.tw-gallery {
+.tw-loaded {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -16,6 +16,21 @@
 }
 
 .tw-m-gallery > .tw-m-play {
+  /*height: auto;*/
+  /*font-size: 15px;*/
+  /*display: inline-block;*/
+  /*position: absolute;*/
+  /*padding: 1rem;*/
+  /*!*margin: 1rem;*!*/
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  /*top: 13rem;*/
+  /*cursor: pointer;*/
+  /*opacity: 0.8;*/
+  /*z-index: 8;*/
+  /*transition: top 0.18s ease, font-size 0.18s ease;*/
+  /*transition-delay: 0.05s;*/
+
   position: relative;
   font-size: 15px;
   letter-spacing: 1px;
@@ -62,8 +77,8 @@
    Post-cond:
      - upon hovering over each arrow, it expends itself
 */
-.tw-hover:hover,
-.tw-hover:active {
+.tw-m-hover-nav:hover,
+.tw-m-hover-nav:active {
   font-size: 95px;
   border-radius: 25px;
   top: 12.2rem;
@@ -94,14 +109,14 @@
 }
 
 /* Configuration of the right button*/
-.tw-m-arrow.tw-right {
+.tw-m-arrow.tw-right-arrow {
   padding-top: 50px;
   padding-bottom: 50px;
   right: -0.2em;
 }
 
 /* Configuration of the left button */
-.tw-m-arrow.tw-m-left- {
+.tw-m-arrow.tw-left-arrow {
   padding-top: 50px;
   padding-bottom: 50px;
   left: -0.2em;
@@ -131,16 +146,16 @@
     top: 12.5rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     top: 11.8rem;
   }
 
-  .tw-m-arrow.tw-right {
+  .tw-m-arrow.tw-right-arrow {
     right: -1.1rem;
   }
 
-  .tw-m-arrow.tw-m-left- {
+  .tw-m-arrow.tw-left-arrow {
     left: -1.1rem;
   }
 
@@ -162,8 +177,8 @@
     top: 10rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     font-size: 90px;
     top: 9.35rem;
   }
@@ -194,17 +209,17 @@
     top: 7.5rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     font-size: 70px;
     top: 7.3rem;
   }
 
-  .tw-m-arrow.tw-right {
+  .tw-m-arrow.tw-right-arrow {
     right: -1.3rem;
   }
 
-  .tw-m-arrow.tw-m-left- {
+  .tw-m-arrow.tw-left-arrow {
     left: -1.3rem;
   }
 
@@ -236,17 +251,17 @@
     top: 4.5rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     font-size: 65px;
     top: 4.3rem;
   }
 
-  .tw-m-arrow.tw-right {
+  .tw-m-arrow.tw-right-arrow {
     right: -1.5rem;
   }
 
-  .tw-m-arrow.tw-m-left- {
+  .tw-m-arrow.tw-left-arrow {
     left: -1.5rem;
   }
 
@@ -278,8 +293,8 @@
     top: 4rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     font-size: 60px;
     top: 3.8rem;
   }
@@ -316,17 +331,17 @@
     top: 3rem;
   }
 
-  .tw-hover:hover,
-  .tw-hover:active {
+  .tw-m-hover-nav:hover,
+  .tw-m-hover-nav:active {
     font-size: 50px;
     top: 2.8rem;
   }
 
-  .tw-m-arrow.tw-right {
+  .tw-m-arrow.tw-right-arrow {
     right: -1.7rem;
   }
 
-  .tw-m-arrow.tw-m-left- {
+  .tw-m-arrow.tw-left-arrow {
     left: -1.7rem;
   }
 
@@ -408,20 +423,20 @@
     visibility: hidden;
   }
 
-  .tw-gallery {
+  .tw-loaded {
     overflow: hidden;
   }
 }
 
-/* tw-description & tw-image related styles */
-.tw-m-item > .tw-base {
+/* tw-m-description & tw-m-image related styles */
+.tw-m-item > .tw-m-wrapper {
   width: 100%;
   height: 80%;
   box-shadow: 0 3vmin 3vmin rgba(0, 0, 0, 0.75),
     0 -0vmin 1.5vmin rgba(0, 0, 0, 0.75);
 }
 
-.tw-description {
+.tw-m-description {
   position: absolute;
   width: 100%;
   height: 10%;
@@ -443,65 +458,65 @@
   cursor: default;
 }
 
-.tw-description.tw-white {
+.tw-m-description.tw-m-white-desc {
   background-color: #eee;
   color: black;
 }
 
-.tw-description.tw-transparent {
+.tw-m-description.tw-m-black-desc {
   background-color: rgba(0, 0, 0, 0.5);
   color: #eee;
   border-bottom: 1.5vmin solid #eee;
 }
 
 @media (max-width: 768px) {
-  .tw-description {
+  .tw-m-description {
     height: 12%;
     top: 68%;
   }
 }
 @media (max-width: 650px) {
-  .tw-description {
+  .tw-m-description {
     height: 14%;
     top: 66%;
     font-size: 19px;
   }
 }
 @media (max-width: 550px) {
-  .tw-description {
+  .tw-m-description {
     height: 16%;
     top: 64%;
     font-size: 18px;
   }
 }
 @media (max-width: 425px) {
-  .tw-description {
+  .tw-m-description {
     height: 18%;
     top: 62%;
     font-size: 17px;
   }
 }
 @media (max-width: 390px) {
-  .tw-description {
+  .tw-m-description {
     height: 20%;
     top: 60%;
   }
 }
 @media (max-width: 375px) {
-  .tw-description {
+  .tw-m-description {
     height: 21%;
     top: 59%;
     font-size: 16px;
   }
 }
 @media (max-width: 320px) {
-  .tw-description {
+  .tw-m-description {
     height: 23%;
     top: 57%;
   }
 }
 
-.tw-base > .tw-image {
+.tw-m-wrapper > .tw-m-image {
   width: 100%;
   height: 100%;
   background-color: #eee;
@@ -512,7 +527,7 @@
 }
 
 @media (max-width: 865px) {
-  .tw-m-item > .tw-image {
+  .tw-m-item > .tw-m-image {
     box-shadow: 0 2vmin 2vmin rgba(0, 0, 0, 0.75),
       0 -0vmin 1.5vmin rgba(0, 0, 0, 0.75);
   }
@@ -579,14 +594,14 @@
   transition: opacity 0.5s;
 }
 
-.tw-s-gallery > .tw-s-nav > .tw-s-invisible {
+.tw-s-gallery > .tw-s-nav > .tw-s-hide-nav {
   visibility: hidden;
 }
 
-.tw-s-arrow.tw-right {
+.tw-s-arrow.tw-right-arrow {
   right: -0.2em;
 }
 
-.tw-s-arrow.tw-m-left- {
+.tw-s-arrow.tw-left-arrow {
   left: -0.2em;
 }
