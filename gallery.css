@@ -568,7 +568,7 @@
   transition: transform 0.25s ease;
 }
 
-.tw-s-thumbnail.tw-focus {
+.tw-s-thumbnail.tw-s-focus {
   border: 0.25rem solid #50b6ff;
   transform: translate3d(0vmin, -2%, 0vmin);
   transition: transform 0.25s ease;
