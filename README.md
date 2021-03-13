@@ -2,29 +2,20 @@
 It is a gallery that consists of two parts: *Main Gallery* and *Secondary Gallery*.
 It is written in vanilla JavaScript. The *Main Gallery* always needs to be enabled, 
 while the *Secondary Gallery* can be either activated or deactivated. This gallery 
-can be used for many purposes, but it has been build with the purpose to display 
-images in a nice format. It is functional on both mobile and desktop devices, but 
-its design is mostly visible on desktop devices.
+can be used for many purposes, but it has been built with the purpose to display
+images quickly on single-page websites. It is functional on both mobile and desktop 
+devices, but its design is mostly visible on desktop devices.
 
 [Demos (TO BE ADDED)](https://github.com/maximzaika/TwoWayGallery.github.io)
 
 ## Contents
-1. [Recent Changelog](#headers)
-2. [Features](#headers2)
-3. [Install](#header3)
-4. [Usage](#header4)
-5. [Options](#header5)
+1. [Recent Changelog](#Recent-Changelog)
+2. [Install](#Install)
+3. [Usage](#Usage)
+4. [Options](#Options)
 
 ## Recent Changelog
-* To be added.
-* To be added.
-* To be added.
-* To be added.
-
-## Features
-| Feature | Description |
-| ---     | ---         |
-| 1       | 2           |
+* v2.01 - The first finalised release that includes all the expected options.
 
 ## Install
 Clone github or download releases from the github.
@@ -44,21 +35,21 @@ stylesheet to the `<head>` of your HTML page.
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     ```
-   - *Note*: this part is **OPTIONAL** if default [Options]() `navigationIcons` and 
+   - *Note*: this part is **OPTIONAL** if default [Options](#Options) `navigationIcons` and 
       `sGalleryNavigationIcons` are overwritten.
 3. Add twoWayGallery.js to the `<head>` of your HTML:
     ```html
     <script src="twoWayGallery.js"></script>
     ``` 
-4. Add markup to the `<body>` of your HTML.: 
-   `sGalleryEnable` is set to `false`.
+4. Add markup to the `<body>` of your HTML: 
     ```html
     <div class="tw-gallery">
        <div class="tw-m-gallery"></div>
        <div class="tw-s-gallery"></div>
     </div>
     ```
-   - *Note*: `<div class="tw-s-gallery"></div>` can be excluded if default [Option]().
+   - *Note*: `<div class="tw-s-gallery"></div>` can be excluded if default [Option](#Options) 
+   `sGalleryEnable` is set to `false`.
 5. Initiate the gallery using the following JS:
     ```javascript
     const twoWayGallery = new TwoWayGallery();
@@ -66,7 +57,7 @@ stylesheet to the `<head>` of your HTML page.
        imagesArray: ["image1.jpg", "image2.jpg", ... , "image100.jpg"]
     });
     ```
-   - *Note*: [Option]() `imagesArray` **NEEDS TO BE INCLUDED**
+   - *Note*: [Option](#Options) `imagesArray` **NEEDS TO BE INCLUDED**
 
 ## Options
 | Option                          | Must     | Type                         | Default        | Description                                                                                                                                                                                                                      |
