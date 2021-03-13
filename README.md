@@ -1,9 +1,10 @@
 # TwoWayGallery
-It is a gallery that consists of two parts: *Main Gallery* and *Secondary Gallery*. 
-The *Main Gallery* always needs to be enabled, while the *Secondary Gallery* can be either 
-activated or deactivated. This gallery can be used for many purposes, but it has been build 
-with the purpose to display images in a nice format. It is functional on both mobile and
-desktop devices, but its design is mostly visible on desktop devices.
+It is a gallery that consists of two parts: *Main Gallery* and *Secondary Gallery*.
+It is written in vanilla JavaScript. The *Main Gallery* always needs to be enabled, 
+while the *Secondary Gallery* can be either activated or deactivated. This gallery 
+can be used for many purposes, but it has been build with the purpose to display 
+images in a nice format. It is functional on both mobile and desktop devices, but 
+its design is mostly visible on desktop devices.
 
 [Demos (TO BE ADDED)](https://github.com/maximzaika/TwoWayGallery.github.io)
 
@@ -31,29 +32,33 @@ Clone github or download releases from the github.
 bower and npm to be added.
 
 ## Usage
-1. Add CSS link to the ```<head>``` of your HTML page:
+1. Add CSS link to the `<head>` of your HTML page:
     ```html
     <link rel="stylesheet" href="twoWayGallery.css" />
     ```
 2. By default, it is required to add [Font Awesome 4](https://fontawesome.com/v4.7.0/icons/) 
-script to the ```<head>``` of your HTML page; however, you can [pass your own icons](link):
+stylesheet to the `<head>` of your HTML page. 
     ```html
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     ```
-3. Add twoWayGallery.js to the ```<head>``` of your HTML:
+   - *Note*: this part is **OPTIONAL** if default [Options]() `navigationIcons` and 
+      `sGalleryNavigationIcons` are overwritten.
+3. Add twoWayGallery.js to the `<head>` of your HTML:
     ```html
     <script src="twoWayGallery.js"></script>
     ``` 
-4. Add markup to the ```<body>``` of your HTML:
+4. Add markup to the `<body>` of your HTML.: 
+   `sGalleryEnable` is set to `false`.
     ```html
     <div class="tw-gallery">
        <div class="tw-m-gallery"></div>
        <div class="tw-s-gallery"></div>
     </div>
     ```
+   - *Note*: `<div class="tw-s-gallery"></div>` can be excluded if default [Option]().
 5. Initiate the gallery using the following JS:
     ```javascript
     const twoWayGallery = new TwoWayGallery();
@@ -61,12 +66,13 @@ script to the ```<head>``` of your HTML page; however, you can [pass your own ic
        imagesArray: ["image1.jpg", "image2.jpg", ... , "image100.jpg"]
     });
     ```
+   - *Note*: [Option]() `imagesArray` **NEEDS TO BE INCLUDED**
 
 ## Options
 | Option                          | Must     | Type                         | Default        | Description                                                                                                                                                                                                                      |
 | ---                             | ---      | ---                          | ---            | ---                                                                                                                                                                                                                              |
-| `twGalleryClass`                | &#10008; | String                       | `"tw-gallery"` | Rename or store more than one gallery on the same page. Example: `tw-gallery2`                                                                                                                                                   |
 | `imagesArray`                   | &#10004; | String[]&nbsp; & !empty      |                | Array that contains the list of images to be displayed. Directory can be included. Example: `["image.jpg", "img/image2.jpg"]`                                                                                                    |
+| `twGalleryClass`                | &#10008; | String                       | `"tw-gallery"` | Rename or store more than one gallery on the same page. Example: `"tw-gallery2"`                                                                                                                                                 |
 | `directory`                     | &#10008; | String                       | `""`           | A directory where your images in the `imagesArray` are located. Slash needs to be included. Example: `"img/"`.                                                                                                                   |
 | `descriptionArray`              | &#10008; | String[]                     | `[]`           | Array that contains the list of descriptions to be displayed. It's length must be the same as `imagesArray`. Example: `["This is image.jpg", "This is image img/image2.jpg"]`                                                    |
 | `descriptionType`               | &#10008; | "white"&nbsp; &#124; "black" | `"white"`      | The way the description is attached to the image. `"White"` has white background that overwrites image borders and the black font, while `"black"` has black semi-transparent background and white font within image borders.    |
@@ -79,7 +85,7 @@ script to the ```<head>``` of your HTML page; however, you can [pass your own ic
 | `autoPlayDirection`             | &#10008; | "left"&nbsp; &#124; "right"  | `"right"`      | The direction that gallery needs to be scrolled to.                                                                                                                                                                              |
 | `autoPlayPauseOnHover`          | &#10008; | Boolean                      | `true`         | If `true`, hover over event on any element (both Main and Secondary), pauses auto scrolling instantly.                                                                                                                           |
 | `autoPlayPauseNotification`     | &#10008; | Boolean                      | `true`         | If `true`, the notification over the gallery is displayed when it is paused.                                                                                                                                                     |
-| `autoPlayPauseNotificationText` | &#10008; | String                       | `"PAUSED"`     | The text that is displayed inside the `autoPlayPauseNotification`. Another great example to display pause icon instead of the default text: `"<i class='fa fa-pause' aria-hidden='true'></i>"`.                                  |
+| `autoPlayPauseNotificationText` | &#10008; | String                       | `"PAUSED"`     | The text that is displayed inside the `autoPlayPauseNotification`. Another great example to display pause icon instead of the default text: `"<i class='fa fa-pause' aria-hidden='true'></i>"`. *Note:* to use this example, default font awesome icons that are included in the [Usage]() part must be passed to your page. |                                |
 | `navigationEnable`              | &#10008; | Boolean                      | `true`         | If `true`, navigation arrows in the main gallery are displayed on each side (left and right).                                                                                                                                    |
 | `navigationShowOnHover`         | &#10008; | Boolean                      | `false`        | If `true`, navigation is hidden by default and is displayed on hover over the main gallery. If `false`, navigation is hidden by default but hovering over the arrows enlarges them.                                              |
 | `navigationIcons`               | &#10008; | String[]                     | `["<i class='fas fa-chevron-left'></i>", "<i class='fas fa-chevron-right'></i>"]` | An array that contains `["left", "right"]` arrow icons of the Main Gallery. Text or any other icons in the same format as `default` can be passed.            |
