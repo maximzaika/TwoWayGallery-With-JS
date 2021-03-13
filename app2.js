@@ -437,9 +437,6 @@ function TwoWayGallery() {
           element.offsetLeft +
           element.offsetWidth / 2 -
           twsSlider.offsetWidth / 2;
-        console.log(`element.offsetLeft: ${element.offsetLeft}; 
-      element.offsetWidth: ${element.offsetWidth / 2};
-      twsSlider.offsetWidth: ${twsSlider.offsetWidth / 2}`);
         twsSlider.scrollTo({
           left: changedFocusedImageOffset - 10,
           behavior: "smooth",
@@ -938,7 +935,7 @@ function TwoWayGallery() {
 
 const twoWayGallery = new TwoWayGallery();
 twoWayGallery.init({
-  twGalleryClass: "tw-gallery3",
+  twGalleryClass: "tw-gallery",
   imagesArray: [
     "https://images.unsplash.com/photo-1553241880-0cdc914d1d88?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
     "https://images.unsplash.com/photo-1561781565-3c2fcbf552cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
@@ -967,59 +964,24 @@ twoWayGallery.init({
   displayItems: 3,
   enableArrowKeys: true,
   enableTouch: true,
-  autoPlayEnable: true,
+  autoPlayEnable: false,
   autoPlayDirection: "left",
   autoPlayPauseOnHover: true,
   autoPlayPauseNotification: true,
   autoPlayPauseNotificationText: `<i class="fa fa-pause" aria-hidden="true"></i>`,
   autoPlayTimeout: 3000,
   navigationEnable: true,
-  navigationShowOnHover: true,
+  navigationShowOnHover: false,
   // navigationIcons: [
   //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
   //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
   // ],
   sGalleryEnable: true,
   sGalleryInstant: false,
-  sGalleryDesktopTouch: true,
-  sGalleryNavigationArrows: true,
+  sGalleryDesktopTouch: false,
+  sGalleryNavigationArrows: false,
   // sGalleryNavigationIcons: [
   //   `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
   //   `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
   // ],
-});
-
-const twoWayGallery2 = new TwoWayGallery();
-twoWayGallery2.init({
-  twGalleryClass: "tw-gallery",
-  imagesArray: [
-    "https://images.unsplash.com/photo-1553241880-0cdc914d1d88?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
-    "https://images.unsplash.com/photo-1561781565-3c2fcbf552cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781565-3c2fcbf552cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-  ],
-  descriptionArray: [
-    "Fantastic view from the above.",
-    "River view.",
-    "City view during the day.",
-    "River view.",
-    "City view during the day.",
-    "City view during the day.",
-    "City view during the day.",
-    "City view during the day.",
-  ],
-  descriptionType: "black",
-  displayItems: 7,
-  navigationIcons: [
-    `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
-    `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
-  ],
-  sGalleryNavigationIcons: [
-    `<i class="fa fa-angle-left" aria-hidden="true"></i>`,
-    `<i class="fa fa-angle-right" aria-hidden="true"></i>`,
-  ],
 });
