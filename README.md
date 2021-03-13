@@ -9,10 +9,10 @@ devices, but its design is mostly visible on desktop devices.
 [Demos (TO BE ADD MORE)](https://maximzaika.github.io/TwoWayGallery/)
 
 ## Contents
-1. [Recent Changelog](#Recent-Changelog)
-2. [Install](#Install)
-3. [Usage](#Usage)
-4. [Options](#Options)
+* [Recent Changelog](#Recent-Changelog)
+* [Install](#Install)
+* [Usage](#Usage)
+* [Options](#Options)
 
 ## Recent Changelog
 * v2.01 - The first finalised release that includes all the expected options.
