@@ -51,7 +51,8 @@ stylesheet to the `<head>` of your HTML page.
     ```
    - *Note*: `<div class="tw-s-gallery"></div>` can be excluded if default [Option](#Options) 
    `sGalleryEnable` is set to `false`.
-5. Initiate the gallery using the following JS:
+5. Initiate the gallery using the following JS by adding it in the `<script>` tag before 
+the `</html>` tag or in any other JS file:
     ```javascript
     const twoWayGallery = new TwoWayGallery();
     twoWayGallery.init({
