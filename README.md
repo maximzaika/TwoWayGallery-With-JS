@@ -6,13 +6,13 @@ can be used for many purposes, but it has been built with the purpose to display
 images quickly on single-page websites. It is functional on both mobile and desktop 
 devices, but its design is mostly visible on desktop devices.
 
-[Demos (TO BE ADD MORE)](https://maximzaika.github.io/TwoWayGallery/)
+[Demos (TO BE ADDED MORE)](https://maximzaika.github.io/TwoWayGallery/)
 
 ## Contents
-1. [Recent Changelog](#Recent-Changelog)
-2. [Install](#Install)
-3. [Usage](#Usage)
-4. [Options](#Options)
+* [Recent Changelog](#Recent-Changelog)
+* [Install](#Install)
+* [Usage](#Usage)
+* [Options](#Options)
 
 ## Recent Changelog
 * v2.01 - The first finalised release that includes all the expected options.
