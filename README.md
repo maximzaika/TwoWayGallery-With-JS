@@ -18,9 +18,10 @@ devices, but its design is mostly visible on desktop devices.
 * v2.01 - The first finalised release that includes all the expected options.
 
 ## Install
-Clone github or download releases from the github.
+Clone the repository or download the latest 
+[release](https://github.com/maximzaika/TwoWayGallery.github.io/releases) from the github.
 
-bower and npm to be added.
+bower and npm (TO BE ADDED).
 
 ## Usage
 1. Add CSS link to the `<head>` of your HTML page:
