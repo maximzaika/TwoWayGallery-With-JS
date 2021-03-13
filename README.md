@@ -6,7 +6,7 @@ can be used for many purposes, but it has been built with the purpose to display
 images quickly on single-page websites. It is functional on both mobile and desktop 
 devices, but its design is mostly visible on desktop devices.
 
-[Demos (TO BE ADDED)](https://github.com/maximzaika/TwoWayGallery.github.io)
+[Demos (TO BE ADD MORE)](https://maximzaika.github.io/TwoWayGallery/)
 
 ## Contents
 1. [Recent Changelog](#Recent-Changelog)
