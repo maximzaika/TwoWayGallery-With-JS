@@ -16,21 +16,6 @@
 }
 
 .tw-m-gallery > .tw-m-play {
-  /*height: auto;*/
-  /*font-size: 15px;*/
-  /*display: inline-block;*/
-  /*position: absolute;*/
-  /*padding: 1rem;*/
-  /*!*margin: 1rem;*!*/
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
-  /*top: 13rem;*/
-  /*cursor: pointer;*/
-  /*opacity: 0.8;*/
-  /*z-index: 8;*/
-  /*transition: top 0.18s ease, font-size 0.18s ease;*/
-  /*transition-delay: 0.05s;*/
-
   position: relative;
   font-size: 15px;
   letter-spacing: 1px;
