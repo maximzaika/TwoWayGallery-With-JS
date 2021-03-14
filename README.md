@@ -15,7 +15,8 @@ devices, but its design is mostly visible on desktop devices.
 * [Options](#Options)
 
 ## Recent Changelog
-* v2.01 - The first finalised release that includes all the expected options.
+* 15/03/2021 Updated the README.md usage section 2. Changed the script src.
+* 14/03/2021 v2.01 - The first finalised release that includes all the expected options.
 
 ## Install
 Clone the repository or download the latest 
