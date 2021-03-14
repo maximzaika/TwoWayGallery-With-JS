@@ -31,10 +31,7 @@ bower and npm (TO BE ADDED).
 2. By default, it is required to add [Font Awesome 4](https://fontawesome.com/v4.7.0/icons/) 
 stylesheet to the `<head>` of your HTML page. 
     ```html
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     ```
    - *Note*: this part is **OPTIONAL** if default [Options](#Options) `navigationIcons` and 
       `sGalleryNavigationIcons` are overwritten.
