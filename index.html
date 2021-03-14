@@ -6,20 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>TwoWayGallery Demos</title>
+    <link rel="icon" href="TWShort.png" />
     <link rel="stylesheet" href="src/twoWayGallery.css" />
+    <link rel="stylesheet" href="demo.css" />
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
     <script src="src/twoWayGallery.js"></script>
   </head>
 
   <body>
-    <div class="tw-gallery">
-      <div class="tw-m-gallery"></div>
-      <div class="tw-s-gallery"></div>
-    </div>
+    <nav class="navbar">
+      <div class="page-row font-size">
+        <a class="navbar-logo" href="#"><p>twoWayGallery.js</p></a>
+
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="#">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#demo">Demo</a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              href="https://github.com/maximzaika/TwoWayGallery/tree/main#Install"
+              >Install</a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a
+              href="https://github.com/maximzaika/TwoWayGallery/tree/main#Options"
+              >Options</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <section class="header">
+      <div class="page-row header-content">
+        <div class="row padding-bottom">
+          <div class="column-left">
+            <h2>TwoWay Gallery <span>v 2.01</span></h2>
+            <p>
+              Touch and navigation enabled JavaScript image gallery that can be
+              used to display images quickly on any web page.
+            </p>
+          </div>
+
+          <div class="column-right column-logo">
+            <img class="tw-logo" src="TWLogo.png" alt="" />
+          </div>
+        </div>
+
+        <a
+          type="button"
+          href="https://github.com/maximzaika/TwoWayGallery/archive/2.01.zip"
+          class="btn btn-download"
+        >
+          Download
+        </a>
+        <a
+          type="button"
+          href="https://github.com/maximzaika/TwoWayGallery/tree/main"
+          class="btn btn-github"
+          >Github Repo</a
+        >
+      </div>
+    </section>
+
+    <section id="demo" class="tw-demo">
+      <div class="page-row">
+        <h2 class="center">Demo & Options</h2>
+        <div class="tw-gallery">
+          <div class="tw-m-gallery"></div>
+          <div class="tw-s-gallery"></div>
+        </div>
+      </div>
+    </section>
   </body>
 
   <script type="text/javascript">
