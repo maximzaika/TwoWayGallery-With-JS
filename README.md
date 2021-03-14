@@ -1,4 +1,7 @@
 # TwoWayGallery
+
+<img src="https://raw.githubusercontent.com/maximzaika/TwoWayGallery/main/TWLogo.png" width="300">
+
 It is a gallery that consists of two parts: *Main Gallery* and *Secondary Gallery*.
 It is written in vanilla JavaScript. The *Main Gallery* always needs to be enabled, 
 while the *Secondary Gallery* can be either activated or deactivated. This gallery 
