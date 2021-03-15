@@ -109,15 +109,6 @@ function TwoWayGallery() {
     const DEF_S_GALLERY_DESK_TOUCH = true;
     const DEF_S_GALLERY_ARROWS = true;
 
-    if (
-      o.navigationEnable &&
-      typeof o.navigationEnable === "boolean" &&
-      o.navigationShowOnHover &&
-      typeof o.navigationShowOnHover === "boolean"
-    ) {
-      DEF_NAV_HOVER = o.navigationShowOnHover;
-    }
-
     return {
       TW_GALLERY: setOption("string", o.twGalleryClass, DEF_TW_GALLERY),
       imagesArray: o.imagesArray,
@@ -138,7 +129,8 @@ function TwoWayGallery() {
           : setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
       navigation: {
         enable: setOption("boolean", o.navigationEnable, DEF_NAV),
-        hover: DEF_NAV_HOVER,
+        // hover: DEF_NAV_HOVER,
+        hover: setOption("boolean", o.navigationShowOnHover, DEF_NAV_HOVER),
         icons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
       },
       enableArrowKeys: setOption("boolean", o.enableArrowKeys, DEF_ARROW_KEYS),
