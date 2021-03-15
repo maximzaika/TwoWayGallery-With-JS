@@ -18,6 +18,11 @@ devices, but its design is mostly visible on desktop devices.
 * [Options](#Options)
 
 ## Recent Changelog
+* 16/04/2021:
+  - modified function this.eventSGalClickTouch to ensure that event is always listening once and to document.body instead of the document. Event mouseup is not listening only when mousedown on the twsSlider is triggered.
+  - this.eventMGalArrowKeys is now enables the listening for arrow keys when the gallery is in viewport based on the scroll event
+  - option navigationShowOnHover has been fixed. Setting it to true was not making any changes to the gallery.
+  - updated nearly complete demo page
 * 15/03/2021 Updated the README.md usage section 2. Changed the script src.
 * 14/03/2021 v2.01 - The first finalised release that includes all the expected options.
 
