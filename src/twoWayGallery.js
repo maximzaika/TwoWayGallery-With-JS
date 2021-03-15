@@ -719,13 +719,7 @@ function TwoWayGallery() {
         mouseStart = event.pageX;
         event.preventDefault();
         twsSlider.addEventListener("mousemove", mouseOverFunction);
-      });
-
-      document.addEventListener("mouseup", () => {
-        const date = new Date();
-        const touchEndTime = date.getTime();
-        touchDuration = Math.abs(touchStartTime - touchEndTime);
-        twsSlider.removeEventListener("mousemove", mouseOverFunction);
+        document.body.addEventListener("mouseup", mouseLeaveFunction);
       });
 
       const mouseOverFunction = (event) => {
@@ -735,6 +729,14 @@ function TwoWayGallery() {
 
         let scrollerDiff = scrollPos + cursorPos;
         twSlider.scrollTo({ left: scrollerDiff });
+      };
+
+      const mouseLeaveFunction = () => {
+        const date = new Date();
+        const touchEndTime = date.getTime();
+        touchDuration = Math.abs(touchStartTime - touchEndTime);
+        twsSlider.removeEventListener("mousemove", mouseOverFunction);
+        document.body.removeEventListener("mousemove", mouseLeaveFunction);
       };
     }
 
