@@ -554,34 +554,42 @@ function TwoWayGallery() {
    * to trigger clicks on the next/prev buttons.
    */
   this.eventMGalArrowKeys = (o) => {
-    if (o.enableArrowKeys) {
-      const isInViewport = (element) => {
-        const rect = element.getBoundingClientRect();
-        return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <=
-            (window.innerWidth || document.documentElement.clientWidth)
-        );
-      };
-
-      const twmGallery = document.querySelector(
-        `.${o.TW_GALLERY} > .${TWM_GALLERY}`
+    const isInViewport = (element) => {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <=
+          (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <=
+          (window.innerWidth || document.documentElement.clientWidth)
       );
+    };
 
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowLeft" && isInViewport(twmGallery)) {
-          event.preventDefault();
-          this.prev(o, true);
-        }
+    const keydownEvent = (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        this.prev(o, true);
+      }
 
-        if (event.key === "ArrowRight" && isInViewport(twmGallery)) {
-          event.preventDefault();
-          this.next(o, true);
-        }
-      });
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        this.next(o, true);
+      }
+    };
+
+    const scrollEvent = () => {
+      const twGallery = document.querySelector(`.${o.TW_GALLERY}`);
+
+      if (isInViewport(twGallery)) {
+        document.addEventListener("keydown", keydownEvent);
+      } else {
+        document.removeEventListener("keydown", keydownEvent);
+      }
+    };
+
+    if (o.enableArrowKeys) {
+      window.addEventListener("scroll", scrollEvent.bind(this));
     }
   };
 
