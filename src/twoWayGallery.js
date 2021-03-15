@@ -109,15 +109,6 @@ function TwoWayGallery() {
     const DEF_S_GALLERY_DESK_TOUCH = true;
     const DEF_S_GALLERY_ARROWS = true;
 
-    if (
-      o.navigationEnable &&
-      typeof o.navigationEnable === "boolean" &&
-      o.navigationShowOnHover &&
-      typeof o.navigationShowOnHover === "boolean"
-    ) {
-      DEF_NAV_HOVER = o.navigationShowOnHover;
-    }
-
     return {
       TW_GALLERY: setOption("string", o.twGalleryClass, DEF_TW_GALLERY),
       imagesArray: o.imagesArray,
@@ -138,7 +129,8 @@ function TwoWayGallery() {
           : setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
       navigation: {
         enable: setOption("boolean", o.navigationEnable, DEF_NAV),
-        hover: DEF_NAV_HOVER,
+        // hover: DEF_NAV_HOVER,
+        hover: setOption("boolean", o.navigationShowOnHover, DEF_NAV_HOVER),
         icons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
       },
       enableArrowKeys: setOption("boolean", o.enableArrowKeys, DEF_ARROW_KEYS),
@@ -554,34 +546,42 @@ function TwoWayGallery() {
    * to trigger clicks on the next/prev buttons.
    */
   this.eventMGalArrowKeys = (o) => {
-    if (o.enableArrowKeys) {
-      const isInViewport = (element) => {
-        const rect = element.getBoundingClientRect();
-        return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <=
-            (window.innerWidth || document.documentElement.clientWidth)
-        );
-      };
-
-      const twmGallery = document.querySelector(
-        `.${o.TW_GALLERY} > .${TWM_GALLERY}`
+    const isInViewport = (element) => {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <=
+          (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <=
+          (window.innerWidth || document.documentElement.clientWidth)
       );
+    };
 
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowLeft" && isInViewport(twmGallery)) {
-          event.preventDefault();
-          this.prev(o, true);
-        }
+    const keydownEvent = (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        this.prev(o, true);
+      }
 
-        if (event.key === "ArrowRight" && isInViewport(twmGallery)) {
-          event.preventDefault();
-          this.next(o, true);
-        }
-      });
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        this.next(o, true);
+      }
+    };
+
+    const scrollEvent = () => {
+      const twGallery = document.querySelector(`.${o.TW_GALLERY}`);
+
+      if (isInViewport(twGallery)) {
+        document.addEventListener("keydown", keydownEvent);
+      } else {
+        document.removeEventListener("keydown", keydownEvent);
+      }
+    };
+
+    if (o.enableArrowKeys) {
+      window.addEventListener("scroll", scrollEvent.bind(this));
     }
   };
 
@@ -719,13 +719,7 @@ function TwoWayGallery() {
         mouseStart = event.pageX;
         event.preventDefault();
         twsSlider.addEventListener("mousemove", mouseOverFunction);
-      });
-
-      document.addEventListener("mouseup", () => {
-        const date = new Date();
-        const touchEndTime = date.getTime();
-        touchDuration = Math.abs(touchStartTime - touchEndTime);
-        twsSlider.removeEventListener("mousemove", mouseOverFunction);
+        document.body.addEventListener("mouseup", mouseLeaveFunction);
       });
 
       const mouseOverFunction = (event) => {
@@ -735,6 +729,14 @@ function TwoWayGallery() {
 
         let scrollerDiff = scrollPos + cursorPos;
         twSlider.scrollTo({ left: scrollerDiff });
+      };
+
+      const mouseLeaveFunction = () => {
+        const date = new Date();
+        const touchEndTime = date.getTime();
+        touchDuration = Math.abs(touchStartTime - touchEndTime);
+        twsSlider.removeEventListener("mousemove", mouseOverFunction);
+        document.body.removeEventListener("mousemove", mouseLeaveFunction);
       };
     }
 
