@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="demo.css" />
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="src/twoWayGallery.js"></script>
+    <script src="twConfig.js" defer></script>
   </head>
 
   <body>
     <nav class="navbar">
       <div class="page-row font-size">
-        <a class="navbar-logo" href="#"><p>twoWayGallery.js</p></a>
+        <a class="navbar-logo" href="#">twoWayGallery.js</a>
 
         <ul class="navbar-nav">
           <!--          <li class="nav-item">-->
@@ -30,6 +31,7 @@
           <li class="nav-item">
             <a
               href="https://github.com/maximzaika/TwoWayGallery/tree/main#Install"
+              target="_blank"
               >Install</a
             >
           </li>
@@ -37,6 +39,7 @@
           <li class="nav-item">
             <a
               href="https://github.com/maximzaika/TwoWayGallery/tree/main#Options"
+              target="_blank"
               >Options</a
             >
           </li>
@@ -76,42 +79,229 @@
       </div>
     </section>
 
-    <section id="demo" class="tw-demo">
+    <section id="options" class="options">
       <div class="page-row">
-        <h2 class="center">Demo & Options</h2>
+        <h2 class="center">Options</h2>
+        <p class="center">
+          Options that require manual input are not displayed. You may find all
+          available options in
+          <a
+            href="https://github.com/maximzaika/TwoWayGallery/tree/main#Options"
+            target="_blank"
+          >
+            Github</a
+          >.
+        </p>
+
+        <div class="available-options">
+          <label for="startItem">startItem</label>
+          <select id="startItem">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+
+          <label for="displayItems">displayItems</label>
+          <select id="displayItems">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="7">7</option>
+          </select>
+
+          <label for="descriptionType">descriptionType</label>
+          <select id="descriptionType">
+            <option value="white" selected>white</option>
+            <option value="black">black</option>
+          </select>
+
+          <p>
+            enableArrowKeys:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="enableArrowKeys"
+                value="enableArrowKeys"
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            enableTouch:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="enableTouch"
+                value="enableTouch"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            autoPlayEnable:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="autoPlayEnable"
+                value="autoPlayEnable"
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <label for="autoPlayTimeout">autoPlayTimeout</label>
+          <select id="autoPlayTimeout">
+            <option value="500">500 ms</option>
+            <option value="1000">1000 ms</option>
+            <option value="2000" selected>2000 ms</option>
+            <option value="4000">4000 ms</option>
+            <option value="8000">8000 ms</option>
+          </select>
+
+          <label for="autoPlayDirection">autoPlayDirection</label>
+          <select id="autoPlayDirection">
+            <option value="left">left</option>
+            <option value="right" selected>right</option>
+          </select>
+
+          <p>
+            autoPlayPauseOnHover:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="autoPlayPauseOnHover"
+                value="autoPlayPauseOnHover"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            autoPlayPauseNotification:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="autoPlayPauseNotification"
+                value="autoPlayPauseNotification"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            navigationEnable:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="navigationEnable"
+                value="navigationEnable"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            navigationShowOnHover:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="navigationShowOnHover"
+                value="navigationShowOnHover"
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            sGalleryEnable:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="sGalleryEnable"
+                value="sGalleryEnable"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            sGalleryInstant:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="sGalleryInstant"
+                value="sGalleryInstant"
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            sGalleryDesktopTouch:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="sGalleryDesktopTouch"
+                value="sGalleryDesktopTouch"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+
+          <p>
+            sGalleryNavigationArrows:
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="sGalleryNavigationArrows"
+                value="sGalleryNavigationArrows"
+                checked
+              />
+              <span class="slider round"></span>
+            </label>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="demo">
+      <div class="page-row">
+        <h2 class="center">Demo</h2>
+
         <div class="tw-gallery">
           <div class="tw-m-gallery"></div>
           <div class="tw-s-gallery"></div>
         </div>
       </div>
     </section>
-  </body>
 
-  <script type="text/javascript">
-    const twoWayGallery = new TwoWayGallery();
-    twoWayGallery.init({
-      imagesArray: [
-        "https://images.unsplash.com/photo-1553241880-0cdc914d1d88?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
-        "https://images.unsplash.com/photo-1561781565-3c2fcbf552cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        "https://images.unsplash.com/photo-1561781569-4f942d7bfa86?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        "https://images.unsplash.com/photo-1610872853577-98ffd151ff2b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        "https://images.unsplash.com/photo-1590354501494-b2038be5b83d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        "https://images.unsplash.com/photo-1494626594498-792a9632e9a4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        "https://images.unsplash.com/photo-1596312906091-281b15599021?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80",
-        "https://images.unsplash.com/photo-1529784237789-45cc21f5705b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80",
-        "https://images.unsplash.com/photo-1605260082899-300f8867d39e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1491&q=80",
-      ],
-      descriptionArray: [
-        "Fantastic view from the above.",
-        "River view.",
-        "City view during the day.",
-        "Awesome looking church!",
-        "Beautiful flower.",
-        "Bench that you can sit on. :)",
-        "Destroyed castle. :(",
-        "City view during the night.",
-        "Hotel in the desert...",
-      ],
-    });
-  </script>
+    <section class="footer">
+      <div class="page-row initials">
+        <p>by Maxim Zaika</p>
+        <div class="refs">
+          <a
+            class="linkedin-icon"
+            href="https://www.linkedin.com/in/maxim-zaika"
+            target="_blank"
+          ></a>
+          <a
+            class="twitter-icon"
+            href="https://twitter.com/share?url=https://github.com/maximzaika/TwoWayGallery&text=TwoWay%20Gallery%20-%20Love%20this%20JS%20image%20Gallery!"
+            target="_blank"
+          ></a>
+        </div>
+      </div>
+    </section>
+  </body>
 </html>
