@@ -76,7 +76,8 @@ An example of how the twGallery is rendered. For now, `tw-gallery` class
 can be replaced using [Option](#Options)  `imagesArray`.
 
 <details>
-    <summary>Click to expand!</summary>
+    <summary>Click to expand HTML Render</summary>
+    
     ```html
     <div class="tw-gallery tw-loaded" style="margin-top: 30px">
       <div class="tw-m-gallery">
