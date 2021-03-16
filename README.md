@@ -74,13 +74,13 @@ the `</html>` tag or in any other JS file:
 
 ## HTML Render
 An example of how the twGallery is rendered. For now, `tw-gallery` class 
-can be replaced using [Option](#Options)  `imagesArray`.
+can be replaced using [Option](#Options)  `twGalleryClass`.
 
 <details>
 <summary>Click to expand HTML Render</summary>
     
 ```html
-<div class="tw-gallery tw-loaded" style="margin-top: 30px">
+<div class="tw-gallery tw-loaded">
   <div class="tw-m-gallery">
 
     <div class="tw-m-nav">
