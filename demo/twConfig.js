@@ -22,6 +22,7 @@ const removeCurrentGal = () => {
 
   twGallery = document.createElement("div");
   twGallery.className = "tw-gallery";
+  twGallery.style.marginTop = "30px";
 
   const twmGallery = document.createElement("div");
   twmGallery.className = `tw-m-gallery`;
@@ -47,7 +48,6 @@ const toggleBooleanEvent = (element, action) => {
     }
 
     initialiseTWGal(options);
-    console.log(options);
   });
 };
 
@@ -64,14 +64,14 @@ let options = {
   descriptionArray: [
     "Supports different styles of descriptions",
     "Stress free setup",
-    `Available in the&nbsp;<a href="https://opensource.org/licenses/mit-license.php" target="_blank">MIT</a>&nbsp;license`,
+    `Available in the MIT license`,
     "Large variety of options available",
     "Memory and bandwidth are the limits",
     "Descriptions can be disabled or enabled whenever necessary",
     "Secondary gallery allows the user to scroll through images quickly",
   ],
   startItem: 2,
-  directory: "img/",
+  directory: "demo/img/",
 };
 initialiseTWGal(options);
 
