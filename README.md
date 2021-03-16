@@ -1,6 +1,6 @@
 # TwoWayGallery
 
-<img src="https://raw.githubusercontent.com/maximzaika/TwoWayGallery/main/TWLogo.png" width="300">
+<img src="https://raw.githubusercontent.com/maximzaika/TwoWayGallery/main/demo/img/TWLogo.png" width="300">
 
 It is a gallery that consists of two parts: *Main Gallery* and *Secondary Gallery*.
 It is written in vanilla JavaScript. The *Main Gallery* always needs to be enabled, 
@@ -9,7 +9,7 @@ can be used for many purposes, but it has been built with the purpose to display
 images quickly on single-page websites. It is functional on both mobile and desktop 
 devices, but its design is mostly visible on desktop devices.
 
-[Demos (TO BE ADDED MORE)](https://maximzaika.github.io/TwoWayGallery/)
+[Demos & Configs](https://maximzaika.github.io/TwoWayGallery/)
 
 ## Contents
 * [Recent Changelog](#Recent-Changelog)
