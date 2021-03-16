@@ -1,14 +1,29 @@
-/*
-    passing arguments:
-       must:
-         - imagesArray
-       optional:
-         - descriptionArray
-         - directory
-         - startItem
-         - displayItems
-         - itemClass
-  */
+/* MIT License
+
+Copyright (c) 2021 Maxim Zaika
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Original Github repository: https://maximzaika.github.io/TwoWayGallery/
+
+*/
+
 function TwoWayGallery() {
   // tw-gallery classes
   const [TWM_GALLERY, TWS_GALLERY, TW_LOADED] = [
@@ -83,99 +98,84 @@ function TwoWayGallery() {
       }
     }
 
-    const DEF_TW_GALLERY = "tw-gallery";
-
-    const DEF_DESCRIPTION_ARRAY = [];
-    const DEF_DESCRIPTION_TYPE = "tw-m-white-desc";
-    const DEF_DIRECTORY = "";
-    const DEF_START_ITEM = 0;
-    const DEF_DISPLAY_ITEMS = 5;
-    const DEF_ARROW_KEYS = false;
-    const DEF_TOUCH = true;
-    const DEF_AUTOPLAY_ENABLE = false;
-    const DEF_AUTOPLAY_TIMEOUT = 2000;
-    const DEF_AUTOPLAY_PAUSE = true;
-    const DEF_AUTOPLAY_PAUSE_NOTIFICATION = true;
-    const DEF_AUTOPLAY_PAUSE_NOTIFICATION_TEXT = "PAUSED";
-    const DEF_AUTOPLAY_DIRECTION = "right";
-    const DEF_NAV = true;
-    let DEF_NAV_HOVER = false;
-    const DEF_NAV_ICONS = [
+    const TW_GALLERY_CLASS = "tw-gallery";
+    const DESCRIPTIONS = [];
+    const DESCRIPTION_TYPE = "tw-m-white-desc";
+    const DIRECTORY = "";
+    const START_ITEM = 0;
+    const DISPLAY_ITEMS = 5;
+    const ARROW_KEYS = false;
+    const TOUCH_ENABLE = true;
+    const AP_ENABLE = false;
+    const AP_TIMEOUT = 2000;
+    const AP_PAUSE = true;
+    const AP_PAUSE_NOTIF = true;
+    const AP_PAUSE_NOTIF_TEXT = "PAUSED";
+    const AP_DIRECTION = "right";
+    const NAVIGATION = true;
+    let NAVIGATION_HOVER = false;
+    const NAVIGATION_ICONS = [
       `<i class="fas fa-chevron-left"></i>`,
       `<i class="fas fa-chevron-right"></i>`,
     ]; // [left, right]
-    const DEF_S_GALLERY_ENABLE = true;
-    const DEF_S_GALLERY_INSTANT = false;
-    const DEF_S_GALLERY_DESK_TOUCH = true;
-    const DEF_S_GALLERY_ARROWS = true;
+    const S_GAL_ENABLE = true;
+    const S_GAL_INSTANT = false;
+    const S_GAL_MOUSE_DRAG = true;
+    const S_GAL_NAVIGATION = true;
 
     return {
-      TW_GALLERY: setOption("string", o.twGalleryClass, DEF_TW_GALLERY),
+      TW_GALLERY: setOption("string", o.twGalleryClass, TW_GALLERY_CLASS),
       imagesArray: o.imagesArray,
-      descriptionArray: setOption(
-        "array",
-        o.descriptionArray,
-        DEF_DESCRIPTION_ARRAY
-      ),
+      descriptionArray: setOption("array", o.descriptionArray, DESCRIPTIONS),
       descriptionType:
-        o.descriptionType === "black"
-          ? "tw-m-black-desc"
-          : DEF_DESCRIPTION_TYPE,
-      directory: setOption("string", o.directory, DEF_DIRECTORY),
-      startItem: setOption("number", o.startItem, DEF_START_ITEM),
+        o.descriptionType === "black" ? "tw-m-black-desc" : DESCRIPTION_TYPE,
+      directory: setOption("string", o.directory, DIRECTORY),
+      startItem: setOption("number", o.startItem, START_ITEM),
       displayItems:
-        setOption("number", o.displayItems, DEF_DISPLAY_ITEMS) % 2 == 0
-          ? DEF_DISPLAY_ITEMS
-          : setOption("number", o.displayItems, DEF_DISPLAY_ITEMS),
+        setOption("number", o.displayItems, DISPLAY_ITEMS) % 2 == 0
+          ? DISPLAY_ITEMS
+          : setOption("number", o.displayItems, DISPLAY_ITEMS),
       navigation: {
-        enable: setOption("boolean", o.navigationEnable, DEF_NAV),
-        // hover: DEF_NAV_HOVER,
-        hover: setOption("boolean", o.navigationShowOnHover, DEF_NAV_HOVER),
-        icons: setOption("array", o.navigationIcons, DEF_NAV_ICONS),
+        enable: setOption("boolean", o.navigationEnable, NAVIGATION),
+        // hover: NAVIGATION_HOVER,
+        hover: setOption("boolean", o.navigationShowOnHover, NAVIGATION_HOVER),
+        icons: setOption("array", o.navigationIcons, NAVIGATION_ICONS),
       },
-      enableArrowKeys: setOption("boolean", o.enableArrowKeys, DEF_ARROW_KEYS),
-      enableTouch: setOption("boolean", o.enableTouch, DEF_TOUCH),
+      enableArrowKeys: setOption("boolean", o.enableArrowKeys, ARROW_KEYS),
+      enableTouch: setOption("boolean", o.enableTouch, TOUCH_ENABLE),
       autoPlay: {
-        enable: setOption("boolean", o.autoPlayEnable, DEF_AUTOPLAY_ENABLE),
-        direction: setOption(
-          "string",
-          o.autoPlayDirection,
-          DEF_AUTOPLAY_DIRECTION
-        ),
-        hoverPause: setOption(
-          "boolean",
-          o.autoPlayPauseOnHover,
-          DEF_AUTOPLAY_PAUSE
-        ),
+        enable: setOption("boolean", o.autoPlayEnable, AP_ENABLE),
+        direction: setOption("string", o.autoPlayDirection, AP_DIRECTION),
+        hoverPause: setOption("boolean", o.autoPlayPauseOnHover, AP_PAUSE),
         hoverPauseNotification: setOption(
           "boolean",
           o.autoPlayPauseNotification,
-          DEF_AUTOPLAY_PAUSE_NOTIFICATION
+          AP_PAUSE_NOTIF
         ),
         hoverPauseNotificationText: setOption(
           "string",
           o.autoPlayPauseNotificationText,
-          DEF_AUTOPLAY_PAUSE_NOTIFICATION_TEXT
+          AP_PAUSE_NOTIF_TEXT
         ),
-        timeout: setOption("number", o.autoPlayTimeout, DEF_AUTOPLAY_TIMEOUT),
+        timeout: setOption("number", o.autoPlayTimeout, AP_TIMEOUT),
       },
       sGallery: {
-        enable: setOption("boolean", o.sGalleryEnable, DEF_S_GALLERY_ENABLE),
-        instant: setOption("boolean", o.sGalleryInstant, DEF_S_GALLERY_INSTANT),
+        enable: setOption("boolean", o.sGalleryEnable, S_GAL_ENABLE),
+        instant: setOption("boolean", o.sGalleryInstant, S_GAL_INSTANT),
         desktopTouch: setOption(
           "boolean",
           o.sGalleryDesktopTouch,
-          DEF_S_GALLERY_DESK_TOUCH
+          S_GAL_MOUSE_DRAG
         ),
         navigationArrows: setOption(
           "boolean",
           o.sGalleryNavigationArrows,
-          DEF_S_GALLERY_ARROWS
+          S_GAL_NAVIGATION
         ),
         navigationIcons: setOption(
           "array",
           o.sGalleryNavigationIcons,
-          DEF_NAV_ICONS
+          NAVIGATION_ICONS
         ),
       },
     };
