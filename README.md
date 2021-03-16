@@ -15,7 +15,7 @@ devices, but its design is mostly visible on desktop devices.
 * [Recent Changelog](#Recent-Changelog)
 * [Install](#Install)
 * [Usage](#Usage)
-* [HTML Render](#Usage)
+* [HTML Render](#Html-Render)
 * [Options](#Options)
 
 ## Recent Changelog
