@@ -15,6 +15,7 @@ devices, but its design is mostly visible on desktop devices.
 * [Recent Changelog](#Recent-Changelog)
 * [Install](#Install)
 * [Usage](#Usage)
+* [HTML Render](#Html-Render)
 * [Options](#Options)
 
 ## Recent Changelog
@@ -69,6 +70,73 @@ the `</html>` tag or in any other JS file:
     });
     ```
    - *Note*: [Option](#Options) `imagesArray` **NEEDS TO BE INCLUDED**
+
+## HTML Render
+An example of how the twGallery is rendered. For now, `tw-gallery` class 
+can be replaced using [Option](#Options)  `imagesArray`.
+
+<details>
+    <summary>Click to expand!</summary>
+    ```html
+    <div class="tw-gallery tw-loaded" style="margin-top: 30px">
+      <div class="tw-m-gallery">
+        <div class="tw-m-nav">
+          <div class="tw-m-prev tw-m-arrow tw-left-arrow tw-m-hover-nav">
+            <span class="tw-m-nav-padding">
+              prev
+            </span>
+          </div>
+          <div class="tw-m-next tw-m-arrow tw-right-arrow tw-m-hover-nav">
+            <span class="tw-m-nav-padding">
+              next
+            </span>
+          </div>
+        </div>
+        <div class="tw-m-items">
+          <div class="tw-m-item tw-m-hidden">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-left-3">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-left-2">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-left-1">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-mid">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-right-1">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-right-2">
+            image & description
+          </div>
+          <div class="tw-m-item tw-m-right-3">
+            image & description
+          </div>
+        </div>
+      </div>
+      <div class="tw-s-gallery">
+        <div class="tw-s-nav">
+            <div class="tw-s-prev tw-s-arrow tw-left-arrow">
+              prev
+            </div>
+            <div class="tw-s-next tw-s-arrow tw-right-arrow">
+            next
+            </div>
+        </div>
+        <div class="tw-s-slider">
+          <img data-tw-s-id="0" class="tw-s-thumbnail" src="">
+          ...
+          <img data-tw-s-id="7" class="tw-s-thumbnail" src="">
+        </div>
+      </div>
+    </div>
+    ```
+</details>
 
 ## Options
 | Option                          | Must     | Type                         | Default        | Description                                                                                                                                                                                                                      |
