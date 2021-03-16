@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>TwoWayGallery Demos</title>
-    <link rel="icon" href="TWShort.png" />
+    <link rel="icon" href="demo/img/TWShort.png" />
     <link rel="stylesheet" href="src/twoWayGallery.css" />
-    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="demo/demo.css" />
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="src/twoWayGallery.js"></script>
-    <script src="twConfig.js" defer></script>
+    <script src="demo/twConfig.js" defer></script>
   </head>
 
   <body>
@@ -20,14 +20,6 @@
         <a class="navbar-logo" href="#">twoWayGallery.js</a>
 
         <ul class="navbar-nav">
-          <!--          <li class="nav-item">-->
-          <!--            <a href="#">Home</a>-->
-          <!--          </li>-->
-
-          <li class="nav-item">
-            <a href="#demo">Demo</a>
-          </li>
-
           <li class="nav-item">
             <a
               href="https://github.com/maximzaika/TwoWayGallery/tree/main#Install"
@@ -59,7 +51,7 @@
           </div>
 
           <div class="column-right column-logo">
-            <img class="tw-logo" src="TWLogo.png" alt="" />
+            <img class="tw-logo" src="demo/img/TWLogo.png" alt="" />
           </div>
         </div>
 
@@ -73,16 +65,17 @@
         <a
           type="button"
           href="https://github.com/maximzaika/TwoWayGallery/tree/main"
+          target="_blank"
           class="btn btn-github"
           >Github Repo</a
         >
       </div>
     </section>
 
-    <section id="options" class="options">
+    <section id="demo" class="demo">
       <div class="page-row">
-        <h2 class="center">Options</h2>
-        <p class="center">
+        <h2 class="center">Demo & Configuration</h2>
+        <p class="center" style="font-size: 20px">
           Options that require manual input are not displayed. You may find all
           available options in
           <a
@@ -94,192 +87,355 @@
         </p>
 
         <div class="available-options">
-          <label for="startItem">startItem</label>
-          <select id="startItem">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2" selected>2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
+          <div class="main-options">
+            <button type="button" class="collapsible">
+              Main gallery configurations
+            </button>
+            <div class="grid-container collapse">
+              <div class="item-1">
+                <p class="center">
+                  startItem
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      The starting image is changed based on its index (both
+                      Main and Secondary galleries).
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <select class="integer" id="startItem">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
+                </div>
+              </div>
 
-          <label for="displayItems">displayItems</label>
-          <select id="displayItems">
-            <option value="3">3</option>
-            <option value="5" selected>5</option>
-            <option value="7">7</option>
-          </select>
+              <div class="item-2">
+                <p class="center">
+                  displayItems
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      The number of items displayed in desktop view.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <select class="integer" id="displayItems">
+                    <option value="3">3</option>
+                    <option value="5" selected>5</option>
+                    <option value="7">7</option>
+                  </select>
+                </div>
+              </div>
 
-          <label for="descriptionType">descriptionType</label>
-          <select id="descriptionType">
-            <option value="white" selected>white</option>
-            <option value="black">black</option>
-          </select>
+              <div class="item-3">
+                <p class="center">
+                  descriptionType
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      The style of the description.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <select class="desc-short-string" id="descriptionType">
+                    <option value="white" selected>white</option>
+                    <option value="black">black</option>
+                  </select>
+                </div>
+              </div>
 
-          <p>
-            enableArrowKeys:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="enableArrowKeys"
-                value="enableArrowKeys"
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-4">
+                <p class="center">
+                  enableArrowKeys
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Allows to use arrow keys if in viewport.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="enableArrowKeys"
+                      value="enableArrowKeys"
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            enableTouch:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="enableTouch"
-                value="enableTouch"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-5">
+                <p class="center">
+                  enableTouch
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Enables swiping right and left.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="enableTouch"
+                      value="enableTouch"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            autoPlayEnable:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="autoPlayEnable"
-                value="autoPlayEnable"
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-6">
+                <p class="center">
+                  apEnable
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext"> Enables auto scroll. </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="autoPlayEnable"
+                      value="autoPlayEnable"
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <label for="autoPlayTimeout">autoPlayTimeout</label>
-          <select id="autoPlayTimeout">
-            <option value="500">500 ms</option>
-            <option value="1000">1000 ms</option>
-            <option value="2000" selected>2000 ms</option>
-            <option value="4000">4000 ms</option>
-            <option value="8000">8000 ms</option>
-          </select>
+              <div class="item-7">
+                <p class="center">
+                  apTimeout
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      If apEnable is true, controls auto scroll delay.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <select class="desc-long-string" id="autoPlayTimeout">
+                    <option value="500">500 ms</option>
+                    <option value="1000">1000 ms</option>
+                    <option value="2000" selected>2000 ms</option>
+                    <option value="4000">4000 ms</option>
+                    <option value="8000">8000 ms</option>
+                  </select>
+                </div>
+              </div>
 
-          <label for="autoPlayDirection">autoPlayDirection</label>
-          <select id="autoPlayDirection">
-            <option value="left">left</option>
-            <option value="right" selected>right</option>
-          </select>
+              <div class="item-8">
+                <p class="center">
+                  apDirection
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      If apEnable is true, controls the direction of auto
+                      scroll.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <select class="desc-short-string" id="autoPlayDirection">
+                    <option value="left">left</option>
+                    <option value="right" selected>right</option>
+                  </select>
+                </div>
+              </div>
 
-          <p>
-            autoPlayPauseOnHover:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="autoPlayPauseOnHover"
-                value="autoPlayPauseOnHover"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-9">
+                <p class="center">
+                  apPauseOnHover
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      If apEnable is true, pauses auto scroll on hover.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="autoPlayPauseOnHover"
+                      value="autoPlayPauseOnHover"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            autoPlayPauseNotification:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="autoPlayPauseNotification"
-                value="autoPlayPauseNotification"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-10">
+                <p class="center">
+                  apPauseNotif
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      If apEnable is true, notifies the user if auto scroll is
+                      paused.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="autoPlayPauseNotification"
+                      value="autoPlayPauseNotification"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            navigationEnable:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="navigationEnable"
-                value="navigationEnable"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-11">
+                <p class="center">
+                  navEnable
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Displays the navigation arrows.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="navigationEnable"
+                      value="navigationEnable"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            navigationShowOnHover:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="navigationShowOnHover"
-                value="navigationShowOnHover"
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-12">
+                <p class="center">
+                  navShowOnHover
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Navigation is hidden and shown on hover.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="navigationShowOnHover"
+                      value="navigationShowOnHover"
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <p>
-            sGalleryEnable:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="sGalleryEnable"
-                value="sGalleryEnable"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+          <div class="secondary-options">
+            <button type="button" class="collapsible">
+              Secondary gallery configurations
+            </button>
+            <div class="grid-container collapse">
+              <div class="item-1">
+                <p class="center">
+                  sgEnable
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Enables Secondary Gallery.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="sGalleryEnable"
+                      value="sGalleryEnable"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            sGalleryInstant:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="sGalleryInstant"
-                value="sGalleryInstant"
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-2">
+                <p class="center">
+                  sgInstant
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Upon click, ignores image scroll animation.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="sGalleryInstant"
+                      value="sGalleryInstant"
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            sGalleryDesktopTouch:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="sGalleryDesktopTouch"
-                value="sGalleryDesktopTouch"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-3">
+                <p class="center">
+                  sgDeskTouch
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Enables mouse drag. Mobile is always on.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="sGalleryDesktopTouch"
+                      value="sGalleryDesktopTouch"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
 
-          <p>
-            sGalleryNavigationArrows:
-            <label class="switch">
-              <input
-                type="checkbox"
-                id="sGalleryNavigationArrows"
-                value="sGalleryNavigationArrows"
-                checked
-              />
-              <span class="slider round"></span>
-            </label>
-          </p>
+              <div class="item-4">
+                <p class="center">
+                  sgNavArrows
+                  <i class="fa fa-info-circle tooltip" aria-hidden="true">
+                    <span class="tooltiptext">
+                      Displays the navigation arrows.
+                    </span>
+                  </i>
+                </p>
+                <div class="center-select">
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      id="sGalleryNavigationArrows"
+                      value="sGalleryNavigationArrows"
+                      checked
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <section id="demo" class="demo">
-      <div class="page-row">
-        <h2 class="center">Demo</h2>
-
-        <div class="tw-gallery">
+        <div class="tw-gallery" style="margin-top: 30px">
           <div class="tw-m-gallery"></div>
           <div class="tw-s-gallery"></div>
         </div>
@@ -303,5 +459,25 @@
         </div>
       </div>
     </section>
+
+    <script>
+      const collapsible = document.getElementsByClassName("collapsible");
+
+      for (const collapse of collapsible) {
+        collapse.addEventListener("click", () => {
+          collapse.classList.toggle("active");
+          let content = collapse.nextElementSibling;
+          if (content.style.maxHeight) {
+            content.style.marginTop = null;
+            content.style.maxHeight = null;
+            content.style.overflow = "hidden";
+          } else {
+            content.style.marginTop = `20px`;
+            content.style.overflow = "visible";
+            content.style.maxHeight = `${content.scrollHeight + 300}px`;
+          }
+        });
+      }
+    </script>
   </body>
 </html>
