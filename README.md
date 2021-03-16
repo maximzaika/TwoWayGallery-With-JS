@@ -81,6 +81,7 @@ can be replaced using [Option](#Options)  `imagesArray`.
 ```html
 <div class="tw-gallery tw-loaded" style="margin-top: 30px">
   <div class="tw-m-gallery">
+
     <div class="tw-m-nav">
       <div class="tw-m-prev tw-m-arrow tw-left-arrow tw-m-hover-nav">
         <span class="tw-m-nav-padding">
@@ -93,6 +94,7 @@ can be replaced using [Option](#Options)  `imagesArray`.
         </span>
       </div>
     </div>
+
     <div class="tw-m-items">
       <div class="tw-m-item tw-m-hidden">
         image & description
@@ -120,6 +122,7 @@ can be replaced using [Option](#Options)  `imagesArray`.
       </div>
     </div>
   </div>
+
   <div class="tw-s-gallery">
     <div class="tw-s-nav">
         <div class="tw-s-prev tw-s-arrow tw-left-arrow">
@@ -129,6 +132,7 @@ can be replaced using [Option](#Options)  `imagesArray`.
         next
         </div>
     </div>
+
     <div class="tw-s-slider">
       <img data-tw-s-id="0" class="tw-s-thumbnail" src="">
       ...
