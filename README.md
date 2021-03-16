@@ -31,10 +31,11 @@ devices, but its design is mostly visible on desktop devices.
 * 14/03/2021 TwoWay Gallery v2.01 - The first finalised release that includes all the expected options.
 
 ## Install
-Clone the repository or download the latest 
+Clone the repository (src folder in particular) or download the latest 
 [release](https://github.com/maximzaika/TwoWayGallery.github.io/releases) from the github.
 
-bower and npm (TO BE ADDED).
+Using npm: 
+- npm i tw-gallery
 
 ## Usage
 1. Add CSS link to the `<head>` of your HTML page:
