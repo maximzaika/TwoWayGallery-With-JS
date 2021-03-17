@@ -342,12 +342,12 @@ function TwoWayGallery() {
   };
 
   /**
-   * @description renders the Main Gallery based on default or user's options
+   * @description renders the Main Gallery based on default or user's options. (tw-m-gallery class)
    * @pre-condition Must be called by this.init (upon initialisation).
                     html needs to be included to ensure that it is rendering correctly
    * @post-condition generate NodeList of items with the class tw-m-items where images and descriptions are stored
    * @return NodeList items (tw-m-items)
-   * @param {Object} o                   App options that include user options.
+   * @param {Object} o Options based on twConf
    * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
    * @param {String[]} o.imagesArray     Images passed by the user.
    * @param {String[]} o.descriptionArray Descriptions passed by the user or [] (default).
@@ -455,31 +455,43 @@ function TwoWayGallery() {
     return generatedIndex;
   };
 
-  // Sets appropriate classes to appropriate index of
-  // NodeList (tw-m-item) generated in the this.generateMItems function
+  /**
+   * @pre-condition Must be called by this.init (upon initialisation).
+                    Gallery must be fully rendered to ensure its initialisation.
+   * @post-condition Sets appropriate classes to appropriate index of NodeList (tw-m-item) generated
+                     in the this.generateMItems function. Assigns the appropriate class:
+                     left-1, middle, right-1
+   * @return midItemId - the new index of the mid item
+   * @param {Object} o Options based on twConf
+   * @param {Number[]} indexesToSet Array that contains the indexes of the array that need to be changed
+   * @param {String} twmItemsPath The string that contains the path to the tw-m-items
+   */
   this.renderMItems = (o, indexesToSet, twmItemsPath) => {
-    // Turns all the tw-m-item classes into hidden: tw-m-item tw-m-hidden
     const twmItems = document.querySelectorAll(twmItemsPath);
-
+    // Turns all the tw-m-item classes into hidden: tw-m-item tw-m-hidden
     twmItems.forEach((element) => {
       element.className = `${TWM_ITEM} ${TWM_ITEM_HIDDEN}`;
     });
-
+    // Variable that will store the index of the middle item
     let midItemId;
-
-    // Toggles hidden, and sets appropriate class to each item
+    // Detects how many displayItems need to be shown
     let classVal = -Math.floor(o.displayItems / 2);
-
+    // Toggles hidden, and sets appropriate class to each item
     for (const index of indexesToSet) {
       for (let i = 0; i < twmItems.length; i++) {
         if (+i === +index) {
+          // If index is found, then remove tw-m-hidden class from it
           twmItems[i].classList.toggle(TWM_ITEM_HIDDEN);
           if (classVal < 0) {
+            // Sets tw-left-3, tw-left-2, tw-left-1 class
             twmItems[i].classList.add(`${TWM_LEFT}${classVal * -1}`);
           } else if (classVal === 0) {
+            // Identifies the index of the middle item
+            // Sets tw-mid class
             midItemId = twmItems[i].childNodes[0].childNodes[0].dataset.twMId;
             twmItems[i].classList.add(`${TWM_MID}`);
           } else {
+            // Sets tw-right-1, tw-right-2, tw-right-3 class
             twmItems[i].classList.add(`${TWM_RIGHT}${classVal}`);
           }
           classVal++;
@@ -487,19 +499,38 @@ function TwoWayGallery() {
         }
       }
     }
+    // Returns the new middle index. Used later to set the focus in the secondary gallery
     return midItemId;
   };
 
+  /**
+   * @description renders the Secondary Gallery based on default or user's options. tw-s-gallery class
+   * @pre-condition Must be called by this.init (upon initialisation).
+                    html needs to be included to ensure that it is rendering without any errors
+   * @post-condition renders the Secondary Gallery and the navigation arrows
+   * @return None
+   * @param {Object} o Options based on twConf
+   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
+   * @param {Boolean} o.sGallery.enable User's or default option that determines whether it is enabled
+   * @param {Boolean} o.sGallery.navigationArrows User's or default option that determines whether arrows are enabled
+   * @param {String[]} o.sGallery.navigationIcons Array that contains the style of icons to be displayed
+   * @param {String[]} o.imagesArray Images passed by the user.
+   * @param {String} o.directory Directory where images are located.
+   * @param {Number} o.startItem An index of the starting image to be displayed.
+   */
   this.renderSGal = (o) => {
+    // Initiates render if sGallery is enabled
     if (o.sGallery.enable) {
       const twsGallery = document.querySelector(
         `.${o.TW_GALLERY} > .${TWS_GALLERY}`
       );
-
+      // Create div.tw-s-slider element
       const twsSlider = document.createElement("div");
       twsSlider.className = TWS_SLIDER;
+      // The id of the dataset
       let id = 0;
       for (const image of o.imagesArray) {
+        // Create img.tw-s-thumb element with dataset tw-s-id and src of the image
         const twsThumbnail = document.createElement("img");
         twsThumbnail.dataset.twSId = id.toString();
         twsThumbnail.className = TWS_THUMB;
@@ -508,20 +539,22 @@ function TwoWayGallery() {
         id++;
       }
       twsGallery.append(twsSlider);
-
+      // Initiates the focus on the image that needs to be selected and centered
       this.focusSGal(o, o.startItem);
-
+      // Initiates render of navigationArrows if sGallery is enabled
       if (o.sGallery.navigationArrows) {
+        // Creates div.tw-s-nav element
         const twsNav = document.createElement("div");
         twsNav.className = TWS_NAV;
-
-        let i = 0;
+        // Counter of the icons (expected 2 only)
+        let icon = 0;
         for (const arrow of TWS_NAVS) {
+          // Creates div.tw-s-prev/tw-s-next.tw-s-arrow.tw-left-arrow/tw-right-arrow element
           const twSArrow = document.createElement("div");
-          twSArrow.classList.add(arrow, TWS_ARROW, TW_ARROW_DIRECTION[i]);
-          twSArrow.innerHTML = o.sGallery.navigationIcons[i];
+          twSArrow.classList.add(arrow, TWS_ARROW, TW_ARROW_DIRECTION[icon]);
+          twSArrow.innerHTML = o.sGallery.navigationIcons[icon];
           twsNav.append(twSArrow);
-          i++;
+          icon++;
         }
 
         twsGallery.prepend(twsNav);
@@ -529,24 +562,37 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description Sets the tw-s-focus class to selected image and centers it if prev/next arrows clicked in main gallery
+   * @pre-condition Must be called by this.renderSGal (upon initialisation), or this.prev/this.next (upon click).
+   * @post-condition Sets tw-s-focus class and centers the tw-s-slider
+   * @return None
+   * @param {Object} o Options based on twConf
+   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
+   * @param {Boolean} o.sGallery.enable User's or default option that determines whether it is enabled
+   * @param {Number} index The image that needs to be focused based on data-tw-s-id
+   */
   this.focusSGal = (o, index) => {
+    // Paths to exact locations
     const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
     const thumbPath = `${sliderPath} > .${TWS_THUMB}`;
     const thumbIndex = `${thumbPath}[data-tw-s-id="${index}"]`;
 
     const element = document.querySelector(thumbIndex);
+    // Initiate when sGallery is enabled and selected element is correct
     if (o.sGallery.enable && element) {
       const twsSlider = document.querySelector(sliderPath);
-
       const currFocusedImage = document.querySelector(
         `${thumbPath}.${TWS_FOCUS}`
       );
-
+      // if current focused image exists, then remove the remove the focus (must always exist)
       if (currFocusedImage) {
         currFocusedImage.classList.remove(TWS_FOCUS);
       }
-
+      // add tw-s-focus to the element selected based on data-tw-s-id
       element.classList.add(TWS_FOCUS);
+      // work around to center the item. Initial load width is smaller than expected so need to
+      // slightly delay it. Can be even 0ms
       setTimeout(() => {
         const changedFocusedImageOffset =
           element.offsetLeft +
