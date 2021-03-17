@@ -1,3 +1,28 @@
+/* MIT License
+
+  Copyright (c) 2021 Maxim Zaika
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+  Original Github repository: https://maximzaika.github.io/TwoWayGallery/
+*/
+
 .tw-loaded {
   max-width: 800px;
   margin-left: auto;
@@ -69,7 +94,7 @@
   top: 12.2rem;
   transition: top 0.18s ease, font-size 0.18s ease;
   transition-delay: 0.05s;
-  text-shadow: 0px 0px 25px #999;
+  text-shadow: 0 0 25px #999;
   opacity: 1;
 }
 
@@ -426,7 +451,6 @@
   width: 100%;
   height: 10%;
   top: 70%;
-  top: 70%;
   box-sizing: border-box;
   border-left: 1.5vmin solid #eee;
   border-right: 1.5vmin solid #eee;
@@ -523,7 +547,7 @@
   display: block;
   white-space: nowrap;
   background-color: #eeecec;
-  box-shadow: 0px 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
   box-sizing: content-box;
   position: relative;
   margin-top: 3rem;
@@ -534,7 +558,6 @@
   margin: 0 9px 0 9px;
   padding: 9px 0 9px 0;
   overflow-x: scroll;
-  cursor: grab;
 }
 
 .tw-s-slider::-webkit-scrollbar {
@@ -557,6 +580,14 @@
   border: 0.25rem solid #50b6ff;
   transform: translate3d(0vmin, -2%, 0vmin);
   transition: transform 0.25s ease;
+}
+
+.tw-s-gallery:active {
+  cursor: grab;
+}
+
+.tw-s-slider:active > .tw-s-thumbnail {
+  cursor: grab;
 }
 
 .tw-s-gallery > .tw-s-nav > .tw-s-arrow {
