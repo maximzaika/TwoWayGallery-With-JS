@@ -1,3 +1,29 @@
+/* MIT License
+
+  Copyright (c) 2021 Maxim Zaika
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+  Original Github repository: https://maximzaika.github.io/TwoWayGallery/
+*/
+
+/* added when the gallery is fully loaded */
 .tw-loaded {
   max-width: 800px;
   margin-left: auto;
@@ -7,6 +33,7 @@
   padding-top: 15px;
 }
 
+/* the initial style of the tw-m-gallery */
 .tw-m-gallery {
   height: 800px;
   perspective: 100vmin;
@@ -15,6 +42,7 @@
   position: relative;
 }
 
+/* when tw-m-ap is true, the tw-p-play is added */
 .tw-m-gallery > .tw-m-play {
   position: relative;
   font-size: 15px;
@@ -34,13 +62,15 @@
   transition: opacity 1s, top 1s;
 }
 
+/* when tw-m-ap is true and the gallery is paused on hover
+   the tw-m-pause is added together with tw-p-play */
 .tw-m-gallery > .tw-m-pause {
   opacity: 1;
   top: 1.2rem;
   transition: opacity 1s, top 1s;
 }
 
-/* Sets up both prev & next navigation arrows */
+/* Sets up both prev & next navigation arrows of mGallery */
 .tw-m-arrow {
   height: auto;
   font-size: 80px;
@@ -69,7 +99,7 @@
   top: 12.2rem;
   transition: top 0.18s ease, font-size 0.18s ease;
   transition-delay: 0.05s;
-  text-shadow: 0px 0px 25px #999;
+  text-shadow: 0 0 25px #999;
   opacity: 1;
 }
 
@@ -93,26 +123,27 @@
   transition: 0.5s;
 }
 
-/* Configuration of the right button*/
+/* Configuration of the right button for mGallery*/
 .tw-m-arrow.tw-right-arrow {
   padding-top: 50px;
   padding-bottom: 50px;
   right: -0.2em;
 }
 
-/* Configuration of the left button */
+/* Configuration of the left button for mGallery */
 .tw-m-arrow.tw-left-arrow {
   padding-top: 50px;
   padding-bottom: 50px;
   left: -0.2em;
 }
 
+/* Additional padding for each button to make the clicks registered outside of their range */
 .tw-m-arrow > .tw-m-nav-padding {
-  /*background-color: burlywood;*/
   padding-top: 245px;
   padding-bottom: 235px;
 }
 
+/* Display size related styles */
 @media (max-width: 768px) {
   .tw-m-gallery {
     height: 768px;
@@ -337,6 +368,7 @@
   }
 }
 
+/* Related to tw-m-items > tw-m-item */
 .tw-m-item {
   position: absolute;
   width: 100%;
@@ -344,88 +376,92 @@
   transition: -webkit-transform 0.18s ease;
 }
 
+/* Hides the item if it is not in part of displayItems (if more than 7/5/3 or less than 0)*/
 .tw-m-item.tw-m-hidden {
   display: none;
 }
 
+/* Sets the main item as tw-m-mid */
 .tw-m-item.tw-m-mid {
   transform: translate3d(0, 0, 0vmin);
   transition-delay: 0s;
   z-index: 7;
 }
 
+/* Sets the right-1 item related to tw-m-mid */
 .tw-m-item.tw-m-right-1 {
   transform: translate3d(10vmin, 5vmin, -15vmin);
   transition-delay: 0.05s;
   z-index: 6;
 }
 
+/* Sets the right-2 item related to tw-m-mid */
 .tw-m-item.tw-m-right-2 {
   transform: translate3d(20vmin, 10vmin, -30vmin);
   transition-delay: 0.05s;
   z-index: 5;
 }
 
+/* Sets the right-3 item related to tw-m-mid */
 .tw-m-item.tw-m-right-3 {
   transform: translate3d(30vmin, 15vmin, -45vmin);
   transition-delay: 0.05s;
   z-index: 4;
 }
 
+/* Sets the left-1 item related to tw-m-mid */
 .tw-m-item.tw-m-left-1 {
   transform: translate3d(-10vmin, 5vmin, -15vmin);
   transition-delay: 0.05s;
   z-index: 6;
 }
 
+/* Sets the left-2 item related to tw-m-mid */
 .tw-m-item.tw-m-left-2 {
   transform: translate3d(-20vmin, 10vmin, -30vmin);
   transition-delay: 0.05s;
   z-index: 5;
 }
 
+/* Sets the left-3 item related to tw-m-mid */
 .tw-m-item.tw-m-left-3 {
   transform: translate3d(-30vmin, 15vmin, -45vmin);
   transition-delay: 0.05s;
   z-index: 4;
 }
-
+/* Display size settings */
 @media (max-width: 966px) {
+  /* Hide right-3 and left-3 based on display size */
   .tw-m-item.tw-m-right-3,
   .tw-m-item.tw-m-left-3 {
     display: none;
   }
 }
 @media (max-width: 915px) {
+  /* Hide right-2 and left-2 based on display size */
   .tw-m-item.tw-m-right-2,
   .tw-m-item.tw-m-left-2 {
     display: none;
   }
 }
 @media (max-width: 865px) {
+  /* Hide right-1 and left-1 based on display size */
   .tw-m-item.tw-m-right-1,
   .tw-m-item.tw-m-left-1 {
     visibility: hidden;
   }
 
+  /* Hide the overflow when it is loaded */
   .tw-loaded {
     overflow: hidden;
   }
 }
 
-/* tw-m-description & tw-m-image related styles */
-.tw-m-item > .tw-m-wrapper {
-  width: 100%;
-  height: 80%;
-  box-shadow: 0 3vmin 3vmin rgba(0, 0, 0, 0.75),
-    0 -0vmin 1.5vmin rgba(0, 0, 0, 0.75);
-}
-
+/* Styles related to both white and black descriptions */
 .tw-m-description {
   position: absolute;
   width: 100%;
   height: 10%;
-  top: 70%;
   top: 70%;
   box-sizing: border-box;
   border-left: 1.5vmin solid #eee;
@@ -443,17 +479,19 @@
   cursor: default;
 }
 
+/* White styles of the description */
 .tw-m-description.tw-m-white-desc {
   background-color: #eee;
   color: black;
 }
 
+/* Black styles of the description */
 .tw-m-description.tw-m-black-desc {
   background-color: rgba(0, 0, 0, 0.5);
   color: #eee;
   border-bottom: 1.5vmin solid #eee;
 }
-
+/* Display related description styles */
 @media (max-width: 768px) {
   .tw-m-description {
     height: 12%;
@@ -501,6 +539,7 @@
   }
 }
 
+/* Added wrapper fir both image and descriptions */
 .tw-m-wrapper > .tw-m-image {
   width: 100%;
   height: 100%;
@@ -511,6 +550,7 @@
   border: 1.5vmin solid #eee;
 }
 
+/* Custom shadows based on the display size */
 @media (max-width: 865px) {
   .tw-m-item > .tw-m-image {
     box-shadow: 0 2vmin 2vmin rgba(0, 0, 0, 0.75),
@@ -523,25 +563,27 @@
   display: block;
   white-space: nowrap;
   background-color: #eeecec;
-  box-shadow: 0px 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0.5vmin 0.5vmin rgba(0, 0, 0, 0.75);
   box-sizing: content-box;
   position: relative;
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
 
+/* Slider styles */
 .tw-s-gallery > .tw-s-slider {
   margin: 0 9px 0 9px;
   padding: 9px 0 9px 0;
   overflow-x: scroll;
-  cursor: grab;
 }
 
+/* Hide scroller of the slider  */
 .tw-s-slider::-webkit-scrollbar {
   height: 0;
   background: transparent;
 }
 
+/* Thumbnail styles */
 .tw-s-slider > .tw-s-thumbnail {
   width: 110px;
   height: 80px;
@@ -553,12 +595,24 @@
   transition: transform 0.25s ease;
 }
 
+/* Focus thumbnail within the tw-s-slider */
 .tw-s-thumbnail.tw-s-focus {
   border: 0.25rem solid #50b6ff;
   transform: translate3d(0vmin, -2%, 0vmin);
   transition: transform 0.25s ease;
 }
 
+/* Add grab cursor upon click and hold */
+.tw-s-gallery:active:hover {
+  cursor: grab;
+}
+
+/* Add grab cursor upon click and hold */
+.tw-s-slider:active:hover > .tw-s-thumbnail {
+  cursor: grab;
+}
+
+/* Styles of the navigation */
 .tw-s-gallery > .tw-s-nav > .tw-s-arrow {
   height: auto;
   font-size: 50px;
@@ -574,19 +628,23 @@
   visibility: visible;
 }
 
+/* On hover show/hide navigation */
 .tw-s-gallery:hover > .tw-s-nav > .tw-s-arrow {
   opacity: 1;
   transition: opacity 0.5s;
 }
 
+/* Hide navigation if this option is selected */
 .tw-s-gallery > .tw-s-nav > .tw-s-hide-nav {
   visibility: hidden;
 }
 
+/* Reposition right arrow */
 .tw-s-arrow.tw-right-arrow {
   right: -0.2em;
 }
 
+/* Reposition left arrow */
 .tw-s-arrow.tw-left-arrow {
   left: -0.2em;
 }
