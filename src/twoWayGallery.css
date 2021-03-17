@@ -558,6 +558,7 @@
   margin: 0 9px 0 9px;
   padding: 9px 0 9px 0;
   overflow-x: scroll;
+  /*cursor: grab;*/
 }
 
 .tw-s-slider::-webkit-scrollbar {
@@ -582,11 +583,11 @@
   transition: transform 0.25s ease;
 }
 
-.tw-s-gallery:active {
+.tw-s-gallery:active:hover {
   cursor: grab;
 }
 
-.tw-s-slider:active > .tw-s-thumbnail {
+.tw-s-slider:active:hover > .tw-s-thumbnail {
   cursor: grab;
 }
 
