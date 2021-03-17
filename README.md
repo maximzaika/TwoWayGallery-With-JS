@@ -82,6 +82,7 @@ can be replaced using [Option](#Options)  `twGalleryClass`.
 ```html
 <div class="tw-gallery tw-loaded">
   <div class="tw-m-gallery">
+    <div class="tw-m-ap tw-m-play">PAUSED</div> <!-- If autoPlayEnabled is true -->
 
     <div class="tw-m-nav">
       <div class="tw-m-prev tw-m-arrow tw-left-arrow tw-m-hover-nav">
@@ -149,7 +150,7 @@ can be replaced using [Option](#Options)  `twGalleryClass`.
 | Option                          | Must     | Type                         | Default        | Description                                                                                                                                                                                                                      |
 | ---                             | ---      | ---                          | ---            | ---                                                                                                                                                                                                                              |
 | `imagesArray`                   | &#10004; | String[]&nbsp; & !empty      |                | Array that contains the list of images to be displayed. Directory can be included. Example: `["image.jpg", "img/image2.jpg"]`                                                                                                    |
-| `twGalleryClass`                | &#10008; | String                       | `"tw-gallery"` | Rename or store more than one gallery on the same page. Example: `"tw-gallery2"`                                                                                                                                                 |
+| `twGalleryClass`                | &#10008; | String                       | `"tw-gallery"` | Used for renaming gallery. Also can be used to include more than one gallery on the same page. Example: `"tw-gallery2"`                                                                                                                                                 |
 | `directory`                     | &#10008; | String                       | `""`           | A directory where your images in the `imagesArray` are located. Slash needs to be included. Example: `"img/"`.                                                                                                                   |
 | `descriptionArray`              | &#10008; | String[]                     | `[]`           | Array that contains the list of descriptions to be displayed. It's length must be the same as `imagesArray`. Example: `["This is image.jpg", "This is image img/image2.jpg"]`                                                    |
 | `descriptionType`               | &#10008; | "white"&nbsp; &#124; "black" | `"white"`      | The way the description is attached to the image. `"White"` has white background that overwrites image borders and the black font, while `"black"` has black semi-transparent background and white font within image borders.    |
