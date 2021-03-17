@@ -21,19 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Original Github repository: https://maximzaika.github.io/TwoWayGallery/
-
 */
 
 function TwoWayGallery() {
-  // tw-gallery classes
+  // Classes related to the tw-gallery
   const [TWM_GALLERY, TWS_GALLERY, TW_LOADED] = [
     "tw-m-gallery",
     "tw-s-gallery",
     "tw-loaded",
   ];
+
+  // Classes related to navigation buttons that assign custom css to each arrow
   const TW_ARROW_DIRECTION = ["tw-left-arrow", "tw-right-arrow"];
 
-  /* ----- tw-m-gallery  ----- */
+  // Classes related to tw-m-gallery
   const [
     TWM_ITEMS,
     TWM_ITEM,
@@ -73,13 +74,12 @@ function TwoWayGallery() {
   ];
   const [TWM_AP, TWM_APS] = ["tw-m-ap", ["tw-m-play", "tw-m-pause"]];
 
-  // tw-s-gallery related pre-defined classes
+  // Classes related to tw-s-gallery
   const [TWS_SLIDER, TWS_THUMB, TWS_FOCUS] = [
     "tw-s-slider",
     "tw-s-thumbnail",
     "tw-s-focus",
   ];
-
   const [TWS_NAV, TWS_NAVS, TWS_ARROW, TWS_NAV_HIDE] = [
     "tw-s-nav",
     ["tw-s-prev", "tw-s-next"],
@@ -87,8 +87,109 @@ function TwoWayGallery() {
     "tw-s-hide-nav",
   ];
 
-  // Argument: options
+  /**
+   * @description Initialises the rendering of the TwoWayGallery
+   * @pre-condition Option imagesArray cannot be [] (empty)
+   * @post-condition Initiates all the options and renders both main and secondary galleries.
+   * @param {Object} options Options that user can pass to the gallery.
+   * @param {String[]} options.imagesArray Contains the list of images to be displayed.
+   Directory can be included. Example: ["image.jpg", "img/image2.jpg"]
+   * @param {String} options.twGalleryClass Used for renaming gallery. Also can be used to include
+   more than one gallery on the same page. Example: "tw-gallery2"
+   * @param {String} options.directory A directory where your images in the imagesArray are located.
+   Slash needs to be included. Example: "img/".
+   * @param {String[]} options.descriptionArray Contains the list of descriptions to be displayed. It's length must be
+   the same as imagesArray. Example: ["This is image.jpg",
+   "This is image img/image2.jpg"]
+   * @param {String} options.descriptionType The way the description is attached to the image. "White" has white background
+   that overwrites image borders and the black font, while "black" has black
+   semi-transparent background and white font within image borders.
+   * @param {Number} options.startItem The index of the image that needs to be displayed first (in the middle of the Main
+   Gallery and focused in the Secondary Gallery).
+   * @param {Number} options.displayItems The number of items to be displayed in the Main Gallery in the Desktop view.
+   Examples: 3 = 1 left, middle, and 1 right. 5 = 2 left, middle, and 2 right.
+   7 = 3 left, middle, and 3 right.
+   * @param {Boolean} options.enableArrowKeys If true, use of arrow keys to control the Main Gallery, whenever it is in
+   view, is enabled.
+   * @param {Boolean} options.enableTouch If true, swipe gesture to control the Main Gallery, is enabled.
+   * @param {Boolean} options.autoPlayEnable If true, the gallery will automatically scroll based on default
+   autoPlayTimeout, autoPlayDirection, autoPlayPauseOnHover,
+   autoPlayPauseNotification, and autoPlayPauseNotificationText options.
+   * @param {Number} options.autoPlayTimeout The timeout before it triggers auto scrolling in milliseconds (ms).
+   * @param {String} options.autoPlayDirection The direction that gallery needs to be scrolled to.
+   * @param {Boolean} options.autoPlayPauseOnHover If true, hover over event on any element (both Main and Secondary),
+   pauses auto scrolling instantly.
+   * @param {Boolean} options.autoPlayPauseNotification If true, the notification over the gallery is displayed when
+   it is paused.
+   * @param {String} options.autoPlayPauseNotificationText The text that is displayed inside the autoPlayPauseNotification.
+   Another great example to display pause icon instead of the default
+   text: "<i class='fa fa-pause' aria-hidden='true'></i>". Note: to
+   use this example, default font awesome icons that are included
+   in the Usage part must be passed to your page.
+   * @param {Boolean} options.navigationEnable If true, navigation arrows in the main gallery are displayed on each side
+   (left and right).
+   * @param {Boolean} options.navigationShowOnHover If true, navigation is hidden by default and is displayed on hover over
+   the main gallery. If false, navigation is hidden by default but hovering
+   over the arrows enlarges them.
+   * @param {String[]} options.navigationIcons An array that contains ["left", "right"] arrow icons of the Main Gallery.
+   Text or any other icons in the same format as default can be passed.
+   * @param {Boolean} options.sGalleryEnable If true and markup with the class tw-s-gallery is included, then the Secondary
+   Gallery is displayed. If false then the class tw-s-gallery can be excluded from
+   the markup.
+   * @param {Boolean} options.sGalleryInstant If true, clicks on the images inside the Secondary Gallery instantly display
+   the image in the Main Gallery. If false, clicks on the images force Main
+   Gallery scroll to the required image one by one showing the animation.
+   * @param {Boolean} options.sGalleryDesktopTouch If true, the touch and scroll on the Secondary Image is enabled in the
+   Desktop view. Note: this cannot be disabled in the mobile view.
+   * @param {Boolean} options.sGalleryNavigationArrows If true, navigation arrows in the Secondary Gallery are displayed on
+   hover. Note: if this and sGalleryDesktopTouch options are false,
+   then it will not be possible to scroll in the Secondary Gallery.
+   * @param {String[]} options.sGalleryNavigationIcons An array that contains ["left", "right"] arrow icons of the
+   Secondary Gallery. Text or any other icons in the same format
+   as default can be passed.
+   */
+  this.init = (options) => {
+    // Check whether user has included options.imagesArray
+    const arrayExists = this.verifyInput(options);
+    if (!arrayExists) {
+      return;
+    }
+    // Set the settings required for the gallery to render
+    let twConf = this.setConfig(options);
+    // Restructure the array to ensure that the o.startItem is always in the middle
+    twConf = this.restructureImagesArray(twConf);
+    // Generate indexes that required to be configured (sets as middle, left, right, or inactive)
+    const indexesToRender = this.generateMItems(
+      twConf.startItem,
+      twConf.displayItems
+    );
+    // Initiate the render of the main gallery and its navigation (excluding items)
+    const twItemsPath = this.renderMGal(twConf);
+    // Initiate the render of the items in the main gallery (set as middle, left, right, or inactive)
+    this.renderMItems(twConf, indexesToRender, twItemsPath);
+    // Initiate the render of the secondary gallery and its navigation
+    this.renderSGal(twConf);
+    // Initiate all the listeners based on default/user's options
+    this.listeners(twConf);
+    // Once it is fully loaded, add 'tw-loaded' class
+    document.querySelector(`.${twConf.TW_GALLERY}`).classList.add(TW_LOADED);
+  };
+
+  /**
+   * @description Initialises the rendering of the TwoWayGallery
+   * @pre-condition Must be called by this.init (upon initialisation)
+   * @post-condition Returns all the options (either users or default)
+   * @param {Object} o Options based on twConf
+   */
   this.setConfig = (o) => {
+    /**
+     * @description checks whether the option is of the appropriate type, if not then sets it to default
+     * @param {String} dataType a type of data expected
+     * @param {Object} userInput any datatype of user's input
+     * @param {Object} defaultInput any datatype of default input
+     * @pre-condition the dataType needs to be assigned
+     * @post-condition returns user's input if it is matching the dataType, otherwise returns default input.
+     */
     function setOption(dataType, userInput, defaultInput) {
       if (dataType === "array") {
         return Array.isArray(userInput) ? userInput : defaultInput;
@@ -98,6 +199,7 @@ function TwoWayGallery() {
       }
     }
 
+    // Default preassigned options
     const TW_GALLERY_CLASS = "tw-gallery";
     const DESCRIPTIONS = [];
     const DESCRIPTION_TYPE = "tw-m-white-desc";
@@ -181,58 +283,58 @@ function TwoWayGallery() {
     };
   };
 
-  this.init = (options) => {
-    const arrayExists = this.verifyInput(options);
-
-    if (!arrayExists) {
-      return; // user failed to pass imagesArray
-    }
-
-    let twConf = this.setConfig(options);
-    twConf = this.restructureImagesArray(twConf);
-
-    const indexesToRender = this.generateMItems(
-      twConf.startItem,
-      twConf.displayItems
-    );
-
-    const twItemsPath = this.renderMGal(twConf);
-    this.renderMItems(twConf, indexesToRender, twItemsPath);
-    this.renderSGal(twConf);
-    this.listeners(twConf);
-
-    document.querySelector(`.${twConf.TW_GALLERY}`).classList.add(TW_LOADED);
-  };
-
+  /**
+   * @description Restructures the array of images to ensure that the
+                  middle item is always in the middle.
+   * @pre-condition Must be called by this.init (upon initialisation).
+                    Length of o.descriptionArray must be equal to o.imagesArray.
+   * @post-condition Returns options that include newly generate arrays
+   * @param {Object} o Options based on twConf
+   */
   this.restructureImagesArray = (o) => {
     const newImagesArray = [];
     const newDescArray = [];
     const imgArrLength = o.imagesArray.length;
     const descArrLength = o.descriptionArray.length;
-
+    // Check whether the lengths of passed arrays are equal
+    try {
+      const notAllowed = imgArrLength !== descArrLength && descArrLength !== 0;
+      if (notAllowed) {
+        throw new Error(
+          "this.restructureImagesArray: length of o.imagesArray is not equal to o.descriptionArray"
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // Find the middle index of the passed array
     let midIndex = Math.floor(imgArrLength / 2);
+    // store a copy of the original index
     const originalMid = midIndex;
-
+    // store the copy of the index of the startItem
     let i = o.startItem;
     let fullyParsed = false;
-
     // Parse through array restructuring them the way that
     // o.startingItem always ends up in the middle of the array
     while (!fullyParsed) {
       newImagesArray[midIndex] = o.imagesArray[i];
       newDescArray[midIndex] =
         descArrLength !== 0 ? o.descriptionArray[i] : newDescArray;
-
+      // Check whether the midIndex is more than the length
+      // if yes, then set index as 0 else increment it.
       midIndex = midIndex + 1 > imgArrLength - 1 ? 0 : midIndex + 1;
+      // End parsing when original middle index is equal to new mid index
+      // Happens when the value returns back to the middle.
       fullyParsed = midIndex === originalMid;
+      // Check whether the i (o.startItem) is more than the length
+      // if yes, then set index as 0 else increment it.
       i = i + 1 > imgArrLength - 1 ? 0 : i + 1;
     }
-
+    // Reassign the following properties of the o (options)
     o.imagesArray = newImagesArray;
     o.startItem = originalMid;
     o.descriptionArray =
       descArrLength !== 0 ? newDescArray : o.descriptionArray;
-
     return o;
   };
 
