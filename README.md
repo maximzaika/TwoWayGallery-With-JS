@@ -20,7 +20,7 @@ devices, but its design is mostly visible on desktop devices.
 
 ## Recent Changelog
 * 17/03/2021:
-  - TwoWay Gallery v2.05:
+  - TwoWay Gallery v2.07:
     - twoWayGallery.js:
       - fully commented
       - this.eventSGalClickTouch function: reduced the time required to disable the touch event on the mGallery.
