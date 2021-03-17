@@ -19,6 +19,19 @@ devices, but its design is mostly visible on desktop devices.
 * [Options](#Options)
 
 ## Recent Changelog
+* 17/03/2021:
+  - TwoWay Gallery v2.05:
+    - twoWayGallery.js:
+      - fully commented
+      - this.eventSGalClickTouch function: reduced the time required to disable the touch event on the mGallery.
+      - Previously it was scrolling at the same time user is scrolling the page. 
+      - Also, increased the distance required for the finger to travel to initiate the touch event.
+      - this.verifyInput function: added error checking whether length of images and description are equal. To ensure that error does not propagate and no human errors are made.
+      - this.prev & this.next functions: removed twConf that initiated this.setConfig each time. It is no longer required and was just doing unnecessary action.
+      - renamed few variables here and there but it does not affect overall logic at all.
+    - twoWayGallery.css:
+      - fully commented
+      - added grab cursor to sGallery when pressed and hold happens
 * 16/03/2021:
   - TwoWay Gallery v2.04:
     - Modified function this.eventSGalClickTouch to ensure that event is always listening once and to document.body instead of the document. Event mouseup is not listening only when mousedown on the twsSlider is triggered.
