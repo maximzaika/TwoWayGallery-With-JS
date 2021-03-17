@@ -807,16 +807,30 @@ function TwoWayGallery() {
    * @param {NodeListOf} pauseThese items that will listen for a pause event
    */
   this.eventMGalTouch = (o, pauseThese) => {
+    // Initiate touch event only if it is True
     if (o.enableTouch) {
+      /**
+       * @description Adds passed event to the images inside the gallery. Either touchstart or mousedown
+       * @pre-condition Gallery must be rendered.
+       * @post-condition initiates touchStart and touchEnd functions, that return touchStart on X axis
+                         and touch start time to ensure that touches are accurate.
+       * @param {NodeListOf} items list of elements that will be listening (expected mGallery images)
+       * @param {String} evStart contains the starting event (expected touchstart or mousedown)
+       * @param {String} evEnd contains the ending event (expected touchend or mouseup)
+       */
       const eventListeners = (items, evStart, evEnd) => {
+        // initialises start on x axis and start time
         let [touchStartX, touchStartTime] = [0, 0];
+        // expected distance finger/mouse drag needs to take place to trigger touch
         const expectedTouchDistance = 60;
-
+        // initiate listen on all the items
         for (const item of items) {
+          // initiate event listener that returns start on x axis and starting time
+          // that is used by the touchEnd() function to calculate the touch event
           item.addEventListener(evStart, (event) => {
             [touchStartX, touchStartTime] = touchStart(event, evStart);
           });
-
+          // also adds touchEnd, that calculates and decides touch action
           item.addEventListener(evEnd, (event) => {
             touchEnd(
               event,
@@ -829,21 +843,41 @@ function TwoWayGallery() {
         }
       };
 
+      /**
+       * @description Based on the event passed, determines what action is triggered (touch or mouse)
+       * @pre-condition Must be called by eventListeners() upon initialising addEventListener()
+       * @post-condition calculate starting time, determine event, and return this information
+       * @return touchStartX and touchStartTime (touch on x axis, and the time of the touch event)
+       * @param {ListeningState} event element that is listening (expected mGallery images)
+       * @param {String} ev contains the starting event (expected touchstart or mousedown)
+       */
       const touchStart = (event, ev) => {
         const date = new Date();
         const touchStartTime = date.getTime();
         let touchStartX = 0;
-
+        // determines whether ev is touch or mouse
         if (ev.includes("touch")) {
+          // gets the position of the touch on the element
           touchStartX = event.touches[0].pageX;
         } else {
-          // mouse event
+          // gets the position of the mouse on the element
           touchStartX = event.pageX;
           event.preventDefault();
         }
         return [touchStartX, touchStartTime];
       };
 
+      /**
+       * @description Based on the event passed, determines what action is triggered (touch or mouse)
+       * @pre-condition Must be called by eventListeners() upon initialising addEventListener()
+       * @post-condition calculate starting time, determine event, and return this information
+       * @return touchStartX and touchStartTime (touch on x axis, and the time of the touch event)
+       * @param {ListeningState} event element that is listening (expected mGallery images)
+       * @param {Number} touchStartX starting position in px
+       * @param {Number} touchStartTime starting time in ms
+       * @param {Number} expectedTouchDistance expected mouse drag/touch distance required to trigger touch event
+       * @param {String} ev contains the starting event (expected touchstart or mousedown)
+       */
       const touchEnd = (
         event,
         touchStartX,
@@ -851,23 +885,29 @@ function TwoWayGallery() {
         expectedTouchDistance,
         ev
       ) => {
+        // Location where touch on x axis is ended
         let touchEndX;
-
+        // Determines touch/mouse events
         if (ev.includes("touch")) {
+          // Sets touch end event
           touchEndX = event.changedTouches[0].pageX;
         } else {
-          // mouse event
+          // Sets mouse end event
           touchEndX = event.pageX;
           event.preventDefault();
         }
-
+        // Sets end time, when user ends the touch event
         const date = new Date();
         const touchEndTime = date.getTime();
+        // Calculate the difference in time to determine whether it is a touch event or a scroll on page event
         const touchDuration = Math.abs(touchStartTime - touchEndTime);
+        // Calculate the difference between start and end events to determine whether it is a touch
         const touchDiffX = Math.abs(touchStartX - touchEndX);
-
+        // If touch takes less than 400ms, then it is a touch, otherwise user is scrolling something else
         if (touchDuration < 400) {
+          // If touch difference more than expected, then it is a touch event instead of scroll
           if (touchDiffX > expectedTouchDistance) {
+            // if touch end more then scroll left, otherwise scroll right. Determines rotation location
             if (touchEndX > touchStartX) {
               this.prev(o, true);
             } else {
@@ -876,7 +916,7 @@ function TwoWayGallery() {
           }
         }
       };
-
+      // Initiates everything listed above
       eventListeners(pauseThese, "touchstart", "touchend");
       eventListeners(pauseThese, "mousedown", "mouseup");
     }
