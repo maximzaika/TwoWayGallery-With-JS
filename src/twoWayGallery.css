@@ -200,14 +200,12 @@
   }
 
   .tw-m-arrow > .tw-m-nav-padding {
-    /*background-color: orange;*/
     padding-top: 190px;
     padding-bottom: 180px;
   }
 }
 @media (max-width: 550px) {
   .tw-m-gallery {
-    /*margin-bottom: -50px;*/
     height: 550px;
     margin-bottom: -7rem;
   }
@@ -240,7 +238,6 @@
   }
 
   .tw-m-arrow > .tw-m-nav-padding {
-    /*background-color: blue;*/
     padding-top: 150px;
     padding-bottom: 140px;
   }
@@ -282,7 +279,6 @@
   }
 
   .tw-m-arrow > .tw-m-nav-padding {
-    /*background-color: red;*/
     padding-top: 120px;
     padding-bottom: 110px;
   }
@@ -316,7 +312,6 @@
   }
 
   .tw-m-arrow > .tw-m-nav-padding {
-    /*background-color: cyan;*/
     padding-top: 110px;
     padding-bottom: 95px;
   }
@@ -362,7 +357,6 @@
   }
 
   .tw-m-arrow > .tw-m-nav-padding {
-    /*background-color: green;*/
     padding-top: 90px;
     padding-bottom: 75px;
   }
@@ -455,6 +449,14 @@
   .tw-loaded {
     overflow: hidden;
   }
+}
+
+/* tw-m-description & tw-m-image related styles */
+.tw-m-item > .tw-m-wrapper {
+  width: 100%;
+  height: 80%;
+  box-shadow: 0 3vmin 3vmin rgba(0, 0, 0, 0.75),
+    0 -0vmin 1.5vmin rgba(0, 0, 0, 0.75);
 }
 
 /* Styles related to both white and black descriptions */
