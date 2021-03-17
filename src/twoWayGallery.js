@@ -160,10 +160,8 @@ function TwoWayGallery() {
    */
   this.init = (options) => {
     // Check whether user has included options.imagesArray
-    const arrayExists = this.verifyInput(options);
-    if (!arrayExists) {
-      return;
-    }
+    // and whether the imagesArray length = descriptionArray
+    this.verifyInput(options);
     // Set the settings required for the gallery to render
     let twConf = this.setConfig(options);
     // Restructure the array to ensure that the o.startItem is always in the middle
@@ -306,17 +304,7 @@ function TwoWayGallery() {
     const newDescArray = [];
     const imgArrLength = o.imagesArray.length;
     const descArrLength = o.descriptionArray.length;
-    // Check whether the lengths of passed arrays are equal
-    try {
-      const notAllowed = imgArrLength !== descArrLength && descArrLength !== 0;
-      if (notAllowed) {
-        throw new Error(
-          "this.restructureImagesArray: length of o.imagesArray is not equal to o.descriptionArray"
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
+
     // Find the middle index of the passed array
     let midIndex = Math.floor(imgArrLength / 2);
     // store a copy of the original index
@@ -620,7 +608,7 @@ function TwoWayGallery() {
     this.eventMGalAutoPlay(o, listenablePath);
     this.eventMGalArrowKeys(o);
     this.eventMGalTouch(o, listenableElements);
-    this.eventMGalnavigationShowOnHover(o, listenableElements, twmNav);
+    this.eventMGalNavShowOnHover(o, listenableElements, twmNav);
     this.eventSGalClickTouch(o);
     this.eventSGalNavArrows(o);
   };
@@ -801,7 +789,7 @@ function TwoWayGallery() {
   /**
    * @description If this option is true, then user can swipe right/left (both touch
                   and mouse drag events) to trigger scrolling on Main Gallery.
-   * @pre-condition o.enableTouch must be true.
+   * @pre-condition o.enableTouch must be true, and must be called by this.listeners function
    * @post-condition initiates touchstart and mousedown events that calculate the touch distance to trigger it
    * @param {Object} o user options
    * @param {NodeListOf} pauseThese items that will listen for a pause event
@@ -923,36 +911,61 @@ function TwoWayGallery() {
   };
 
   /**
+   * @description If this option is true, then navigation buttons are hidden by default
+                  and are shown once user hovers/clicks (mouse/touch) over/on the image
+   * @pre-condition o.navigation.hover must be true, and must be called by this.listeners function
+   * @post-condition Sets calls to tw-m-hide-nav if hover is true or sets to tw-m-hover-nav otherwise.
+                     These classes initiate show on hover or always display. Also, function parses through
+                     all the elements that needs to listen to initiate the event listening
+   * @return None
    * @param {Object} o user options
-   * @param {Boolean} o.navigation.hover user's choice true or false
    * @param {NodeListOf} pauseThese items that will listen for a hover event
    * @param {NodeListOf} twNav navigation buttons that will listen for a hover event
-   * If this option is true, then navigation buttons are hidden by default
-   * and are shown once user hovers/clicks (mouse/touch) over/on the image
+   * 
    */
-  this.eventMGalnavigationShowOnHover = (o, pauseThese, twNav) => {
+  this.eventMGalNavShowOnHover = (o, pauseThese, twNav) => {
+    // adds .tw-m-hover-nav or .tw-m-hide-nav to classes .tw-m-nav .tw-m-arrow
     const setClass = o.navigation.hover ? TWM_NAV_HIDE : TWM_NAV_HOVER;
-
     for (const arrow of twNav) {
       arrow.classList.add(setClass);
     }
-
+    // if this option is true then initiate
     if (o.navigation.hover) {
+      /**
+       * @description sets appropriate class upon hover to each nav
+       * @pre-condition must be called by eventListener() function
+       * @post-condition adds and removes tw-m-nav-hide or tw-m-nav-show classes
+       * @return None
+       * @param {NodeListOf} items items that will listen for a hover event
+       * @param {String} removeClass class that needs to be removed (expected tw-m-nav-hide or tw-m-nav-show)
+       * @param {String} addClass class that needs to be removed (expected tw-m-nav-hide or tw-m-nav-show)
+       */
+      const setOpacity = (items, removeClass, addClass) => {
+        // Parse through all the navigation items to remove and set classes
+        for (const item of items) {
+          item.classList.remove(removeClass);
+          item.classList.add(addClass);
+        }
+      };
+
+      /**
+       * @description initialises event listeners on all the navigation buttons
+       * @pre-condition must be called within this function
+       * @post-condition adds event listeners and sets opacity using setOpacity function on each element
+       * @return None
+       * @param {String} event type of the event that need to listen to (expected mouseenter and mouseleave)
+       * @param {NodeListOf} items items that will listen for a hover event
+       * @param {String} removeClass class that needs to be removed (expected tw-m-nav-hide or tw-m-nav-show)
+       * @param {String} addClass class that needs to be removed (expected tw-m-nav-hide or tw-m-nav-show)
+       */
       const eventListener = (event, items, removeClass, addClass) => {
+        // Parse through all the navigation items to initiate event listeners
         for (const item of items) {
           item.addEventListener(event, () => {
             setOpacity(twNav, removeClass, addClass);
           });
         }
       };
-
-      function setOpacity(items, removeClass, addClass) {
-        for (const item of items) {
-          item.classList.remove(removeClass);
-          item.classList.add(addClass);
-        }
-      }
-
       eventListener("mouseenter", pauseThese, TWM_NAV_HIDE, TWM_NAV_SHOW);
       eventListener("mouseleave", pauseThese, TWM_NAV_SHOW, TWM_NAV_HIDE);
     }
@@ -1173,18 +1186,31 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description checks whether some options passed are not missing and matching
+   * @pre-condition must be called upon initialisation in this.init
+   * @post-condition Checks whether imagesArray exists and whether the length
+                     of the description array (if it is passed) is the same as imagesArray
+   * @throws errors imagesArray missing or length is unequal
+   * @param {Object} o user options
+   */
   this.verifyInput = (o) => {
-    let arrayExists = true;
-    new Promise((resolve, reject) => {
-      if (!o.imagesArray) {
-        arrayExists = false;
-        throw new Error(
-          "imagesArray is missing from the passing arguments. Stopping execution!"
-        );
-      }
-    }).catch((error) => {
-      throw error;
-    });
-    return arrayExists;
+    // Check whether the o.imagesArray has been passed
+    if (!o.imagesArray) {
+      throw new Error(
+        "o.imagesArray is missing from the passing arguments. Stopping execution!"
+      );
+    }
+
+    // Check whether the lengths of passed arrays are equal
+    const imgArrLength = o.imagesArray.length;
+    const descArrLength = o.descriptionArray.length;
+    const arraysNotEqual =
+      imgArrLength !== descArrLength && descArrLength !== 0;
+    if (arraysNotEqual) {
+      throw new Error(
+        "this.restructureImagesArray: length of o.imagesArray is not equal to o.descriptionArray"
+      );
+    }
   };
 }
