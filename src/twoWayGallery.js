@@ -547,7 +547,7 @@ function TwoWayGallery() {
    * @post-condition Sets tw-s-focus class and centers the tw-s-slider
    * @return None
    * @param {Object} o Options based on twConf
-   * @param {Number} index The image that needs to be focused based on data-tw-s-id
+   * @param {String} index The image that needs to be focused based on data-tw-s-id (originally a string)
    */
   this.focusSGal = (o, index) => {
     // Paths to exact locations
@@ -1049,54 +1049,92 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description Enabled o.sGallery.desktopTouch if it is true, assigns event listerners to
+                  images (thumbnails) only, determines current position of the scroller,
+                  and listening for mouse movements to determine the direction to scroll the
+                  mouse to
+   * @pre-condition o.sGallery.desktopTouch must be true, and must be called by this.listeners function
+   * @post-condition enables navigation clicks, and mouse drag to simulate scroll
+   * @return (none only if desktopTouch is enabled and the touch duration is longer than expected)
+   * @param {Object} o user options
+   */
   this.eventSGalClickTouch = (o) => {
+    // Path to the slider
     const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
     const twsSlider = document.querySelector(sliderPath);
 
-    // Enable touch rotation on the desktop (mobile should would by default)
+    // Enable touch rotation on the desktop (mobile should work by default)
     let touchDuration = 0;
     if (o.sGallery.desktopTouch && o.sGallery.enable && twsSlider) {
+      // Determine where mouse started event and when it is started
       let mouseStart = 0;
       let touchStartTime;
+      // Initiate a listener on the tw-s-slider when mouse is clicked (toggled)
       twsSlider.addEventListener("mousedown", (event) => {
+        // Sets the start time of the click and location in px
         const date = new Date();
         touchStartTime = date.getTime();
         mouseStart = event.pageX;
         event.preventDefault();
+        // Initiates mousemove event that triggered mouseOverFunction
         twsSlider.addEventListener("mousemove", mouseOverFunction);
+        // Add event to document.body, that is listening when mouseup event happens to
+        // stop the execution of the mouse drag
         document.body.addEventListener("mouseup", mouseLeaveFunction);
       });
 
+      /**
+       * @description When mousedown even is triggered, then it is considered as long touch
+       * @pre-condition called after mousedown event (twsSlider.eventListener)
+       * @post-condition Initiates scroll based on the movement of a mouse
+       * @return none
+       * @param event expected arguments of a mousedown event
+       */
       const mouseOverFunction = (event) => {
         const twSlider = document.querySelector(sliderPath);
+        // current scroller position of the twSlider
         const scrollPos = twSlider.scrollLeft;
+        // dragged position of the cursor (/60 is to make it more accurate and less
+        // responsive to fast touches)
         const cursorPos = Math.floor((mouseStart - event.pageX) / 60);
-
+        // calculate the difference between original position and mouse drag
         let scrollerDiff = scrollPos + cursorPos;
+        // scroll the scroller
         twSlider.scrollTo({ left: scrollerDiff });
       };
 
+      /**
+       * @description When mouseup even is triggered (Anywhere in the body) then end touch
+       * @pre-condition called after mouseup event (twsSlider.eventListener). Also removes
+                        assigned eventListeners just to avoid their propogaion
+       * @post-condition calculates the time it taken to end the scroll
+       * @return none
+       */
       const mouseLeaveFunction = () => {
         const date = new Date();
         const touchEndTime = date.getTime();
         touchDuration = Math.abs(touchStartTime - touchEndTime);
         twsSlider.removeEventListener("mousemove", mouseOverFunction);
-        document.body.removeEventListener("mousemove", mouseLeaveFunction);
+        document.body.removeEventListener("mouseup", mouseLeaveFunction);
       };
     }
 
     // Clicking on the sGallery but listen for the clicks on the images only
     if (o.sGallery.enable && twsSlider) {
+      // Listen for clicks on the images (thumbnails) inside the twsSlider
       twsSlider.addEventListener("click", (event) => {
         if (touchDuration > 120) {
           // do not execute the click if touch is triggered
           return;
         }
-
+        // get the clicked image, its id, and initiate (refocus on)
         const imgClicked = event.target;
         const imgClickedId = imgClicked.dataset.twSId;
         this.focusSGal(o, imgClickedId);
+        // path to tw-m-items to initiate the scroll event
         const twmItemPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS} > .${TWM_ITEM}`;
+        // get the middle element of the tw-m-items and its id
         const mMidItem = document.querySelector(`${twmItemPath}.${TWM_MID}`);
         const mMidIndex = mMidItem.firstChild.firstChild.dataset.twMId;
 
@@ -1104,12 +1142,14 @@ function TwoWayGallery() {
           // Scroll the mGallery to the left
           case mMidIndex > imgClickedId:
             if (o.sGallery.instant) {
+              // if instant, it avoids scroll animation to the image clicked in the mGallery
               for (let i = mMidIndex; i > imgClickedId; i--) {
                 if (i !== imgClickedId) {
                   this.prev(o, false);
                 }
               }
             } else {
+              // if not instant, then it initiates as scroll to the image inside mGallery
               const diff = mMidIndex - imgClickedId;
               let timesRun = 0;
               let interval = setInterval(() => {
@@ -1127,12 +1167,14 @@ function TwoWayGallery() {
           // Scroll the mGallery to the right
           case mMidIndex < imgClickedId:
             if (o.sGallery.instant) {
+              // if instant, it avoids scroll animation to the image clicked in the mGallery
               for (let i = mMidIndex; i < imgClickedId; i++) {
                 if (i !== imgClickedId) {
                   this.next(o, false);
                 }
               }
             } else {
+              // if not instant, then it initiates as scroll to the image inside mGallery
               const diff = imgClickedId - mMidIndex;
               let timesRun = 0;
               let interval = setInterval(() => {
@@ -1149,38 +1191,64 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description initiate event listeners on the prev and next buttons of the sGallery
+   * @pre-condition o.sGallery.navigationArrows must be true, and must be called by this.listeners function
+   * @post-condition triggers clicks and moves the slider to the right or left
+   * @return none
+   * @param {Object} o user options
+   */
   this.eventSGalNavArrows = (o) => {
+    // Initiate if o.sGallery.navigationArrows is true
     if (o.sGallery.enable && o.sGallery.navigationArrows) {
+      /**
+       * @description scroll the scroller based on the clicks
+       * @pre-condition tw-s-prev or tw-s-next buttons must be clicked (event listener must be passed)
+       * @post-condition moves the scroller based on clicks
+       * @return none
+       * @param {String} action event that is taking place (prev or next) expected
+       */
       const slideSGal = (action) => {
+        // get current location of the slider
         const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
         const twSlider = document.querySelector(sliderPath);
+        // get focused item
         const twFocused = document.querySelector(
           `${sliderPath} > .${TWS_FOCUS}`
         );
+        // get position of to be focused item
         const focusedWidth = twFocused.offsetWidth;
+        // get position of the current slider position
         const scrollPos = twSlider.scrollLeft;
+        // get the difference between the 2 to scroll left or right
         const scrollerDiff =
           action === "prev"
             ? scrollPos - focusedWidth
             : scrollPos + focusedWidth;
+        // initiate scroll
         twSlider.scrollTo({ left: scrollerDiff, behavior: "smooth" });
       };
-
+      // get the path of the tw-s-nav
       const twsNavPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_NAV}`;
+      // node of the prev button
       const prevSBtn = document.querySelector(
         `${twsNavPath} > .${TWS_NAVS[0]}`
       );
+      // node of the next button
       const nextSBtn = document.querySelector(
         `${twsNavPath} > .${TWS_NAVS[1]}`
       );
-
+      // initiate listeners on these buttons
       prevSBtn.addEventListener("click", slideSGal.bind(null, "prev"));
       nextSBtn.addEventListener("click", slideSGal.bind(null, "next"));
-
-      const twSlider = document.querySelector(`.${TWS_SLIDER}`);
-      twSlider.addEventListener("scroll", () => {
-        const maxSliderScroll = twSlider.scrollWidth - twSlider.clientWidth;
-        const scrollPos = twSlider.scrollLeft;
+      // node of tw-s-slider
+      const twsSlider = document.querySelector(`.${TWS_SLIDER}`);
+      // initiate event listener of the scroll on tws-slider
+      twsSlider.addEventListener("scroll", () => {
+        // get the maximum possible scroll
+        const maxSliderScroll = twsSlider.scrollWidth - twsSlider.clientWidth;
+        // get the current location of the scroller
+        const scrollPos = twsSlider.scrollLeft;
 
         this.sGalToggleNavigation(
           scrollPos,
@@ -1192,18 +1260,32 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description hides navigation arrows in sGallery when reached the end
+   * @pre-condition must be called by this.eventSGalNavArrows(). Scroll event on tw-s-slider
+                    needs to take place
+   * @post-condition upon reaching the left or ride sides of the tw-s-slider, the left or
+                     right arrows are toggled. Class tw-s-nav-hide is toggled.
+   * @return None
+   * @param {Number} scrollPosition the current location of the scroller in px
+   * @param {Number} maxSliderScroll maximum location where scroll can get to
+   * @param {Element} sPrevBtn element of the prev button
+   * @param {Element} sNextBtn element of the next button
+   */
   this.sGalToggleNavigation = (
-    scrollerDiff,
+    scrollPosition,
     maxSliderScroll,
     sPrevBtn,
     sNextBtn
   ) => {
-    if (scrollerDiff <= 0) {
+    // if current scroll position goes lower than minimum (0) then set hide
+    if (scrollPosition <= 0) {
       sPrevBtn.classList.toggle(TWS_NAV_HIDE);
-      return 0;
-    } else if (scrollerDiff >= maxSliderScroll) {
+    } else if (scrollPosition >= maxSliderScroll) {
+      // if current scroll position goes beyond maximum then set hide
       sNextBtn.classList.toggle(TWS_NAV_HIDE);
     } else {
+      // if tw-s-nav-hide is already set and end is not reached then remove it
       if (sNextBtn.classList.contains(TWS_NAV_HIDE)) {
         sNextBtn.classList.remove(TWS_NAV_HIDE);
       } else {
