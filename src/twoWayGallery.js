@@ -179,7 +179,7 @@ function TwoWayGallery() {
    * @description Initialises the rendering of the TwoWayGallery
    * @pre-condition Must be called by this.init (upon initialisation)
    * @post-condition Returns all the options (either users or default)
-   * @param {Object} o Options based on twConf
+   * @param {Object} o Receives all the options passed by the twConfig
    */
   this.setConfig = (o) => {
     /**
@@ -290,6 +290,9 @@ function TwoWayGallery() {
                     Length of o.descriptionArray must be equal to o.imagesArray.
    * @post-condition Returns options that include newly generate arrays
    * @param {Object} o Options based on twConf
+   * @param {String[]} o.imagesArray Images passed by the user.
+   * @param {String[]} o.descriptionArray Descriptions passed by the user.
+   * @param {Number} o.startItem Index of the starting item either default or user's choice
    */
   this.restructureImagesArray = (o) => {
     const newImagesArray = [];
@@ -339,65 +342,73 @@ function TwoWayGallery() {
   };
 
   /**
+   * @description renders the Main Gallery based on default or user's options
+   * @pre-condition Must be called by this.init (upon initialisation).
+                    html needs to be included to ensure that it is rendering correctly
+   * @post-condition generate NodeList of items with the class tw-m-items where images and descriptions are stored
+   * @return NodeList items (tw-m-items)
    * @param {Object} o                   App options that include user options.
    * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
-   * @param {String[]} o.imagesArray     Array of images passed by the user.
-   * @param {String[]} o.descriptionArray Array of descriptions passed by the user.
-   * @param {String} o.descriptionType String that contains type and color of the description.
+   * @param {String[]} o.imagesArray     Images passed by the user.
+   * @param {String[]} o.descriptionArray Descriptions passed by the user or [] (default).
+   * @param {String} o.descriptionType String that contains style of the description to be displayed.
    * @param {String} o.directory         Directory where images are located.
    * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
    * @param {Boolean} o.navigation.hover  Hide/show navigation upon hovering the gallery.
    * @param {String[]} o.navigation.icons Array that contains HTML of the arrow icons.
-   * @param {Number} o.startItem
+   * @param {Number} o.startItem An index of the starting image to be displayed.
    */
   this.renderMGal = (o) => {
+    // Path to tw-m-gallery.
     const twmGallery = document.querySelector(
       `.${o.TW_GALLERY} > .${TWM_GALLERY}`
     );
-
-    let imgArrLength = o.imagesArray.length;
+    // Reusable lengths of the arrays
+    const imgArrLength = o.imagesArray.length;
     const descArrLength = o.descriptionArray.length;
+    // Create div.tw-m-items element
     const twmItems = document.createElement("div");
     twmItems.className = TWM_ITEMS;
 
     // Add tw-m-item inside tw-m-items
     for (let i = 0; i < imgArrLength; i++) {
+      // Create div.tw-m-item.tw-m-hidden element
       const twmItem = document.createElement("div");
       twmItem.classList.add(TWM_ITEM, TWM_ITEM_HIDDEN);
-
+      // Create div.tw-m-wrapper element
       const twmWrapper = document.createElement("div");
       twmWrapper.className = TWM_WRAPPER;
-
+      // Create img.tw-m-image element with dataset tw-m-id and src of the image
       const twmImage = document.createElement("img");
       twmImage.src = o.directory + o.imagesArray[i];
       twmImage.alt = descArrLength !== 0 ? o.descriptionArray[i] : "";
       twmImage.className = TWM_IMAGE;
       twmImage.dataset.twMId = i.toString();
       twmWrapper.appendChild(twmImage);
-
+      // Initiate if descriptionArray exists
       if (o.descriptionArray.length !== 0) {
+        // Create div.tw-m-description.tw-m-white/tw-m-black element
         const twmDesc = document.createElement("div");
-        twmDesc.classList.add(TWM_DESC);
-        twmDesc.classList.add(o.descriptionType);
+        twmDesc.classList.add(TWM_DESC, o.descriptionType);
         twmDesc.innerHTML = o.descriptionArray[i];
         twmWrapper.appendChild(twmDesc);
       }
-
       twmItem.appendChild(twmWrapper);
       twmItems.appendChild(twmItem);
     }
-
     twmGallery.appendChild(twmItems);
 
-    // create prev and next arrows
+    // Initiate if navigation is enabled (enabled by Default)
     if (o.navigation.enable) {
+      // Create div.tw-m-nav element
       const twmNav = document.createElement("div");
       twmNav.className = TWM_NAV;
-
+      // Create navigations (left and right)
       for (let i = 0; i < TWM_NAVS.length; i++) {
+        // Create div.tw-m-prev/tw-m-next.tw-m-prev.tw-left-arrow/tw-right-arrow element
         const twmNavBtn = document.createElement("div");
         twmNavBtn.classList.add(TWM_NAVS[i], TWM_ARROW, TW_ARROW_DIRECTION[i]);
-
+        // Create span.tw-m-padding element
         const twmNavPadding = document.createElement("span");
         twmNavPadding.className = TWM_PADDING;
         twmNavPadding.innerHTML = o.navigation.icons[i];
@@ -407,13 +418,23 @@ function TwoWayGallery() {
       }
       twmGallery.prepend(twmNav);
     }
-
+    // Return the NodeList of tw-m-items
     return `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS} > .${TWM_ITEM}`;
   };
 
-  // Generates array of indexes where appropriate classes will go
+  /**
+   * @pre-condition Must be called by this.init (upon initialisation).
+                    Gallery must be fully rendered to ensure its initialisation.
+   * @post-condition Generates array of indexes where appropriate classes will go
+   * @return array of indexes where appropriate classes will go
+   * @param {Number} startItem Starting index of an image. Comes from o.startItem
+   * @param {Number} displayItems Number of items to display (3, 5, 7) Comes from o.displayItems
+   */
   this.generateMItems = (startItem, displayItems) => {
     const generatedIndex = [];
+    // Get the center item of the displayItems.
+    // If -2, then need to generate left-2, left-1, middle, right-1, right-2 classes
+    // If -1, then need to generate left-1, middle, right-1 classes
     let noOfItems = -Math.floor(displayItems / 2);
     for (let i = 0; i < displayItems; i++) {
       let index;
