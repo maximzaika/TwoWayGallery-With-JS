@@ -1,26 +1,26 @@
 /* MIT License
 
-Copyright (c) 2021 Maxim Zaika
+  Copyright (c) 2021 Maxim Zaika
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
 
-Original Github repository: https://maximzaika.github.io/TwoWayGallery/
+  Original Github repository: https://maximzaika.github.io/TwoWayGallery/
 */
 
 function TwoWayGallery() {
@@ -101,10 +101,12 @@ function TwoWayGallery() {
    * @param {String[]} options.descriptionArray Contains the list of descriptions to be displayed. It's length must be
    the same as imagesArray. Example: ["This is image.jpg",
    "This is image img/image2.jpg"]
-   * @param {String} options.descriptionType The way the description is attached to the image. "White" has white background
+   * @param {String} options.descriptionType The way the description is attached to the image. "White" has white
+   *   background
    that overwrites image borders and the black font, while "black" has black
    semi-transparent background and white font within image borders.
-   * @param {Number} options.startItem The index of the image that needs to be displayed first (in the middle of the Main
+   * @param {Number} options.startItem The index of the image that needs to be displayed first (in the middle of the
+   *   Main
    Gallery and focused in the Secondary Gallery).
    * @param {Number} options.displayItems The number of items to be displayed in the Main Gallery in the Desktop view.
    Examples: 3 = 1 left, middle, and 1 right. 5 = 2 left, middle, and 2 right.
@@ -121,27 +123,35 @@ function TwoWayGallery() {
    pauses auto scrolling instantly.
    * @param {Boolean} options.autoPlayPauseNotification If true, the notification over the gallery is displayed when
    it is paused.
-   * @param {String} options.autoPlayPauseNotificationText The text that is displayed inside the autoPlayPauseNotification.
+   * @param {String} options.autoPlayPauseNotificationText The text that is displayed inside the
+   *   autoPlayPauseNotification.
    Another great example to display pause icon instead of the default
    text: "<i class='fa fa-pause' aria-hidden='true'></i>". Note: to
    use this example, default font awesome icons that are included
    in the Usage part must be passed to your page.
-   * @param {Boolean} options.navigationEnable If true, navigation arrows in the main gallery are displayed on each side
+   * @param {Boolean} options.navigationEnable If true, navigation arrows in the main gallery are displayed on each
+   *   side
    (left and right).
-   * @param {Boolean} options.navigationShowOnHover If true, navigation is hidden by default and is displayed on hover over
+   * @param {Boolean} options.navigationShowOnHover If true, navigation is hidden by default and is displayed on hover
+   *   over
    the main gallery. If false, navigation is hidden by default but hovering
    over the arrows enlarges them.
-   * @param {String[]} options.navigationIcons An array that contains ["left", "right"] arrow icons of the Main Gallery.
+   * @param {String[]} options.navigationIcons An array that contains ["left", "right"] arrow icons of the Main
+   *   Gallery.
    Text or any other icons in the same format as default can be passed.
-   * @param {Boolean} options.sGalleryEnable If true and markup with the class tw-s-gallery is included, then the Secondary
+   * @param {Boolean} options.sGalleryEnable If true and markup with the class tw-s-gallery is included, then the
+   *   Secondary
    Gallery is displayed. If false then the class tw-s-gallery can be excluded from
    the markup.
-   * @param {Boolean} options.sGalleryInstant If true, clicks on the images inside the Secondary Gallery instantly display
+   * @param {Boolean} options.sGalleryInstant If true, clicks on the images inside the Secondary Gallery instantly
+   *   display
    the image in the Main Gallery. If false, clicks on the images force Main
    Gallery scroll to the required image one by one showing the animation.
-   * @param {Boolean} options.sGalleryDesktopTouch If true, the touch and scroll on the Secondary Image is enabled in the
+   * @param {Boolean} options.sGalleryDesktopTouch If true, the touch and scroll on the Secondary Image is enabled in
+   *   the
    Desktop view. Note: this cannot be disabled in the mobile view.
-   * @param {Boolean} options.sGalleryNavigationArrows If true, navigation arrows in the Secondary Gallery are displayed on
+   * @param {Boolean} options.sGalleryNavigationArrows If true, navigation arrows in the Secondary Gallery are
+   *   displayed on
    hover. Note: if this and sGalleryDesktopTouch options are false,
    then it will not be possible to scroll in the Secondary Gallery.
    * @param {String[]} options.sGalleryNavigationIcons An array that contains ["left", "right"] arrow icons of the
@@ -290,9 +300,6 @@ function TwoWayGallery() {
                     Length of o.descriptionArray must be equal to o.imagesArray.
    * @post-condition Returns options that include newly generate arrays
    * @param {Object} o Options based on twConf
-   * @param {String[]} o.imagesArray Images passed by the user.
-   * @param {String[]} o.descriptionArray Descriptions passed by the user.
-   * @param {Number} o.startItem Index of the starting item either default or user's choice
    */
   this.restructureImagesArray = (o) => {
     const newImagesArray = [];
@@ -348,15 +355,6 @@ function TwoWayGallery() {
    * @post-condition generate NodeList of items with the class tw-m-items where images and descriptions are stored
    * @return NodeList items (tw-m-items)
    * @param {Object} o Options based on twConf
-   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
-   * @param {String[]} o.imagesArray     Images passed by the user.
-   * @param {String[]} o.descriptionArray Descriptions passed by the user or [] (default).
-   * @param {String} o.descriptionType String that contains style of the description to be displayed.
-   * @param {String} o.directory         Directory where images are located.
-   * @param {String} o.navigationType    Type of navigation to display: arrow, dots, arrow & dots.
-   * @param {Boolean} o.navigation.hover  Hide/show navigation upon hovering the gallery.
-   * @param {String[]} o.navigation.icons Array that contains HTML of the arrow icons.
-   * @param {Number} o.startItem An index of the starting image to be displayed.
    */
   this.renderMGal = (o) => {
     // Path to tw-m-gallery.
@@ -510,13 +508,6 @@ function TwoWayGallery() {
    * @post-condition renders the Secondary Gallery and the navigation arrows
    * @return None
    * @param {Object} o Options based on twConf
-   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
-   * @param {Boolean} o.sGallery.enable User's or default option that determines whether it is enabled
-   * @param {Boolean} o.sGallery.navigationArrows User's or default option that determines whether arrows are enabled
-   * @param {String[]} o.sGallery.navigationIcons Array that contains the style of icons to be displayed
-   * @param {String[]} o.imagesArray Images passed by the user.
-   * @param {String} o.directory Directory where images are located.
-   * @param {Number} o.startItem An index of the starting image to be displayed.
    */
   this.renderSGal = (o) => {
     // Initiates render if sGallery is enabled
@@ -568,8 +559,6 @@ function TwoWayGallery() {
    * @post-condition Sets tw-s-focus class and centers the tw-s-slider
    * @return None
    * @param {Object} o Options based on twConf
-   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
-   * @param {Boolean} o.sGallery.enable User's or default option that determines whether it is enabled
    * @param {Number} index The image that needs to be focused based on data-tw-s-id
    */
   this.focusSGal = (o, index) => {
@@ -606,7 +595,15 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description Initiates all the functions with the event listeners
+   * @pre-condition Must be called by this.init on initialisation of the TwoWayGallery
+   * @post-condition Based on options, initiates required events
+   * @return None
+   * @param {Object} o Options based on twConf
+   */
   this.listeners = (o) => {
+    // Path to all the required NodeElements
     const twmGalPath = `.${o.TW_GALLERY} > .${TWM_GALLERY}`;
     const twmGalApPath = `${twmGalPath} > .${TWM_AP}`;
     const twmArrowPath = `${twmGalPath} > .${TWM_NAV} > .${TWM_ARROW}`;
@@ -614,12 +611,11 @@ function TwoWayGallery() {
     const twmGalImgPath = `${twmGalWrapperPath} > .${TWM_IMAGE}`;
     const twmGalDescPath = `${twmGalWrapperPath} > .${TWM_DESC}`;
     const listenablePath = `${twmGalApPath}, ${twmGalImgPath}, ${twmGalDescPath}, ${twmArrowPath}`;
-
-    // Enable action on the arrows
+    // Navigation Arrows
     const twmNav = document.querySelectorAll(twmArrowPath);
-
+    // Elements that will listen for all the following events
     const listenableElements = document.querySelectorAll(listenablePath);
-    // additional user options
+    // eventListeners based on default/user options
     this.eventMGalNavArrows(o);
     this.eventMGalAutoPlay(o, listenablePath);
     this.eventMGalArrowKeys(o);
@@ -629,36 +625,46 @@ function TwoWayGallery() {
     this.eventSGalNavArrows(o);
   };
 
+  /**
+   * @description Main Gallery - enables listening on navigation arrows.
+   * @pre-condition o.navigation.enable must be true and called by this.listeners function
+   * @post-condition enables listening on navigation arrows.
+   * @return None
+   * @param {Object} o Options based on twConf
+   */
   this.eventMGalNavArrows = (o) => {
+    // Initiates only if navigation is enabled (true)
     if (o.navigation.enable) {
+      // Path to the navigation arrows
       const twmNavs = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_NAV}`;
-
+      // Listenable node elements
       const prevBtn = document.querySelector(`${twmNavs} > .${TWM_NAVS[0]}`); // tw-m-prev
       const nextBtn = document.querySelector(`${twmNavs} > .${TWM_NAVS[1]}`); // tw-m-next
-
+      // Enable event listeners
       prevBtn.addEventListener("click", this.prev.bind(null, o, true));
       nextBtn.addEventListener("click", this.next.bind(null, o, true));
     }
   };
 
   /**
-   * @param {Object} o user options
-   * @param {String} o.TW_GALLERY the class of the main gallery. Default: tw-gallery
-   * @param {Boolean} o.autoPlay.enable user's choice true or false
-   * @param {Number} o.autoPlay.timeout user's choice of timeout duration
-   * @param {Boolean} o.autoPlay.hoverPause user's choice true or false to enable pause on hover
-   * @param {Boolean} o.autoPlay.hoverPauseNotification true or false to display the pause notification
-   * @param {String} o.autoPlay.hoverPauseNotificationText text to display upon pause
+   * @description If this option is true, then the gallery will auto AUTOPLAY based on the options selected.
+   * @pre-condition o.autoPlay.enable must be true. Also listenablePath needs to be passed
+   * @post-condition Based on o.autoPlay.direction, o.autoPlay.timeout, and o.TW_GALLERY initiates auto rotation
+                     Also o.autoPlay.hoverPause listens for mouse enter/leave event to pause the autoPlay.
+                     While o.hoverPauseNotification is responsible for showing a notification when this event happens.
+   * @param {Object} o default/user options
    * @param {String} listenablePath a string that contains the path to CSS listenable by pause
-   * If this option is true, then the gallery will auto AUTOPLAY based on the
-   * options selected.
    */
   this.eventMGalAutoPlay = (o, listenablePath) => {
+    // Initiate autoPlay when it is true
     if (o.autoPlay.enable) {
+      // Boolean that responsible for pausing the execution of the autoPlay when it is true
       let isPaused = false;
-
+      // Initiate autoPlay based on o.autoPlay.timeout in ms
       setInterval(() => {
+        // Only autoPlay when it is not paused. This boolean is changed when mouse enters/leaves the gallery
         if (!isPaused) {
+          // User's/default option to scroll the gallery right or left
           switch (o.autoPlay.direction) {
             case "right":
               this.next(o, true);
@@ -669,29 +675,44 @@ function TwoWayGallery() {
           }
         }
       }, o.autoPlay.timeout);
-
+      // If hoverPause is enabled (true)
       if (o.autoPlay.hoverPause) {
         const twmGallery = document.querySelector(
           `.${o.TW_GALLERY} > .${TWM_GALLERY}`
         );
-
+        // Render tw-m-ap class that will contain contain pause status
         let twmAP;
         if (o.autoPlay.hoverPauseNotification) {
+          // Create div.tw-m-ap.tw-m-play element with the text/icon set by default/user
           twmAP = document.createElement("div");
           twmAP.innerHTML = o.autoPlay.hoverPauseNotificationText;
           twmAP.className = `${TWM_AP} ${TWM_APS[0]}`;
           twmGallery.prepend(twmAP);
         }
 
+        /**
+         * @description responsible for initiating mouseenter/mouseleave events
+         * @pre-condition called within the current function also. tw-m-ap class must be rendered
+         * @post-condition upon mouseenter, changes isPause to true, while upon mouseleave changes isPause to false.
+                           Also, adds tw-ap-pause class to tw-m-ap that will show the notification
+         * @param {NodeListOf} items elements that are going to listen for autoplay
+         * @param {String} event Expected "mouseleave" or "mouseenter" events
+         * @param {Boolean} paused State to which isPause needs to be changed to upon mouseenter/mouseleave
+         */
         const eventListener = (items, event, paused) => {
+          // Initiate event listeners on all the items
           for (const item of items) {
             item.addEventListener(event, () => {
+              // enable housePauseNotification if true
               if (o.autoPlay.hoverPauseNotification) {
+                // add tw-ap-pause class to tw-m-ap class
                 twmAP.classList.add(TWM_APS[1]);
                 if (event === "mouseleave") {
+                  // when mouse leaves the gallery, then remove tw-ap-pause event
                   twmAP.classList.remove(TWM_APS[1]);
                 }
               }
+              // change the state of isPause to true(paused)/false(resumed)
               isPaused = paused;
             });
           }
@@ -709,63 +730,87 @@ function TwoWayGallery() {
   };
 
   /**
-   * @param {Object} o user options
-   * @param {Boolean} o.enableArrowKeys user's choice true or false
-   * If this option is true, then user can use left and right arrow keyboard keys
-   * to trigger clicks on the next/prev buttons.
+   * @description If this option is true, then user can use left and right arrow keyboard keys to trigger
+                  clicks on the next/prev buttons.
+   * @pre-condition o.enableArrowKeys must be true.
+   * @post-condition 'scroll' event triggers isInViewport() function that identifies whether the gallery
+                     is focused. If it is, then it enables ArrowLeft and ArrowRight keys to initiate gallery
+                     rotation.
+   * @param {Object} o default/user options
    */
   this.eventMGalArrowKeys = (o) => {
-    const isInViewport = (element) => {
-      const rect = element.getBoundingClientRect();
-      return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <=
-          (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <=
-          (window.innerWidth || document.documentElement.clientWidth)
-      );
-    };
-
-    const keydownEvent = (event) => {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        this.prev(o, true);
-      }
-
-      if (event.key === "ArrowRight") {
-        event.preventDefault();
-        this.next(o, true);
-      }
-    };
-
-    const scrollEvent = () => {
-      const twGallery = document.querySelector(`.${o.TW_GALLERY}`);
-
-      if (isInViewport(twGallery)) {
-        document.addEventListener("keydown", keydownEvent);
-      } else {
-        document.removeEventListener("keydown", keydownEvent);
-      }
-    };
-
     if (o.enableArrowKeys) {
+      /**
+       * @description Verifies whether the element (gallery) is focused and returns True or False.
+       * @pre-condition o.enableArrowKeys must be true.
+       * @post-condition Checks the position of the element on the page.
+       * @return boolean
+       * @param {Node} element that needs to be focused (twGallery) expected
+       */
+      const isInViewport = (element) => {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth)
+        );
+      };
+
+      /**
+       * @description Verifies whether the element (gallery) is focused and returns True or False.
+       * @pre-condition Triggered by scrollEvent() when isInViewport() is true.
+       * @post-condition Checked what key is clicked, and does appropriate action.
+       * @return None
+       * @param {ListeningState} event Currently executing event (Detected clicked button)
+       */
+      const keydownEvent = (event) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          this.prev(o, true);
+        }
+
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          this.next(o, true);
+        }
+      };
+
+      /**
+       * @description Checks whether twGallery is in viewport and initiates event listeners or removes them.
+       * @pre-condition Page must be scrolled. Must be called by the scroll event.
+       * @post-condition When twGallery is in viewport, it initiates/removes eventListener on keydownEvent() function
+       * @return None
+       */
+      const scrollEvent = () => {
+        const twGallery = document.querySelector(`.${o.TW_GALLERY}`);
+        // Adds/removes event listener when in viewport
+        if (isInViewport(twGallery)) {
+          document.addEventListener("keydown", keydownEvent);
+        } else {
+          document.removeEventListener("keydown", keydownEvent);
+        }
+      };
+      // Initiates scroll event listener on window
       window.addEventListener("scroll", scrollEvent.bind(this));
     }
   };
 
   /**
+   * @description If this option is true, then user can swipe right/left (both touch
+                  and mouse drag events) to trigger scrolling on Main Gallery.
+   * @pre-condition o.enableTouch must be true.
+   * @post-condition initiates touchstart and mousedown events that calculate the touch distance to trigger it
    * @param {Object} o user options
-   * @param {Boolean} o.enableTouch user's choice true or false
    * @param {NodeListOf} pauseThese items that will listen for a pause event
-   * If this option is true, then user can swipe right/left (both touch
-   * and mouse events) to trigger clicks on the next/prev buttons.
    */
   this.eventMGalTouch = (o, pauseThese) => {
     if (o.enableTouch) {
       const eventListeners = (items, evStart, evEnd) => {
         let [touchStartX, touchStartTime] = [0, 0];
-        const expectedTouchDistance = 40;
+        const expectedTouchDistance = 60;
 
         for (const item of items) {
           item.addEventListener(evStart, (event) => {
@@ -821,7 +866,7 @@ function TwoWayGallery() {
         const touchDuration = Math.abs(touchStartTime - touchEndTime);
         const touchDiffX = Math.abs(touchStartX - touchEndX);
 
-        if (touchDuration < 1500) {
+        if (touchDuration < 400) {
           if (touchDiffX > expectedTouchDistance) {
             if (touchEndX > touchStartX) {
               this.prev(o, true);
