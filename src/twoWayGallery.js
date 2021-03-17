@@ -635,6 +635,69 @@ function TwoWayGallery() {
   };
 
   /**
+   * @description Triggers rotation of the mGallery to the left.
+   * @pre-condition o.navigation.enable must be true and called by this.listeners function
+   * @post-condition initiates index generation, moving NodeList items inside the tw-m-items, and
+                     settings left-1, mid, right-1 to new elements. This function takes the last item
+                     in the list and moves it to the front
+   * @return None
+   * @param {Object} o Options based on twConf
+   * @param {Boolean} isArrowClick true indicates that it is direct click on the arrow key
+                      while false indicates indirect. False happens only when click happens on
+                      the image inside the Secondary Gallery (sGallery)
+   */
+  this.prev = (o, isArrowClick = false) => {
+    // Paths to classes the require action
+    const itemsPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS}`;
+    const twItemsPath = `${itemsPath} > .${TWM_ITEM}`;
+    // Generates indexes that receive current middle, and other items with classes left-1, mid, right-1
+    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
+    // All the items inside the mGallery
+    const twmItems = document.querySelectorAll(twItemsPath);
+    // Position of the last item in the tw-m-items
+    const twLastItem = twmItems[twmItems.length - 1];
+    // move the last item to the front of the NodeList
+    document.querySelector(itemsPath).prepend(twLastItem);
+    // render left-1, mid, right-1 to the appropriate tw-m-items and get the middle it is located it
+    const midId = this.renderMItems(o, newIndexArray, twItemsPath);
+    // If click doesn't come from the sGallery then need to get the item of the sGallery and refocus it
+    if (isArrowClick && o.sGallery.enable) {
+      const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
+      const twThumbs = document.querySelectorAll(
+        `${sliderPath} > .${TWS_THUMB}`
+      );
+      const twThumbLast = twThumbs[twmItems.length - 1];
+      document.querySelector(sliderPath).prepend(twThumbLast);
+      this.focusSGal(o, midId);
+    }
+  };
+
+  this.next = (o, isArrowClick = false) => {
+    const itemsPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS}`;
+    const twConf = this.setConfig(o);
+    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
+
+    const twItemsPath = `${itemsPath} > .${TWM_ITEM}`;
+    const twItems = document.querySelectorAll(twItemsPath);
+    const twFirstItem = twItems[0];
+
+    // move the first item to the back of the list
+    document.querySelector(itemsPath).appendChild(twFirstItem);
+
+    const midId = this.renderMItems(twConf, newIndexArray, twItemsPath);
+
+    if (isArrowClick && o.sGallery.enable) {
+      const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
+      const twThumbs = document.querySelectorAll(
+        `${sliderPath} > .${TWS_THUMB}`
+      );
+      const twThumbLast = twThumbs[0];
+      document.querySelector(sliderPath).appendChild(twThumbLast);
+      this.focusSGal(o, midId);
+    }
+  };
+
+  /**
    * @description If this option is true, then the gallery will auto AUTOPLAY based on the options selected.
    * @pre-condition o.autoPlay.enable must be true. Also listenablePath needs to be passed
    * @post-condition Based on o.autoPlay.direction, o.autoPlay.timeout, and o.TW_GALLERY initiates auto rotation
@@ -1131,58 +1194,6 @@ function TwoWayGallery() {
       } else {
         sPrevBtn.classList.remove(TWS_NAV_HIDE);
       }
-    }
-  };
-
-  this.prev = (o, isArrowClick = false) => {
-    const itemsPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS}`;
-    const twConf = this.setConfig(o);
-    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
-
-    const twItemsPath = `${itemsPath} > .${TWM_ITEM}`;
-    const twmItems = document.querySelectorAll(twItemsPath);
-    const twLastItem = twmItems[twmItems.length - 1];
-
-    // move the last item to the front of the NodeList
-    document.querySelector(itemsPath).prepend(twLastItem);
-
-    const midId = this.renderMItems(twConf, newIndexArray, twItemsPath);
-
-    if (isArrowClick && o.sGallery.enable) {
-      const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
-      const twThumbs = document.querySelectorAll(
-        `${sliderPath} > .${TWS_THUMB}`
-      );
-
-      const twThumbLast = twThumbs[twmItems.length - 1];
-      document.querySelector(sliderPath).prepend(twThumbLast);
-
-      this.focusSGal(o, midId);
-    }
-  };
-
-  this.next = (o, isArrowClick = false) => {
-    const itemsPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS}`;
-    const twConf = this.setConfig(o);
-    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
-
-    const twItemsPath = `${itemsPath} > .${TWM_ITEM}`;
-    const twItems = document.querySelectorAll(twItemsPath);
-    const twFirstItem = twItems[0];
-
-    // move the first item to the back of the list
-    document.querySelector(itemsPath).appendChild(twFirstItem);
-
-    const midId = this.renderMItems(twConf, newIndexArray, twItemsPath);
-
-    if (isArrowClick && o.sGallery.enable) {
-      const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
-      const twThumbs = document.querySelectorAll(
-        `${sliderPath} > .${TWS_THUMB}`
-      );
-      const twThumbLast = twThumbs[0];
-      document.querySelector(sliderPath).appendChild(twThumbLast);
-      this.focusSGal(o, midId);
     }
   };
 
