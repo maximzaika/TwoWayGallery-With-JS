@@ -636,7 +636,8 @@ function TwoWayGallery() {
 
   /**
    * @description Triggers rotation of the mGallery to the left.
-   * @pre-condition o.navigation.enable must be true and called by this.listeners function
+   * @pre-condition the gallery must be fully rendered and this.eventMGalNavArrows() must be initiated in
+                    this.listeners()
    * @post-condition initiates index generation, moving NodeList items inside the tw-m-items, and
                      settings left-1, mid, right-1 to new elements. This function takes the last item
                      in the list and moves it to the front
@@ -672,20 +673,34 @@ function TwoWayGallery() {
     }
   };
 
+  /**
+   * @description Triggers rotation of the mGallery to the right.
+   * @pre-condition the gallery must be fully rendered and this.eventMGalNavArrows() must be initiated in
+   this.listeners()
+   * @post-condition initiates index generation, moving NodeList items inside the tw-m-items, and
+                     settings left-1, mid, right-1 to new elements. This function takes the first item
+                     in the list and moves it to the end
+   * @return None
+   * @param {Object} o Options based on twConf
+   * @param {Boolean} isArrowClick true indicates that it is direct click on the arrow key
+                      while false indicates indirect. False happens only when click happens on
+                      the image inside the Secondary Gallery (sGallery)
+   */
   this.next = (o, isArrowClick = false) => {
+    // Paths to classes the require action
     const itemsPath = `.${o.TW_GALLERY} > .${TWM_GALLERY} > .${TWM_ITEMS}`;
-    const twConf = this.setConfig(o);
-    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
-
     const twItemsPath = `${itemsPath} > .${TWM_ITEM}`;
+    // Generates indexes that receive current middle, and other items with classes left-1, mid, right-1
+    const newIndexArray = this.generateMItems(o.startItem, o.displayItems);
+    // All the items inside the mGallery
     const twItems = document.querySelectorAll(twItemsPath);
+    // Position of the first item in the tw-m-items
     const twFirstItem = twItems[0];
-
     // move the first item to the back of the list
     document.querySelector(itemsPath).appendChild(twFirstItem);
-
-    const midId = this.renderMItems(twConf, newIndexArray, twItemsPath);
-
+    // render left-1, mid, right-1 to the appropriate tw-m-items and get the middle it is located it
+    const midId = this.renderMItems(o, newIndexArray, twItemsPath);
+    // If click doesn't come from the sGallery then need to get the item of the sGallery and refocus it
     if (isArrowClick && o.sGallery.enable) {
       const sliderPath = `.${o.TW_GALLERY} > .${TWS_GALLERY} > .${TWS_SLIDER}`;
       const twThumbs = document.querySelectorAll(
